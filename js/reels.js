@@ -123,6 +123,8 @@ SlotGame.Reels = {
         // Number of "extra" symbols to scroll through before landing
         var baseExtra = turbo ? 8 : 20;
         var reelsStopped = 0;
+        var BOUNCE_DURATION = 180; // ms for bounce-back phase (fixed, not affected by turbo)
+        var symCount = SlotGame.Config.symbols.length;
 
         for (var reel = 0; reel < SlotGame.Config.REELS; reel++) {
             (function(r) {
@@ -133,7 +135,7 @@ SlotGame.Reels = {
                 // Prepend current visible symbols so the reel starts showing the previous result
                 var currentColumn = SlotGame.State.grid ? SlotGame.State.grid[r] : null;
 
-                // Build reel strip DOM: [current 3] + [extra random] + [target 3]
+                // Build reel strip DOM: [current 3] + [extra random] + [target 3] + [1 buffer]
                 strip.innerHTML = '';
                 strip.style.transition = 'none';
                 strip.style.transform = 'translateY(0px)';
@@ -150,48 +152,75 @@ SlotGame.Reels = {
                     strip.appendChild(self.createSymbolEl(reelStrip[s]));
                 }
 
+                // Add 1 buffer symbol after target for overshoot visual coverage
+                strip.appendChild(self.createSymbolEl(Math.floor(Math.random() * symCount)));
+
                 // Force reflow so browser registers the starting position
                 strip.offsetHeight;
 
-                // Calculate final position: we need to scroll so that the last 3 symbols are visible
+                // Calculate final position (buffer NOT counted in totalSymbols)
                 var totalSymbols = (currentColumn ? currentColumn.length : 0) + reelStrip.length;
                 var totalHeight = totalSymbols * self.symbolSize;
                 var viewportHeight = SlotGame.Config.ROWS * self.symbolSize;
                 var targetY = -(totalHeight - viewportHeight);
+
+                // Overshoot: go 15% of symbol height past the target
+                var overshootY = targetY - self.symbolSize * 0.15;
 
                 // Start scroll animation after stagger delay
                 var startDelay = r * stagger;
                 var spinTime = baseDuration + r * stagger;
 
                 self.reelTimers[r] = setTimeout(function() {
-                    // Use CSS transition for smooth deceleration
-                    strip.style.transition = 'transform ' + spinTime + 'ms cubic-bezier(0.1, 0.0, 0.2, 1.0)';
-                    strip.style.transform = 'translateY(' + targetY + 'px)';
+                    // Phase 1: Main scroll to overshoot position
+                    strip.style.transition = 'transform ' + spinTime + 'ms cubic-bezier(0.2, 0.0, 0.3, 1.0)';
+                    strip.style.transform = 'translateY(' + overshootY + 'px)';
 
-                    // When transition ends
-                    var fired = false;
-                    var onEnd = function() {
-                        if (fired || gen !== self._spinGeneration) return;
-                        fired = true;
-                        strip.removeEventListener('transitionend', onEnd);
-                        self._reelStopped[r] = true;
-                        reelsStopped++;
+                    // When Phase 1 transition ends
+                    var phase1Fired = false;
+                    var onPhase1End = function() {
+                        if (phase1Fired || gen !== self._spinGeneration) return;
+                        phase1Fired = true;
+                        strip.removeEventListener('transitionend', onPhase1End);
+
+                        // Remove buffer symbol before Phase 2
+                        if (strip.children.length > totalSymbols) {
+                            strip.removeChild(strip.lastChild);
+                        }
 
                         // Play reel stop sound
                         if (SlotGame.Audio && SlotGame.Audio.reelStop) {
                             SlotGame.Audio.reelStop(r);
                         }
 
-                        if (reelsStopped === SlotGame.Config.REELS) {
-                            self.spinning = false;
-                            SlotGame.State.grid = targetGrid;
-                            if (onAllStopped) onAllStopped();
-                        }
-                    };
-                    strip.addEventListener('transitionend', onEnd);
+                        // Phase 2: Bounce back to exact target position
+                        strip.style.transition = 'transform ' + BOUNCE_DURATION + 'ms cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        strip.style.transform = 'translateY(' + targetY + 'px)';
 
-                    // Safety fallback: fire onEnd if transitionend doesn't fire
-                    setTimeout(onEnd, spinTime + 100);
+                        var phase2Fired = false;
+                        var onPhase2End = function() {
+                            if (phase2Fired || gen !== self._spinGeneration) return;
+                            phase2Fired = true;
+                            strip.removeEventListener('transitionend', onPhase2End);
+
+                            self._reelStopped[r] = true;
+                            reelsStopped++;
+
+                            if (reelsStopped === SlotGame.Config.REELS) {
+                                self.spinning = false;
+                                SlotGame.State.grid = targetGrid;
+                                if (onAllStopped) onAllStopped();
+                            }
+                        };
+                        strip.addEventListener('transitionend', onPhase2End);
+
+                        // Safety fallback for Phase 2
+                        setTimeout(onPhase2End, BOUNCE_DURATION + 100);
+                    };
+                    strip.addEventListener('transitionend', onPhase1End);
+
+                    // Safety fallback for Phase 1
+                    setTimeout(onPhase1End, spinTime + 100);
                 }, startDelay);
             })(reel);
         }
