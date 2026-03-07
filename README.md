@@ -1,5 +1,7 @@
 # Fortune Slots
 
+[繁體中文](README.zh-TW.md) | English
+
 A fully-featured 5-reel, 3-row, 20-payline video slot machine built with pure HTML5, CSS3, and vanilla JavaScript. No frameworks, no dependencies, no build step required.
 
 ## Play Now
