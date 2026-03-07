@@ -1,0 +1,394 @@
+/* === Controls Panel === */
+#controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 15px;
+    background: linear-gradient(180deg, var(--bg-tertiary), var(--bg-primary));
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+/* === Bet Controls === */
+#bet-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#bet-display, #lines-display, #total-bet-display {
+    text-align: center;
+    min-width: 65px;
+}
+
+.label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+#bet-per-line, #active-lines, #total-bet {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+    font-variant-numeric: tabular-nums;
+}
+
+/* === Control Buttons === */
+.ctrl-btn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--accent-gold);
+    background: transparent;
+    color: var(--accent-gold);
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.ctrl-btn:hover {
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.ctrl-btn:active {
+    transform: scale(0.9);
+}
+
+.ctrl-btn:disabled {
+    border-color: #555;
+    color: #555;
+    cursor: not-allowed;
+}
+
+.ctrl-btn:disabled:hover {
+    background: transparent;
+    box-shadow: none;
+}
+
+.ctrl-btn.small {
+    width: auto;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+.ctrl-btn.small.active {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+}
+
+/* === Spin Button === */
+.spin-btn {
+    width: 90px;
+    height: 90px;
+    border: 3px solid var(--accent-gold);
+    background: var(--btn-gradient);
+    color: var(--bg-primary);
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--shadow-gold), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+}
+
+.spin-btn:hover {
+    background: var(--btn-gradient-hover);
+    box-shadow: var(--shadow-gold-strong), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.spin-btn:active {
+    transform: scale(0.95);
+}
+
+.spin-btn:disabled {
+    background: var(--btn-gradient-disabled);
+    border-color: #555;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.spin-btn:disabled:hover {
+    transform: none;
+}
+
+/* STOP state - red/orange during spinning */
+.spin-btn.spin-btn--stop {
+    background: linear-gradient(135deg, #ff6b35, #e63946, #ff6b35);
+    border-color: #ff6b35;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(230, 57, 70, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.spin-btn.spin-btn--stop:hover {
+    background: linear-gradient(135deg, #ff8c5a, #ff4d5e, #ff8c5a);
+    box-shadow: 0 0 25px rgba(230, 57, 70, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+/* SKIP state - dimmer gold during win display */
+.spin-btn.spin-btn--skip {
+    background: linear-gradient(135deg, #8a7030, #a08840, #8a7030);
+    border-color: #a08840;
+    color: #f0e6c0;
+    box-shadow: 0 0 8px rgba(160, 136, 64, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.spin-btn.spin-btn--skip:hover {
+    background: linear-gradient(135deg, #a08840, #c0a050, #a08840);
+    box-shadow: 0 0 15px rgba(160, 136, 64, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+/* === Extra Controls === */
+#extra-controls {
+    display: flex;
+    gap: 6px;
+}
+
+/* === Bottom Bar === */
+#bottom-bar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 6px 15px;
+    background: var(--bg-primary);
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.5px;
+}
+
+.icon-btn:hover {
+    color: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+/* === Free Spins HUD === */
+#free-spins-hud {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 8px 20px;
+    display: flex;
+    gap: 20px;
+    z-index: 30;
+    font-weight: bold;
+    color: var(--accent-gold);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+#free-spins-hud.hidden {
+    display: none;
+}
+
+/* === Bonus Grid === */
+#bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 15px;
+    max-width: 400px;
+    margin: 10px auto;
+}
+
+.bonus-chest {
+    width: 80px;
+    height: 80px;
+    perspective: 600px;
+    cursor: pointer;
+}
+
+.bonus-chest-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.bonus-chest.revealed .bonus-chest-inner {
+    transform: rotateY(180deg);
+}
+
+.bonus-chest-front,
+.bonus-chest-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    font-size: 2.5rem;
+}
+
+.bonus-chest-front {
+    background: linear-gradient(135deg, #8B4513, #D2691E);
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.bonus-chest-front:hover {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.bonus-chest-back {
+    background: linear-gradient(135deg, #2d1b4e, #3d2a5e);
+    border: 2px solid var(--accent-gold);
+    transform: rotateY(180deg);
+    flex-direction: column;
+    font-size: 1rem;
+    color: var(--accent-gold);
+    font-weight: bold;
+}
+
+.bonus-chest.revealed {
+    cursor: default;
+}
+
+/* === Jackpot Overlay === */
+#jackpot-text {
+    font-size: 3rem;
+    animation: jackpotPulse 0.5s ease-in-out infinite alternate;
+}
+
+#jackpot-win-amount {
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    margin: 20px 0;
+    font-weight: bold;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+}
+
+/* === Paytable Modal === */
+#paytable-modal {
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-gold);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    width: 90%;
+}
+
+#paytable-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#paytable-close:hover {
+    color: var(--accent-gold);
+}
+
+#paytable-content {
+    margin-top: 10px;
+}
+
+.paytable-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.paytable-symbol {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.paytable-symbol img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.paytable-name {
+    width: 60px;
+    font-weight: bold;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.paytable-pays {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    font-size: 0.8rem;
+}
+
+.paytable-pays span {
+    color: var(--accent-gold);
+}
+
+.paytable-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px solid rgba(255, 215, 0, 0.2);
+}
+
+.paytable-section h3 {
+    color: var(--accent-gold);
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.paytable-section p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+#bonus-picks-remaining {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+#bonus-total-win {
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+    font-weight: bold;
+    margin-top: 10px;
+}

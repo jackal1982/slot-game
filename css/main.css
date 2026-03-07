@@ -1,0 +1,181 @@
+/* === Root Variables === */
+:root {
+    --bg-primary: #1a0a2e;
+    --bg-secondary: #2d1b4e;
+    --bg-tertiary: #3d2a5e;
+    --accent-gold: #ffd700;
+    --accent-amber: #ff8c00;
+    --accent-red: #dc143c;
+    --accent-green: #00cc44;
+    --text-primary: #ffffff;
+    --text-secondary: #b8b8b8;
+    --text-gold: #ffd700;
+    --reel-bg: #0d0d1a;
+    --reel-border: #ffd700;
+    --btn-gradient: linear-gradient(180deg, #ffd700, #ff8c00);
+    --btn-gradient-hover: linear-gradient(180deg, #ffe44d, #ffaa33);
+    --btn-gradient-disabled: linear-gradient(180deg, #666, #444);
+    --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
+    --shadow-gold-strong: 0 0 40px rgba(255, 215, 0, 0.5);
+    --border-radius: 8px;
+}
+
+/* === Reset & Base === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-primary);
+    background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(100, 50, 150, 0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(50, 20, 80, 0.5) 0%, transparent 60%);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* === Game Container === */
+#game-container {
+    width: 100%;
+    max-width: 900px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-gold);
+    overflow: hidden;
+    position: relative;
+}
+
+/* === Jackpot Banner === */
+#jackpot-banner {
+    background: linear-gradient(90deg, #1a0a2e, #3d2a5e, #1a0a2e);
+    padding: 8px 0;
+    text-align: center;
+    border-bottom: 2px solid var(--accent-gold);
+    flex-shrink: 0;
+}
+
+#jackpot-display {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    letter-spacing: 2px;
+}
+
+/* === Info Bar === */
+#info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 20px;
+    background: var(--bg-tertiary);
+    flex-shrink: 0;
+}
+
+#info-bar > div {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+#balance-display { color: var(--text-primary); }
+#win-display { color: var(--accent-gold); }
+
+#balance, #win-amount {
+    font-variant-numeric: tabular-nums;
+}
+
+/* === Overlays (shared) === */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.overlay h2 {
+    font-size: 2rem;
+    color: var(--accent-gold);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    margin-bottom: 16px;
+}
+
+.overlay p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.overlay .btn-overlay {
+    margin-top: 16px;
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1a0a2e;
+    background: var(--btn-gradient);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.overlay .btn-overlay:hover {
+    background: var(--btn-gradient-hover);
+}
+
+/* === Hidden utility === */
+.hidden {
+    display: none !important;
+}
+
+/* === Message display === */
+#message-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+#message-display.show {
+    opacity: 1;
+}

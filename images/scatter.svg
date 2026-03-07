@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="dg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f0ff"/>
+      <stop offset="30%" stop-color="#60b0ff"/>
+      <stop offset="60%" stop-color="#2060d0"/>
+      <stop offset="100%" stop-color="#102060"/>
+    </linearGradient>
+    <linearGradient id="dg2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#60b0ff" stop-opacity="0.1"/>
+    </linearGradient>
+    <filter id="dglow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Shadow -->
+  <ellipse cx="50" cy="92" rx="25" ry="5" fill="#102060" opacity="0.3"/>
+  <!-- Diamond body -->
+  <polygon points="50,8 85,40 50,92 15,40" fill="url(#dg1)" stroke="#4080c0" stroke-width="1" filter="url(#dglow)"/>
+  <!-- Top facets -->
+  <polygon points="50,8 85,40 50,40" fill="#4090e0" opacity="0.5"/>
+  <polygon points="50,8 15,40 50,40" fill="#80c0ff" opacity="0.4"/>
+  <!-- Bottom facets -->
+  <polygon points="50,40 85,40 50,92" fill="#2060b0" opacity="0.3"/>
+  <polygon points="50,40 15,40 50,92" fill="#3080d0" opacity="0.2"/>
+  <!-- Center line highlight -->
+  <line x1="50" y1="8" x2="50" y2="92" stroke="#ffffff" stroke-width="0.8" opacity="0.3"/>
+  <!-- Shine spots -->
+  <circle cx="38" cy="32" r="4" fill="#ffffff" opacity="0.7"/>
+  <circle cx="35" cy="29" r="2" fill="#ffffff" opacity="0.9"/>
+  <circle cx="58" cy="55" r="2" fill="#ffffff" opacity="0.4"/>
+  <!-- Sparkle rays -->
+  <line x1="32" y1="25" x2="28" y2="18" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+  <line x1="42" y1="28" x2="46" y2="20" stroke="#ffffff" stroke-width="0.8" opacity="0.4"/>
+</svg>

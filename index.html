@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fortune Slots - 幸運老虎機</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/reels.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Jackpot Banner -->
+        <header id="jackpot-banner">
+            <div id="jackpot-display">JACKPOT: 5,000</div>
+        </header>
+
+        <!-- Info Bar -->
+        <div id="info-bar">
+            <div id="balance-display">BALANCE: <span id="balance">10,000</span></div>
+            <div id="win-display">WIN: <span id="win-amount">0</span></div>
+        </div>
+
+        <!-- Main Reel Area -->
+        <div id="reel-area">
+            <div id="reel-grid">
+                <div class="reel-viewport" data-reel="0">
+                    <div class="reel-strip" id="reel-strip-0"></div>
+                </div>
+                <div class="reel-viewport" data-reel="1">
+                    <div class="reel-strip" id="reel-strip-1"></div>
+                </div>
+                <div class="reel-viewport" data-reel="2">
+                    <div class="reel-strip" id="reel-strip-2"></div>
+                </div>
+                <div class="reel-viewport" data-reel="3">
+                    <div class="reel-strip" id="reel-strip-3"></div>
+                </div>
+                <div class="reel-viewport" data-reel="4">
+                    <div class="reel-strip" id="reel-strip-4"></div>
+                </div>
+            </div>
+            <!-- Win line overlay canvas -->
+            <canvas id="winline-canvas"></canvas>
+            <!-- Message display -->
+            <div id="message-display"></div>
+        </div>
+
+        <!-- Control Panel -->
+        <div id="controls">
+            <div id="bet-controls">
+                <button id="btn-bet-down" class="ctrl-btn" aria-label="Decrease bet">&#8722;</button>
+                <div id="bet-display">
+                    <div class="label">BET/LINE</div>
+                    <div id="bet-per-line">1</div>
+                </div>
+                <button id="btn-bet-up" class="ctrl-btn" aria-label="Increase bet">+</button>
+            </div>
+
+            <div id="lines-display">
+                <div class="label">LINES</div>
+                <div id="active-lines">20</div>
+            </div>
+
+            <div id="total-bet-display">
+                <div class="label">TOTAL BET</div>
+                <div id="total-bet">20</div>
+            </div>
+
+            <button id="btn-spin" class="spin-btn">SPIN</button>
+
+            <div id="extra-controls">
+                <button id="btn-max-bet" class="ctrl-btn small">MAX BET</button>
+                <button id="btn-auto-spin" class="ctrl-btn small">AUTO</button>
+                <button id="btn-turbo" class="ctrl-btn small">TURBO</button>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div id="bottom-bar">
+            <button id="btn-paytable" class="icon-btn">PAYTABLE</button>
+            <button id="btn-sound" class="icon-btn">SOUND: ON</button>
+        </div>
+
+        <!-- Free Spins Overlay -->
+        <div id="free-spins-intro" class="overlay">
+            <h2>FREE SPINS!</h2>
+            <p>You won <span id="fs-awarded">10</span> Free Spins!</p>
+            <p>All wins are multiplied by <span id="fs-multiplier">2</span>x</p>
+            <button class="btn-overlay" id="btn-fs-start">START</button>
+        </div>
+
+        <!-- Free Spins Counter (during free spins) -->
+        <div id="free-spins-hud" class="hidden">
+            <div id="fs-counter">FREE SPINS: <span id="fs-remaining">0</span> / <span id="fs-total">0</span></div>
+            <div id="fs-winnings">TOTAL WIN: <span id="fs-win-amount">0</span></div>
+        </div>
+
+        <!-- Free Spins Summary -->
+        <div id="free-spins-summary" class="overlay">
+            <h2>FREE SPINS COMPLETE!</h2>
+            <p>Total Winnings: <span id="fs-summary-amount">0</span></p>
+            <button class="btn-overlay" id="btn-fs-collect">COLLECT</button>
+        </div>
+
+        <!-- Bonus Game Overlay -->
+        <div id="bonus-overlay" class="overlay">
+            <h2>BONUS GAME!</h2>
+            <p>Pick a treasure chest to reveal your prize!</p>
+            <div id="bonus-picks-remaining">Picks remaining: <span id="bonus-picks">3</span></div>
+            <div id="bonus-grid"></div>
+            <div id="bonus-total-win">Total Bonus Win: <span id="bonus-win-amount">0</span></div>
+            <button class="btn-overlay hidden" id="btn-bonus-collect">COLLECT</button>
+        </div>
+
+        <!-- Jackpot Win Overlay -->
+        <div id="jackpot-overlay" class="overlay">
+            <h2 id="jackpot-text">JACKPOT!</h2>
+            <div id="jackpot-win-amount">0</div>
+            <button class="btn-overlay" id="btn-jackpot-collect">COLLECT</button>
+        </div>
+
+        <!-- Paytable Modal -->
+        <div id="paytable-overlay" class="overlay">
+            <div id="paytable-modal">
+                <button id="paytable-close">&times;</button>
+                <h2>PAYTABLE</h2>
+                <div id="paytable-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts in dependency order -->
+    <script src="js/config.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/rng.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/paylines.js"></script>
+    <script src="js/features.js"></script>
+    <script src="js/jackpot.js"></script>
+    <script src="js/reels.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

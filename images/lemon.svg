@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="lg" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fff44f"/>
+      <stop offset="50%" stop-color="#ffe000"/>
+      <stop offset="100%" stop-color="#ccaa00"/>
+    </radialGradient>
+    <linearGradient id="lleaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#50d050"/>
+      <stop offset="100%" stop-color="#208020"/>
+    </linearGradient>
+    <filter id="lshadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <!-- Lemon body -->
+  <ellipse cx="50" cy="55" rx="32" ry="28" fill="url(#lg)" stroke="#b89800" stroke-width="1.2"
+    filter="url(#lshadow)" transform="rotate(-15,50,55)"/>
+  <!-- Tip left -->
+  <path d="M20,42 C14,38 12,35 16,32 C18,30 22,34 24,38 Z"
+    fill="#ffe000" stroke="#b89800" stroke-width="0.8"/>
+  <!-- Tip right -->
+  <path d="M78,60 C84,58 88,55 86,50 C84,48 80,52 78,56 Z"
+    fill="#ffe000" stroke="#b89800" stroke-width="0.8"/>
+  <!-- Highlight -->
+  <ellipse cx="40" cy="45" rx="14" ry="10" fill="#fff88f" opacity="0.5" transform="rotate(-15,40,45)"/>
+  <ellipse cx="36" cy="42" rx="6" ry="5" fill="#ffffff" opacity="0.4" transform="rotate(-15,36,42)"/>
+  <!-- Texture lines -->
+  <path d="M30,48 C35,42 50,40 65,48" fill="none" stroke="#ccaa00" stroke-width="0.4" opacity="0.5"/>
+  <path d="M28,55 C38,48 55,47 70,55" fill="none" stroke="#ccaa00" stroke-width="0.4" opacity="0.4"/>
+  <!-- Stem/leaf -->
+  <path d="M44,30 C46,24 48,20 50,18" fill="none" stroke="#2a7a2a" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50,18 C54,12 62,10 64,16 C65,20 58,20 50,18 Z"
+    fill="url(#lleaf)" stroke="#1a6e1a" stroke-width="0.6"/>
+  <path d="M51,17 C55,14 59,14 60,16" fill="none" stroke="#60d060" stroke-width="0.6" opacity="0.5"/>
+</svg>

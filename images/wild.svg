@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="wg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff7a0"/>
+      <stop offset="40%" stop-color="#ffd700"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </radialGradient>
+    <filter id="wglow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="wface" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8dc"/>
+      <stop offset="100%" stop-color="#ffd700"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer glow -->
+  <polygon points="50,5 61,35 95,35 67,55 78,88 50,68 22,88 33,55 5,35 39,35"
+    fill="url(#wg)" filter="url(#wglow)" opacity="0.4" transform="scale(1.05) translate(-2.5,-2.5)"/>
+  <!-- Star body -->
+  <polygon points="50,8 60,36 92,36 66,54 76,85 50,66 24,85 34,54 8,36 40,36"
+    fill="url(#wg)" stroke="#b8860b" stroke-width="1.5"/>
+  <!-- Inner star highlight -->
+  <polygon points="50,18 56,38 76,38 60,50 66,72 50,58 34,72 40,50 24,38 44,38"
+    fill="url(#wface)" opacity="0.6"/>
+  <!-- "W" text -->
+  <text x="50" y="58" text-anchor="middle" font-family="Arial Black, sans-serif"
+    font-size="28" font-weight="bold" fill="#8b6914" opacity="0.9">W</text>
+  <text x="50" y="57" text-anchor="middle" font-family="Arial Black, sans-serif"
+    font-size="28" font-weight="bold" fill="#fff8dc">W</text>
+</svg>

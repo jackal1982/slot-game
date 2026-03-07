@@ -1,0 +1,125 @@
+/* === Reel Area === */
+#reel-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* === Reel Grid === */
+#reel-grid {
+    display: flex;
+    gap: 4px;
+    background: var(--reel-bg);
+    border: 3px solid var(--reel-border);
+    border-radius: var(--border-radius);
+    padding: 4px;
+    box-shadow: var(--shadow-gold), inset 0 0 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+/* === Reel Viewport === */
+.reel-viewport {
+    width: 100px;
+    height: 300px; /* 3 rows * 100px */
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0.3) 0%,
+        transparent 15%,
+        transparent 85%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+    border-radius: 4px;
+}
+
+/* === Reel Strip === */
+.reel-strip {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: none;
+    will-change: transform;
+}
+
+/* === Symbol Cell === */
+.symbol {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    border-radius: 4px;
+}
+
+.symbol img {
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+.symbol::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+/* === Symbol States === */
+.symbol.winning {
+    animation: symbolWin 0.5s ease-in-out infinite alternate;
+    z-index: 10;
+}
+
+.symbol.dimmed {
+    opacity: 0.3;
+    filter: grayscale(0.8);
+}
+
+/* === Win Line Canvas Overlay === */
+#winline-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* === Reel Separator Lines === */
+.reel-viewport + .reel-viewport {
+    border-left: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+/* Row separator lines (horizontal) */
+#reel-grid::before,
+#reel-grid::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 1px;
+    background: rgba(255, 215, 0, 0.15);
+    z-index: 5;
+    pointer-events: none;
+}
+
+#reel-grid::before {
+    top: calc(4px + 100px);
+}
+
+#reel-grid::after {
+    top: calc(4px + 200px);
+}

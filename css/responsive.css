@@ -1,0 +1,229 @@
+/* === Tablet (< 768px) === */
+@media (max-width: 768px) {
+    #game-container {
+        max-width: 100%;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+
+    .reel-viewport {
+        width: 80px;
+        height: 240px;
+    }
+
+    .symbol {
+        width: 80px;
+        height: 80px;
+    }
+
+    #reel-grid::before { top: calc(4px + 80px); }
+    #reel-grid::after { top: calc(4px + 160px); }
+
+    .spin-btn {
+        width: 75px;
+        height: 75px;
+        font-size: 0.95rem;
+    }
+
+    #jackpot-display { font-size: 1.2rem; }
+
+    #controls { gap: 8px; padding: 8px 10px; }
+
+    .bonus-chest {
+        width: 65px;
+        height: 65px;
+    }
+
+    .bonus-chest-front,
+    .bonus-chest-back {
+        font-size: 2rem;
+    }
+}
+
+/* === Mobile (< 480px) === */
+@media (max-width: 480px) {
+    /* Fix mobile browser viewport: 100vh ignores address bar/nav */
+    html, body {
+        overflow: auto;
+        height: auto;
+    }
+
+    body {
+        align-items: flex-start;
+        min-height: 100dvh;
+        min-height: -webkit-fill-available;
+    }
+
+    #game-container {
+        height: auto;
+        min-height: 100dvh;
+        min-height: -webkit-fill-available;
+        max-height: none;
+        overflow: visible;
+    }
+
+    /* Reel area: no flex-grow, just fit content */
+    #reel-area {
+        flex: 0 0 auto;
+        min-height: 0;
+        padding: 8px 5px;
+    }
+
+    #controls {
+        flex-shrink: 0;
+        gap: 5px;
+        padding: 6px 8px;
+    }
+
+    #bottom-bar {
+        flex-shrink: 0;
+    }
+
+    /* Viewport-width-based sizing so reels fill screen width */
+    .reel-viewport {
+        width: calc((100vw - 30px) / 5);
+        height: calc(((100vw - 30px) / 5) * 3);
+    }
+
+    .symbol {
+        width: calc((100vw - 30px) / 5);
+        height: calc((100vw - 30px) / 5);
+    }
+
+    #reel-grid::before { top: calc(4px + (100vw - 30px) / 5); }
+    #reel-grid::after { top: calc(4px + (100vw - 30px) / 5 * 2); }
+
+    #reel-grid {
+        gap: 2px;
+        padding: 2px;
+        border-width: 2px;
+    }
+
+    .spin-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    #bet-controls { gap: 3px; }
+
+    .ctrl-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+
+    .ctrl-btn.small {
+        height: 28px;
+        padding: 0 7px;
+        font-size: 0.6rem;
+    }
+
+    #bet-per-line, #active-lines, #total-bet {
+        font-size: 1.1rem;
+    }
+
+    .label { font-size: 0.55rem; }
+
+    #jackpot-banner { padding: 5px 0; }
+    #jackpot-display { font-size: 1rem; }
+    #info-bar { padding: 4px 10px; font-size: 0.8rem; }
+    #bottom-bar { padding: 4px 10px; }
+    .icon-btn { font-size: 0.65rem; padding: 3px 8px; }
+
+    #extra-controls { gap: 3px; }
+
+    .overlay h2 { font-size: 1.5rem; }
+    .overlay p { font-size: 0.9rem; }
+
+    .bonus-chest {
+        width: 55px;
+        height: 55px;
+    }
+    .bonus-chest-front,
+    .bonus-chest-back {
+        font-size: 1.6rem;
+    }
+    .bonus-chest-back {
+        font-size: 0.75rem;
+    }
+
+    #bonus-grid {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    /* Reorder flex children so HUD sits between reel-area and controls */
+    #jackpot-banner { order: 1; }
+    #info-bar { order: 2; }
+    #reel-area { order: 3; }
+    #free-spins-hud {
+        position: static;
+        transform: none;
+        order: 4;
+        justify-content: center;
+        font-size: 0.75rem;
+        padding: 4px 0;
+        gap: 8px;
+        white-space: nowrap;
+    }
+    #controls { order: 5; }
+    #bottom-bar { order: 6; }
+}
+
+/* === Small Mobile (< 360px) === */
+@media (max-width: 360px) {
+    .reel-viewport {
+        width: 55px;
+        height: 165px;
+    }
+
+    .symbol {
+        width: 55px;
+        height: 55px;
+    }
+
+    #reel-grid::before { top: calc(4px + 55px); }
+    #reel-grid::after { top: calc(4px + 110px); }
+
+    .spin-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 0.75rem;
+    }
+
+    #bet-display, #lines-display, #total-bet-display {
+        min-width: 50px;
+    }
+}
+
+/* === Landscape Mobile (very short screens) === */
+@media (max-height: 400px) and (orientation: landscape) {
+    #jackpot-banner { padding: 3px 0; }
+    #jackpot-display { font-size: 0.9rem; }
+    #info-bar { padding: 3px 10px; font-size: 0.75rem; }
+
+    .reel-viewport {
+        width: 60px;
+        height: 180px;
+    }
+
+    .symbol {
+        width: 60px;
+        height: 60px;
+    }
+
+    #reel-grid::before { top: calc(4px + 60px); }
+    #reel-grid::after { top: calc(4px + 120px); }
+
+    #controls { padding: 4px 8px; gap: 6px; }
+
+    .spin-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 0.8rem;
+    }
+
+    #bottom-bar { padding: 3px 10px; }
+}
