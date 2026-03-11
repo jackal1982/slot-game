@@ -438,6 +438,73 @@ SlotGame.UI = {
             content.appendChild(row);
         });
 
+        // Paylines visual guide
+        var paylines = SlotGame.Config.paylines;
+        var plColors = SlotGame.Config.paylineColors;
+        var SVG_NS = 'http://www.w3.org/2000/svg';
+
+        var plSection = document.createElement('div');
+        plSection.className = 'paytable-section';
+        plSection.innerHTML = '<h3>Paylines</h3>';
+
+        var plContainer = document.createElement('div');
+        plContainer.className = 'payline-grid-container';
+
+        for (var pi = 0; pi < paylines.length; pi++) {
+            var pl = paylines[pi];
+            var plColor = plColors[pi];
+
+            var plItem = document.createElement('div');
+            plItem.className = 'payline-item';
+
+            var plLabel = document.createElement('span');
+            plLabel.className = 'payline-label';
+            plLabel.textContent = (pi + 1);
+            plLabel.style.backgroundColor = plColor;
+
+            var plGrid = document.createElement('div');
+            plGrid.className = 'payline-mini-grid';
+
+            for (var pr = 0; pr < 3; pr++) {
+                for (var pc = 0; pc < 5; pc++) {
+                    var plCell = document.createElement('div');
+                    plCell.className = 'payline-cell';
+                    if (pl[pc] === pr) {
+                        var plDot = document.createElement('div');
+                        plDot.className = 'payline-dot';
+                        plDot.style.backgroundColor = plColor;
+                        plCell.appendChild(plDot);
+                    }
+                    plGrid.appendChild(plCell);
+                }
+            }
+
+            var plSvg = document.createElementNS(SVG_NS, 'svg');
+            plSvg.setAttribute('class', 'payline-svg');
+            plSvg.setAttribute('viewBox', '0 0 5 3');
+            plSvg.setAttribute('preserveAspectRatio', 'none');
+            var plPoly = document.createElementNS(SVG_NS, 'polyline');
+            var plPoints = '';
+            for (var pp = 0; pp < 5; pp++) {
+                plPoints += (pp + 0.5) + ',' + (pl[pp] + 0.5) + ' ';
+            }
+            plPoly.setAttribute('points', plPoints.trim());
+            plPoly.setAttribute('stroke', plColor);
+            plPoly.setAttribute('stroke-width', '0.15');
+            plPoly.setAttribute('fill', 'none');
+            plPoly.setAttribute('stroke-linecap', 'round');
+            plPoly.setAttribute('stroke-linejoin', 'round');
+            plSvg.appendChild(plPoly);
+            plGrid.appendChild(plSvg);
+
+            plItem.appendChild(plLabel);
+            plItem.appendChild(plGrid);
+            plContainer.appendChild(plItem);
+        }
+
+        plSection.appendChild(plContainer);
+        content.appendChild(plSection);
+
         // Feature descriptions
         var features = [
             { title: 'Wild', desc: 'Wild substitutes for all symbols except Scatter. 5 Wilds on middle row wins the JACKPOT!' },

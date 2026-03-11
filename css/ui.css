@@ -380,6 +380,74 @@
     line-height: 1.5;
 }
 
+/* --- Payline Visual Guide --- */
+
+.payline-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.payline-item {
+    flex: 0 0 calc(25% - 8px);
+    text-align: center;
+}
+
+.payline-label {
+    display: inline-block;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    min-width: 18px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.payline-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    aspect-ratio: 5 / 3;
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.payline-cell {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.payline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 4px currentColor;
+}
+
+.payline-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.payline-svg polyline {
+    opacity: 0.7;
+}
+
 #bonus-picks-remaining {
     font-size: 1.1rem;
     color: var(--text-primary);
