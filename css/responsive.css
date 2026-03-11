@@ -38,6 +38,10 @@
     .bonus-chest-back {
         font-size: 2rem;
     }
+
+    .payline-item {
+        flex: 0 0 calc(33.3% - 8px);
+    }
 }
 
 /* === Mobile (< 480px) === */
@@ -170,6 +174,15 @@
     }
     #controls { order: 5; }
     #bottom-bar { order: 6; }
+
+    .payline-item {
+        flex: 0 0 calc(50% - 8px);
+    }
+
+    .payline-dot {
+        width: 6px;
+        height: 6px;
+    }
 }
 
 /* === Small Mobile (< 360px) === */
