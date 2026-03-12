@@ -74,6 +74,9 @@
     }
 
     #controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         flex-shrink: 0;
         gap: 5px;
         padding: 6px 8px;
@@ -110,6 +113,7 @@
         letter-spacing: 1px;
     }
 
+    #left-controls { justify-content: center; gap: 5px; }
     #bet-controls { gap: 3px; }
 
     .ctrl-btn {
