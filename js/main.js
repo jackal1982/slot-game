@@ -49,9 +49,6 @@ SlotGame.Main = {
         // Guard: can only spin in IDLE
         if (state.phase !== 'IDLE') return;
 
-        // Ensure audio context is active
-        SlotGame.Audio.ensureContext();
-
         // Check if in free spins
         var isFree = state.inFreeSpins;
 

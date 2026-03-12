@@ -47,6 +47,69 @@ body {
     -webkit-user-select: none;
 }
 
+/* === Splash Screen === */
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: radial-gradient(ellipse at 50% 40%, #3d2a5e, #1a0a2e 70%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+#splash-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#splash-content {
+    text-align: center;
+}
+
+#splash-title {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+    color: var(--accent-gold);
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 2px 4px rgba(0,0,0,0.5);
+    margin: 0 0 8px 0;
+    letter-spacing: 3px;
+}
+
+#splash-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0 0 40px 0;
+    letter-spacing: 2px;
+}
+
+#splash-btn {
+    background: var(--btn-gradient);
+    color: #1a0a2e;
+    border: none;
+    padding: 14px 40px;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 4px 15px rgba(0,0,0,0.3);
+    animation: splashPulse 2s ease-in-out infinite;
+}
+
+#splash-btn:hover {
+    background: var(--btn-gradient-hover);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes splashPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
 /* === Game Container === */
 #game-container {
     width: 100%;
