@@ -4,50 +4,81 @@
  */
 SlotGame.Audio = {
     ctx: null,
-    _warmedUp: false,
+    _ready: false,
 
     /**
-     * Set up early wake listener. AudioContext is created lazily on first interaction.
+     * Set up splash screen as user gesture to unlock AudioContext.
+     * Also pre-allocate AudioContext eagerly and add idle-resume listeners.
      */
     init: function() {
+        try {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            return; // Web Audio not supported
+        }
+
         var self = this;
-        // Listen on pointerdown/touchstart (fires ~100ms before click)
-        // so AudioContext has time to resume before sounds are scheduled.
+
+        // Splash screen: user taps "TAP TO PLAY" → resume + warmup → hide splash
+        var splash = document.getElementById('splash-screen');
+        var splashBtn = document.getElementById('splash-btn');
+        if (splash && splashBtn) {
+            var startGame = function() {
+                if (self.ctx.state === 'suspended') {
+                    self.ctx.resume().then(function() {
+                        self._warmUp();
+                    });
+                } else {
+                    self._warmUp();
+                }
+                splash.classList.add('hidden');
+                setTimeout(function() {
+                    splash.style.display = 'none';
+                }, 500); // After fade-out transition
+            };
+            splashBtn.addEventListener('click', startGame);
+            splash.addEventListener('touchend', startGame);
+        }
+
+        // If context starts running immediately (e.g. MEI or autoplay allowed)
+        if (this.ctx.state === 'running') {
+            this._warmUp();
+            // Auto-dismiss splash if audio is already unlocked
+            if (splash) {
+                splash.classList.add('hidden');
+                setTimeout(function() { splash.style.display = 'none'; }, 500);
+            }
+        }
+
+        // Listen for state changes (suspend after idle)
+        this.ctx.onstatechange = function() {
+            if (self.ctx.state === 'running' && !self._ready) {
+                self._warmUp();
+            }
+            if (self.ctx.state === 'suspended') {
+                self._ready = false;
+            }
+        };
+
+        // On pointerdown, resume if suspended (handles idle suspend)
         var wakeAudio = function() {
-            self.ensureContext();
+            if (self.ctx && self.ctx.state === 'suspended') {
+                self.ctx.resume();
+            }
         };
         document.addEventListener('pointerdown', wakeAudio, { passive: true });
         document.addEventListener('touchstart', wakeAudio, { passive: true });
-    },
 
-    /**
-     * Create AudioContext if needed, resume if suspended, and warm up the audio pipeline.
-     * Call this at the start of any user-triggered action (spin, button click).
-     */
-    ensureContext: function() {
-        if (!this.ctx) {
-            try {
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            } catch (e) {
-                return false; // Web Audio not supported
+        // Resume on tab visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && self.ctx && self.ctx.state === 'suspended') {
+                self.ctx.resume();
             }
-        }
-        var wasSuspended = this.ctx.state === 'suspended';
-        if (wasSuspended) {
-            this.ctx.resume();
-            this._warmedUp = false; // Force re-warmup after suspend
-        }
-        // Play a silent buffer to prime the audio pipeline on first use
-        // or after resume from suspend (prevents stutter on first real sound).
-        if (!this._warmedUp) {
-            this._warmUp();
-        }
-        return true;
+        });
     },
 
     /**
      * Play a short silent buffer to prime the Web Audio pipeline.
-     * This eliminates first-play latency caused by lazy audio graph initialization.
      */
     _warmUp: function() {
         if (!this.ctx) return;
@@ -57,16 +88,17 @@ SlotGame.Audio = {
             source.buffer = buffer;
             source.connect(this.ctx.destination);
             source.start(0);
-            this._warmedUp = true;
+            this._ready = true;
         } catch (e) { /* ignore */ }
     },
 
     /**
-     * Play a single tone.
+     * Play a single tone. Silently skips if context is not yet running
+     * (avoids stutter; by next interaction it will be ready).
      */
     playTone: function(freq, duration, type, volume) {
         if (!SlotGame.State.soundEnabled) return;
-        if (!this.ensureContext()) return;
+        if (!this.ctx || this.ctx.state !== 'running') return;
         type = type || 'sine';
         volume = volume !== undefined ? volume : 0.3;
         try {
@@ -88,7 +120,7 @@ SlotGame.Audio = {
      */
     playNoise: function(duration, volume) {
         if (!SlotGame.State.soundEnabled) return;
-        if (!this.ensureContext()) return;
+        if (!this.ctx || this.ctx.state !== 'running') return;
         volume = volume || 0.1;
         try {
             var bufferSize = this.ctx.sampleRate * duration;
