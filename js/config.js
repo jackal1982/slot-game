@@ -34,13 +34,13 @@ SlotGame.Config = {
 
     // --- Scatter Payout (free spins awarded) ---
     scatterFreeSpins: {
-        3: 6,
-        4: 9,
-        5: 13,
+        3: 8,
+        4: 12,
+        5: 18,
     },
 
     // --- Free Spins ---
-    FREE_SPIN_MULTIPLIER: 2,
+    FREE_SPIN_MULTIPLIER: 3,
 
     // --- Paylines (20 lines) ---
     // Each payline is an array of 5 row indices (0=top, 1=middle, 2=bottom)
@@ -94,6 +94,23 @@ SlotGame.Config = {
     BONUS_TRIGGER_COUNT: 3, // 3 Crowns on a payline
     BONUS_STARTING_PICKS: 3,
     BONUS_CHEST_COUNT: 12,
+
+    // --- Reel Strips (fixed symbol sequences per reel) ---
+    // Each reel has a circular strip of symbols. Spin picks a random stop position.
+    // Symbol IDs: 0=Wild, 1=Scatter, 2=Crown, 3=Bell, 4=Seven, 5=Cherry, 6=Lemon, 7=Grape
+    // Constraints: Wild/Scatter/Crown spaced 3+ apart so max 1 per visible 3-row window.
+    REEL_STRIPS: [
+        // Reel 0 (30): W:1 S:1 C:1 B:3 V:4 H:5 L:8 G:7
+        [6,7,5,4,6,7,3,5,6,7,4,6,5,0,7,4,6,3,7,5,6,7,4,1,6,5,7,3,6,2],
+        // Reel 1 (34): W:1 S:2 C:2 B:4 V:4 H:5 L:8 G:8
+        [7,4,6,5,7,3,6,7,5,6,4,3,7,6,1,5,7,6,4,7,3,6,5,7,0,6,5,4,2,7,6,3,1,2],
+        // Reel 2 (31): W:1 S:1 C:2 B:3 V:5 H:5 L:7 G:7
+        [4,7,5,6,3,7,4,6,5,7,6,4,2,7,5,6,3,4,7,6,0,5,7,6,4,5,1,7,3,6,2],
+        // Reel 3 (33): W:1 S:2 C:2 B:3 V:4 H:6 L:8 G:7
+        [5,6,7,4,5,3,6,7,6,5,1,4,7,6,5,3,7,6,4,7,5,2,6,7,0,6,5,4,7,3,2,6,1],
+        // Reel 4 (28): W:1 S:1 C:2 B:4 V:3 H:4 L:6 G:7
+        [3,7,6,4,7,5,3,6,7,5,6,7,2,4,6,3,7,5,0,7,6,5,3,7,1,6,4,2],
+    ],
 
     // --- Animation Timing ---
     REEL_SPIN_DURATION: 300,   // ms per reel base

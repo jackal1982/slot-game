@@ -55,7 +55,7 @@ SlotGame.Animations = {
         this.ctx.lineJoin = 'round';
         this.ctx.beginPath();
 
-        for (var reel = 0; reel < matchCount; reel++) {
+        for (var reel = 0; reel < SlotGame.Config.REELS; reel++) {
             var x = reel * cellWidth + cellWidth / 2;
             var y = line[reel] * cellHeight + cellHeight / 2;
             if (reel === 0) {
@@ -69,7 +69,7 @@ SlotGame.Animations = {
 
         // Draw circles at each position
         this.ctx.fillStyle = color;
-        for (var r = 0; r < matchCount; r++) {
+        for (var r = 0; r < SlotGame.Config.REELS; r++) {
             var cx = r * cellWidth + cellWidth / 2;
             var cy = line[r] * cellHeight + cellHeight / 2;
             this.ctx.beginPath();

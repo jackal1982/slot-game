@@ -16,6 +16,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex: 1;
+    justify-content: flex-end;
 }
 
 #bet-display, #lines-display, #total-bet-display {
@@ -158,6 +160,8 @@
 #extra-controls {
     display: flex;
     gap: 6px;
+    flex: 1;
+    justify-content: flex-start;
 }
 
 /* === Bottom Bar === */
@@ -198,11 +202,15 @@
     border-radius: 8px;
     padding: 8px 20px;
     display: flex;
+    flex-wrap: nowrap;
     gap: 20px;
     z-index: 30;
     font-weight: bold;
     color: var(--accent-gold);
     text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    white-space: nowrap;
+    max-width: 90vw;
+    font-size: clamp(0.7rem, 2vw, 1rem);
 }
 
 #free-spins-hud.hidden {

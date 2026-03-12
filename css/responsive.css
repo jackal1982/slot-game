@@ -167,8 +167,10 @@
         transform: none;
         order: 4;
         justify-content: center;
+        align-self: center;
+        width: auto;
         font-size: 0.75rem;
-        padding: 4px 0;
+        padding: 4px 12px;
         gap: 8px;
         white-space: nowrap;
     }
