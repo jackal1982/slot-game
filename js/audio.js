@@ -4,33 +4,69 @@
  */
 SlotGame.Audio = {
     ctx: null,
+    _warmedUp: false,
 
     /**
-     * Initialize AudioContext (must be called after user gesture).
+     * Set up early wake listener. AudioContext is created lazily on first interaction.
      */
     init: function() {
-        try {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (e) {
-            // Web Audio not supported
-        }
+        var self = this;
+        // Listen on pointerdown/touchstart (fires ~100ms before click)
+        // so AudioContext has time to resume before sounds are scheduled.
+        var wakeAudio = function() {
+            self.ensureContext();
+        };
+        document.addEventListener('pointerdown', wakeAudio, { passive: true });
+        document.addEventListener('touchstart', wakeAudio, { passive: true });
     },
 
     /**
-     * Ensure AudioContext is running (resume if suspended).
+     * Create AudioContext if needed, resume if suspended, and warm up the audio pipeline.
+     * Call this at the start of any user-triggered action (spin, button click).
      */
     ensureContext: function() {
-        if (this.ctx && this.ctx.state === 'suspended') {
-            this.ctx.resume();
+        if (!this.ctx) {
+            try {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                return false; // Web Audio not supported
+            }
         }
+        var wasSuspended = this.ctx.state === 'suspended';
+        if (wasSuspended) {
+            this.ctx.resume();
+            this._warmedUp = false; // Force re-warmup after suspend
+        }
+        // Play a silent buffer to prime the audio pipeline on first use
+        // or after resume from suspend (prevents stutter on first real sound).
+        if (!this._warmedUp) {
+            this._warmUp();
+        }
+        return true;
+    },
+
+    /**
+     * Play a short silent buffer to prime the Web Audio pipeline.
+     * This eliminates first-play latency caused by lazy audio graph initialization.
+     */
+    _warmUp: function() {
+        if (!this.ctx) return;
+        try {
+            var buffer = this.ctx.createBuffer(1, 1, this.ctx.sampleRate);
+            var source = this.ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(this.ctx.destination);
+            source.start(0);
+            this._warmedUp = true;
+        } catch (e) { /* ignore */ }
     },
 
     /**
      * Play a single tone.
      */
     playTone: function(freq, duration, type, volume) {
-        if (!this.ctx || !SlotGame.State.soundEnabled) return;
-        this.ensureContext();
+        if (!SlotGame.State.soundEnabled) return;
+        if (!this.ensureContext()) return;
         type = type || 'sine';
         volume = volume !== undefined ? volume : 0.3;
         try {
@@ -51,8 +87,8 @@ SlotGame.Audio = {
      * Play noise burst (for percussive sounds).
      */
     playNoise: function(duration, volume) {
-        if (!this.ctx || !SlotGame.State.soundEnabled) return;
-        this.ensureContext();
+        if (!SlotGame.State.soundEnabled) return;
+        if (!this.ensureContext()) return;
         volume = volume || 0.1;
         try {
             var bufferSize = this.ctx.sampleRate * duration;
