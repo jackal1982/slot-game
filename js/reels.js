@@ -130,7 +130,8 @@ SlotGame.Reels = {
             (function(r) {
                 var strip = self.strips[r];
                 var extraCount = baseExtra + r * 5; // Each reel spins a bit longer
-                var reelStrip = SlotGame.RNG.generateReelStrip(targetGrid[r], extraCount);
+                var stopPos = SlotGame.RNG._stopPositions[r];
+                var reelStrip = SlotGame.RNG.generateReelStrip(r, stopPos, extraCount);
 
                 // Prepend current visible symbols so the reel starts showing the previous result
                 var currentColumn = SlotGame.State.grid ? SlotGame.State.grid[r] : null;

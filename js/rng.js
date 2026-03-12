@@ -1,10 +1,14 @@
 /**
  * SlotGame RNG Module
- * Weighted random number generation and grid creation.
+ * Strip-based random number generation and grid creation.
+ * Each reel has a fixed circular strip; spins pick a random stop position.
  */
 SlotGame.RNG = {
+    // Current stop positions per reel (for animation continuity)
+    _stopPositions: [0, 0, 0, 0, 0],
+
     /**
-     * Pick a random symbol ID based on weights.
+     * Pick a random symbol ID based on weights (used only by RTP simulator for comparison).
      * @returns {number} Symbol ID
      */
     pickSymbol: function() {
@@ -22,53 +26,58 @@ SlotGame.RNG = {
     },
 
     /**
-     * Generate a 5x3 grid of symbol IDs.
+     * Read 3 consecutive symbols from a reel strip at a given position (circular).
+     * @param {number} reelIndex - Which reel (0-4)
+     * @param {number} stopPosition - Starting position on the strip
+     * @returns {number[]} Array of 3 symbol IDs
+     */
+    readStripWindow: function(reelIndex, stopPosition) {
+        var strip = SlotGame.Config.REEL_STRIPS[reelIndex];
+        var len = strip.length;
+        var result = [];
+        for (var row = 0; row < SlotGame.Config.ROWS; row++) {
+            result.push(strip[(stopPosition + row) % len]);
+        }
+        return result;
+    },
+
+    /**
+     * Generate a 5x3 grid by picking random stop positions on each reel strip.
      * grid[reel][row] = symbolId
      * @returns {number[][]} 5x3 grid
      */
     generateGrid: function() {
-        // Symbols limited to max 1 per reel
-        var LIMITED = [SlotGame.Config.WILD_ID, SlotGame.Config.SCATTER_ID, SlotGame.Config.CROWN_ID];
-
         var grid = [];
         for (var reel = 0; reel < SlotGame.Config.REELS; reel++) {
-            var column = [];
-            var usedLimited = {}; // track which limited symbols already appeared
-            for (var row = 0; row < SlotGame.Config.ROWS; row++) {
-                var sym;
-                var attempts = 0;
-                do {
-                    sym = this.pickSymbol();
-                    attempts++;
-                } while (attempts < 50 && usedLimited[sym]);
-                // Mark limited symbols as used
-                if (LIMITED.indexOf(sym) !== -1) {
-                    usedLimited[sym] = true;
-                }
-                column.push(sym);
-            }
-            grid.push(column);
+            var stripLen = SlotGame.Config.REEL_STRIPS[reel].length;
+            var pos = Math.floor(Math.random() * stripLen);
+            this._stopPositions[reel] = pos;
+            grid.push(this.readStripWindow(reel, pos));
         }
         return grid;
     },
 
     /**
-     * Generate a reel strip of N symbols (for animation).
-     * The last 3 symbols are the target (final result).
-     * @param {number[]} targetColumn - Array of 3 symbol IDs for final position
-     * @param {number} extraSymbols - Number of random symbols above the target
+     * Generate a reel strip segment for animation.
+     * Returns symbols from the actual reel strip leading up to the stop position.
+     * The last 3 symbols are the target (final visible result).
+     * @param {number} reelIndex - Which reel (0-4)
+     * @param {number} stopPosition - Where the reel stops
+     * @param {number} extraSymbols - Number of symbols to show before the target
      * @returns {number[]} Array of symbol IDs
      */
-    generateReelStrip: function(targetColumn, extraSymbols) {
-        var strip = [];
-        for (var i = 0; i < extraSymbols; i++) {
-            strip.push(this.pickSymbol());
+    generateReelStrip: function(reelIndex, stopPosition, extraSymbols) {
+        var strip = SlotGame.Config.REEL_STRIPS[reelIndex];
+        var len = strip.length;
+        var result = [];
+        // Start from extraSymbols before the stop position, read through to target
+        var startPos = stopPosition - extraSymbols;
+        var totalSymbols = extraSymbols + SlotGame.Config.ROWS;
+        for (var i = 0; i < totalSymbols; i++) {
+            var pos = ((startPos + i) % len + len) % len;
+            result.push(strip[pos]);
         }
-        // Append target symbols at the end
-        for (var j = 0; j < targetColumn.length; j++) {
-            strip.push(targetColumn[j]);
-        }
-        return strip;
+        return result;
     },
 
     /**
@@ -137,10 +146,13 @@ SlotGame.RNG = {
                 }
             }
 
-            // Jackpot check (simplified: 5 wilds on middle row)
+            // Jackpot check: deterministic (5 wilds on middle row) + random trigger
             var middleRow = [grid[0][1], grid[1][1], grid[2][1], grid[3][1], grid[4][1]];
             var allWild = middleRow.every(function(s) { return s === SlotGame.Config.WILD_ID; });
-            if (allWild) {
+            var randomChance = SlotGame.Config.JACKPOT_RANDOM_BASE_CHANCE *
+                Math.min(totalBet / 20, SlotGame.Config.JACKPOT_MAX_BET_MULTIPLIER);
+            var randomTrigger = Math.random() < randomChance;
+            if (allWild || randomTrigger) {
                 jackpotWins += jackpotPool;
                 jackpotPool = SlotGame.Config.JACKPOT_SEED;
             }
