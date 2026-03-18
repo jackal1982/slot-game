@@ -33,6 +33,7 @@ SlotGame.State = {
     // --- Settings ---
     turboMode: false,
     soundEnabled: true,
+    musicEnabled: true,
 
     // --- Computed Properties ---
     get betPerLine() {
@@ -77,6 +78,7 @@ SlotGame.State = {
                 betIndex: this.betIndex,
                 jackpotPool: this.jackpotPool,
                 soundEnabled: this.soundEnabled,
+                musicEnabled: this.musicEnabled,
                 turboMode: this.turboMode,
             };
             localStorage.setItem('slotGame_state', JSON.stringify(data));
@@ -101,6 +103,9 @@ SlotGame.State = {
                 }
                 if (typeof data.soundEnabled === 'boolean') {
                     this.soundEnabled = data.soundEnabled;
+                }
+                if (typeof data.musicEnabled === 'boolean') {
+                    this.musicEnabled = data.musicEnabled;
                 }
                 if (typeof data.turboMode === 'boolean') {
                     this.turboMode = data.turboMode;
