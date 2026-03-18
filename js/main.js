@@ -293,6 +293,7 @@ SlotGame.Main = {
         SlotGame.Features.freeSpins.start(count);
         SlotGame.UI.hideFreeSpinsIntro();
         SlotGame.UI.showFreeSpinsHud();
+        SlotGame.Audio.bgmSetMode('freespin');
         SlotGame.State.phase = 'IDLE';
         SlotGame.UI.updateSpinButton();
 
@@ -304,6 +305,7 @@ SlotGame.Main = {
 
     collectFreeSpins: function() {
         SlotGame.UI.hideFreeSpinsSummary();
+        SlotGame.Audio.bgmSetMode('normal');
         SlotGame.State.phase = 'IDLE';
         SlotGame.UI.updateSpinButton();
         SlotGame.UI.updateBalance();

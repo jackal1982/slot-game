@@ -38,6 +38,9 @@
     .bonus-chest-back {
         font-size: 2rem;
     }
+    .bonus-chest-back {
+        font-size: 0.65rem;
+    }
 
     .payline-item {
         flex: 0 0 calc(33.3% - 8px);
@@ -154,7 +157,7 @@
         font-size: 1.6rem;
     }
     .bonus-chest-back {
-        font-size: 0.75rem;
+        font-size: 0.6rem;
     }
 
     #bonus-grid {

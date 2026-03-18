@@ -27,6 +27,7 @@ SlotGame.UI = {
             btnTurbo: document.getElementById('btn-turbo'),
             btnPaytable: document.getElementById('btn-paytable'),
             btnSound: document.getElementById('btn-sound'),
+            btnMusic: document.getElementById('btn-music'),
             messageDisplay: document.getElementById('message-display'),
             // Free spins
             freeSpinsIntro: document.getElementById('free-spins-intro'),
@@ -64,6 +65,7 @@ SlotGame.UI = {
         this.els.btnAutoSpin.addEventListener('click', function() { self.toggleAutoSpin(); });
         this.els.btnTurbo.addEventListener('click', function() { self.toggleTurbo(); });
         this.els.btnSound.addEventListener('click', function() { self.toggleSound(); });
+        this.els.btnMusic.addEventListener('click', function() { self.toggleMusic(); });
         this.els.btnPaytable.addEventListener('click', function() { self.showPaytable(); });
         this.els.paytableClose.addEventListener('click', function() { self.hidePaytable(); });
         this.els.paytableOverlay.addEventListener('click', function(e) {
@@ -124,6 +126,7 @@ SlotGame.UI = {
         this.updateWin(0);
         this.updateSpinButton();
         this.updateSoundButton();
+        this.updateMusicButton();
         this.updateTurboButton();
     },
 
@@ -173,6 +176,10 @@ SlotGame.UI = {
 
     updateSoundButton: function() {
         this.els.btnSound.textContent = SlotGame.State.soundEnabled ? 'SOUND: ON' : 'SOUND: OFF';
+    },
+
+    updateMusicButton: function() {
+        this.els.btnMusic.textContent = SlotGame.State.musicEnabled ? 'MUSIC: ON' : 'MUSIC: OFF';
     },
 
     updateTurboButton: function() {
@@ -235,6 +242,17 @@ SlotGame.UI = {
     toggleSound: function() {
         SlotGame.State.soundEnabled = !SlotGame.State.soundEnabled;
         this.updateSoundButton();
+        SlotGame.State.save();
+    },
+
+    toggleMusic: function() {
+        SlotGame.State.musicEnabled = !SlotGame.State.musicEnabled;
+        this.updateMusicButton();
+        if (SlotGame.State.musicEnabled) {
+            SlotGame.Audio.bgmStart();
+        } else {
+            SlotGame.Audio.bgmStop();
+        }
         SlotGame.State.save();
     },
 
