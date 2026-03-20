@@ -34,12 +34,8 @@
         height: 65px;
     }
 
-    .bonus-chest-front,
-    .bonus-chest-back {
+    .bonus-chest-front {
         font-size: 2rem;
-    }
-    .bonus-chest-back {
-        font-size: 0.65rem;
     }
 
     .payline-item {
@@ -152,12 +148,8 @@
         width: 55px;
         height: 55px;
     }
-    .bonus-chest-front,
-    .bonus-chest-back {
+    .bonus-chest-front {
         font-size: 1.6rem;
-    }
-    .bonus-chest-back {
-        font-size: 0.6rem;
     }
 
     #bonus-grid {

@@ -278,7 +278,7 @@
     border: 2px solid #0099FF;
     transform: rotateY(180deg);
     flex-direction: column;
-    font-size: clamp(0.45rem, 1.5vw, 0.65rem);
+    font-size: 12px;
     color: #0A1929;
     font-weight: bold;
     text-align: center;

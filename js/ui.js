@@ -108,6 +108,8 @@ SlotGame.UI = {
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
+                // Block keyboard input when any overlay is active
+                if (document.querySelector('.overlay.active')) return;
                 handleReelAreaAction();
             }
         });
@@ -374,6 +376,12 @@ SlotGame.UI = {
                 break;
         }
         back.textContent = label;
+        // Auto-fit font size to container width
+        var containerWidth = chest.offsetWidth || 80;
+        var charCount = label.length;
+        var idealFontSize = Math.floor((containerWidth * 0.85) / (charCount * 0.6));
+        idealFontSize = Math.max(8, Math.min(idealFontSize, containerWidth * 0.35));
+        back.style.fontSize = idealFontSize + 'px';
         chest.classList.add('revealed');
 
         this.els.bonusWinAmount.textContent = SlotGame.State.bonusTotalWin.toLocaleString();
