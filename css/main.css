@@ -1,22 +1,26 @@
 /* === Root Variables === */
 :root {
-    --bg-primary: #1a0a2e;
-    --bg-secondary: #2d1b4e;
-    --bg-tertiary: #3d2a5e;
-    --accent-gold: #ffd700;
-    --accent-amber: #ff8c00;
+    --bg-primary: #E8F4FF;
+    --bg-secondary: #D0E8FF;
+    --bg-tertiary: #B8DCFF;
+    --accent-gold: #0099FF;
+    --accent-amber: #0077CC;
     --accent-red: #dc143c;
     --accent-green: #00cc44;
-    --text-primary: #ffffff;
-    --text-secondary: #b8b8b8;
-    --text-gold: #ffd700;
-    --reel-bg: #0d0d1a;
-    --reel-border: #ffd700;
-    --btn-gradient: linear-gradient(180deg, #ffd700, #ff8c00);
-    --btn-gradient-hover: linear-gradient(180deg, #ffe44d, #ffaa33);
+    --text-primary: #0A1929;
+    --text-secondary: #1A4366;
+    --text-gold: #0099FF;
+    --reel-bg: #1A5B99;
+    --reel-border: #0099FF;
+    --btn-gradient: linear-gradient(135deg, #0099FF, #0077CC);
+    --btn-gradient-hover: linear-gradient(135deg, #00B3FF, #0088DD);
     --btn-gradient-disabled: linear-gradient(180deg, #666, #444);
-    --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
-    --shadow-gold-strong: 0 0 40px rgba(255, 215, 0, 0.5);
+    --shadow-gold: 0 0 20px rgba(0, 153, 255, 0.3);
+    --shadow-gold-strong: 0 0 40px rgba(0, 153, 255, 0.5);
+    --accent-warm: #FF9F1C;
+    --win-glow: rgba(0, 212, 255, 0.8);
+    --jackpot-color: #FF9F1C;
+    --free-spins-color: #00D4FF;
     --border-radius: 8px;
 }
 
@@ -37,8 +41,8 @@ body {
     font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: var(--bg-primary);
     background-image:
-        radial-gradient(ellipse at 50% 0%, rgba(100, 50, 150, 0.3) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 100%, rgba(50, 20, 80, 0.5) 0%, transparent 60%);
+        radial-gradient(ellipse at 50% 0%, rgba(0, 100, 200, 0.2) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(0, 70, 150, 0.15) 0%, transparent 60%);
     color: var(--text-primary);
     display: flex;
     justify-content: center;
@@ -54,7 +58,7 @@ body {
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    background: radial-gradient(ellipse at 50% 40%, #3d2a5e, #1a0a2e 70%);
+    background: radial-gradient(ellipse at 50% 40%, #B8DCFF, #E8F4FF 70%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,7 +78,7 @@ body {
 #splash-title {
     font-size: clamp(1.8rem, 6vw, 2.5rem);
     color: var(--accent-gold);
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 0 0 30px rgba(0, 153, 255, 0.5), 0 2px 4px rgba(0,0,0,0.5);
     margin: 0 0 8px 0;
     letter-spacing: 3px;
 }
@@ -88,7 +92,7 @@ body {
 
 #splash-btn {
     background: var(--btn-gradient);
-    color: #1a0a2e;
+    color: #ffffff;
     border: none;
     padding: 14px 40px;
     font-size: clamp(1rem, 3.5vw, 1.3rem);
@@ -96,13 +100,13 @@ body {
     border-radius: 50px;
     cursor: pointer;
     letter-spacing: 2px;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 0 30px rgba(0, 153, 255, 0.4), 0 4px 15px rgba(0,0,0,0.3);
     animation: splashPulse 2s ease-in-out infinite;
 }
 
 #splash-btn:hover {
     background: var(--btn-gradient-hover);
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 40px rgba(0, 153, 255, 0.6);
 }
 
 @keyframes splashPulse {
@@ -126,7 +130,7 @@ body {
 
 /* === Jackpot Banner === */
 #jackpot-banner {
-    background: linear-gradient(90deg, #1a0a2e, #3d2a5e, #1a0a2e);
+    background: linear-gradient(90deg, #E8F4FF, #B8DCFF, #E8F4FF);
     padding: 8px 0;
     text-align: center;
     border-bottom: 2px solid var(--accent-gold);
@@ -136,8 +140,8 @@ body {
 #jackpot-display {
     font-size: 1.4rem;
     font-weight: bold;
-    color: var(--accent-gold);
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    color: #FF9F1C;
+    text-shadow: 0 0 10px rgba(255, 159, 28, 0.6);
     letter-spacing: 2px;
 }
 
@@ -191,14 +195,14 @@ body {
 
 .overlay h2 {
     font-size: 1.8rem;
-    color: var(--accent-gold);
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    color: #FF9F1C;
+    text-shadow: 0 0 20px rgba(255, 159, 28, 0.6);
     margin-bottom: 8px;
 }
 
 .overlay p {
     font-size: 1rem;
-    color: var(--text-secondary);
+    color: #ffffff;
     margin-bottom: 8px;
 }
 
@@ -207,7 +211,7 @@ body {
     padding: 10px 36px;
     font-size: 1.1rem;
     font-weight: bold;
-    color: #1a0a2e;
+    color: #ffffff;
     background: var(--btn-gradient);
     border: none;
     border-radius: 25px;
@@ -233,8 +237,8 @@ body {
     transform: translate(-50%, -50%);
     font-size: 1.8rem;
     font-weight: bold;
-    color: var(--accent-gold);
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0,0,0,0.5);
+    color: #FF9F1C;
+    text-shadow: 0 0 20px rgba(255, 159, 28, 0.8), 0 2px 4px rgba(0,0,0,0.5);
     z-index: 50;
     pointer-events: none;
     opacity: 0;
