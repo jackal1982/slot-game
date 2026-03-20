@@ -49,6 +49,8 @@ body {
     align-items: center;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
 }
 
 /* === Splash Screen === */
