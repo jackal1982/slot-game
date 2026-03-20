@@ -100,8 +100,6 @@ SlotGame.Reels = {
     // Store for slam stop
     _targetGrid: null,
     _onAllStopped: null,
-    _reelPeekMode: [],   // Tracks which reels should use peek reveal animation
-    _scatterCountByReel: [], // Pre-calculated: which reels contain Scatter
 
     spin: function(targetGrid, onAllStopped) {
         var self = this;
@@ -120,34 +118,6 @@ SlotGame.Reels = {
         if (turbo) {
             baseDuration *= SlotGame.Config.TURBO_SPEED_FACTOR;
             stagger *= SlotGame.Config.TURBO_SPEED_FACTOR;
-        }
-
-        // Pre-calculate which reels contain Scatter and determine peek mode for upcoming reels
-        var scatterRunningCount = 0;
-        var peekFromReel = -1; // -1 means no peek needed
-        this._scatterCountByReel = [];
-        this._reelPeekMode = [];
-        for (var pr = 0; pr < SlotGame.Config.REELS; pr++) {
-            var hasScatter = false;
-            for (var prr = 0; prr < SlotGame.Config.ROWS; prr++) {
-                if (targetGrid[pr][prr] === SlotGame.Config.SCATTER_ID) {
-                    hasScatter = true;
-                    break;
-                }
-            }
-            this._scatterCountByReel[pr] = hasScatter;
-            if (hasScatter) scatterRunningCount++;
-            // Once we reach 2 Scatters, all subsequent reels use peek mode
-            if (scatterRunningCount >= 2 && peekFromReel === -1) {
-                peekFromReel = pr + 1;
-                // Guard against out-of-bounds: if 2nd scatter is in last reel, no peek needed
-                if (peekFromReel >= SlotGame.Config.REELS) {
-                    peekFromReel = -1;
-                }
-            }
-        }
-        for (var pm = 0; pm < SlotGame.Config.REELS; pm++) {
-            this._reelPeekMode[pm] = (peekFromReel !== -1 && pm >= peekFromReel);
         }
 
         // Number of "extra" symbols to scroll through before landing
@@ -202,13 +172,10 @@ SlotGame.Reels = {
                 var startDelay = r * stagger;
                 var spinTime = baseDuration + r * stagger;
 
-                // All reels use the same Phase 1 target (overshoot); peek reels diverge in Phase 2
-                var phase1Target = overshootY;
-
                 self.reelTimers[r] = setTimeout(function() {
-                    // Phase 1: Main scroll (to hold position for peek reels, overshoot for normal)
+                    // Phase 1: Main scroll to overshoot position
                     strip.style.transition = 'transform ' + spinTime + 'ms cubic-bezier(0.2, 0.0, 0.3, 1.0)';
-                    strip.style.transform = 'translateY(' + phase1Target + 'px)';
+                    strip.style.transform = 'translateY(' + overshootY + 'px)';
 
                     // When Phase 1 transition ends
                     var phase1Fired = false;
@@ -222,69 +189,34 @@ SlotGame.Reels = {
                             strip.removeChild(strip.lastChild);
                         }
 
-                        // Determine which sound and animation to use
-                        var isPeekMode = self._reelPeekMode[r];
-                        if (isPeekMode && SlotGame.Audio && SlotGame.Audio.scatterReelStop) {
-                            SlotGame.Audio.scatterReelStop(r);
-                        } else if (SlotGame.Audio && SlotGame.Audio.reelStop) {
+                        // Play reel stop sound
+                        if (SlotGame.Audio && SlotGame.Audio.reelStop) {
                             SlotGame.Audio.reelStop(r);
                         }
 
-                        // Phase 2: Either bounce animation or peek reveal
-                        if (isPeekMode) {
-                            // Peek mode: gradual reveal animation with stagger delay
-                            var onPhase2End = function() {
-                                self._reelStopped[r] = true;
-                                reelsStopped++;
+                        // Phase 2: bounce back animation
+                        strip.style.transition = 'transform ' + BOUNCE_DURATION + 'ms cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        strip.style.transform = 'translateY(' + targetY + 'px)';
 
-                                if (reelsStopped === SlotGame.Config.REELS) {
-                                    self.spinning = false;
-                                    SlotGame.State.grid = targetGrid;
-                                    if (onAllStopped) onAllStopped();
-                                }
-                            };
-                            // Calculate stagger: count how many peek reels came before this one
-                            var peekOrder = 0;
-                            for (var pi = 0; pi < r; pi++) {
-                                if (self._reelPeekMode[pi]) peekOrder++;
+                        var phase2Fired = false;
+                        var onPhase2End = function() {
+                            if (phase2Fired || gen !== self._spinGeneration) return;
+                            phase2Fired = true;
+                            strip.removeEventListener('transitionend', onPhase2End);
+
+                            self._reelStopped[r] = true;
+                            reelsStopped++;
+
+                            if (reelsStopped === SlotGame.Config.REELS) {
+                                self.spinning = false;
+                                SlotGame.State.grid = targetGrid;
+                                if (onAllStopped) onAllStopped();
                             }
-                            var peekStagger = SlotGame.Config.PEEK_REEL_STAGGER * peekOrder;
-                            if (SlotGame.State.turboMode) {
-                                peekStagger *= SlotGame.Config.TURBO_SPEED_FACTOR;
-                            }
-                            if (peekStagger > 0) {
-                                setTimeout(function() {
-                                    if (gen !== self._spinGeneration) return;
-                                    self._doPeekReveal(r, targetY, onPhase2End);
-                                }, peekStagger);
-                            } else {
-                                self._doPeekReveal(r, targetY, onPhase2End);
-                            }
-                        } else {
-                            // Normal mode: bounce back animation
-                            strip.style.transition = 'transform ' + BOUNCE_DURATION + 'ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-                            strip.style.transform = 'translateY(' + targetY + 'px)';
+                        };
+                        strip.addEventListener('transitionend', onPhase2End);
 
-                            var phase2Fired = false;
-                            var onPhase2End = function() {
-                                if (phase2Fired || gen !== self._spinGeneration) return;
-                                phase2Fired = true;
-                                strip.removeEventListener('transitionend', onPhase2End);
-
-                                self._reelStopped[r] = true;
-                                reelsStopped++;
-
-                                if (reelsStopped === SlotGame.Config.REELS) {
-                                    self.spinning = false;
-                                    SlotGame.State.grid = targetGrid;
-                                    if (onAllStopped) onAllStopped();
-                                }
-                            };
-                            strip.addEventListener('transitionend', onPhase2End);
-
-                            // Safety fallback for Phase 2
-                            setTimeout(onPhase2End, BOUNCE_DURATION + 100);
-                        }
+                        // Safety fallback for Phase 2
+                        setTimeout(onPhase2End, BOUNCE_DURATION + 100);
                     };
                     strip.addEventListener('transitionend', onPhase1End);
 
@@ -323,12 +255,8 @@ SlotGame.Reels = {
 
         var self = this;
 
-        // Invalidate all stale spin callbacks (safety timeouts, transitionend, peek loops)
+        // Invalidate all stale spin callbacks (safety timeouts, transitionend)
         this._spinGeneration++;
-
-        // Clear peek mode so any ongoing peek reveal stops
-        this._reelPeekMode = [];
-        this._scatterCountByReel = [];
 
         // Clear all pending stagger timers
         for (var i = 0; i < this.reelTimers.length; i++) {
@@ -422,13 +350,10 @@ SlotGame.Reels = {
      */
     highlightSymbols: function(positions) {
         var visible = this.getVisibleSymbols();
-        // Dim all first (preserve special highlights like scatter/crown)
+        // Dim all first
         for (var r = 0; r < SlotGame.Config.REELS; r++) {
             for (var row = 0; row < SlotGame.Config.ROWS; row++) {
-                if (!visible[r][row].classList.contains('highlight-scatter') &&
-                    !visible[r][row].classList.contains('highlight-crown')) {
-                    visible[r][row].classList.add('dimmed');
-                }
+                visible[r][row].classList.add('dimmed');
                 visible[r][row].classList.remove('winning');
             }
         }
@@ -441,26 +366,13 @@ SlotGame.Reels = {
     },
 
     /**
-     * Clear all symbol highlights (including scatter/crown feature highlights).
+     * Clear all symbol highlights.
      */
     clearHighlights: function() {
         var visible = this.getVisibleSymbols();
         for (var r = 0; r < SlotGame.Config.REELS; r++) {
             for (var row = 0; row < SlotGame.Config.ROWS; row++) {
                 visible[r][row].classList.remove('dimmed', 'winning', 'scatter-hit', 'highlight', 'highlight-scatter', 'highlight-crown');
-            }
-        }
-    },
-
-    /**
-     * Clear only win-cycle highlights (dimmed/winning), leaving scatter/crown highlights intact.
-     * Called by stopWinLines so feature highlights persist after win animation completes.
-     */
-    clearWinHighlights: function() {
-        var visible = this.getVisibleSymbols();
-        for (var r = 0; r < SlotGame.Config.REELS; r++) {
-            for (var row = 0; row < SlotGame.Config.ROWS; row++) {
-                visible[r][row].classList.remove('dimmed', 'winning');
             }
         }
     },
@@ -493,54 +405,4 @@ SlotGame.Reels = {
         }
     },
 
-    /**
-     * Two-phase peek reveal animation using CSS transitions.
-     * Phase A (~800ms, normal spin cubic-bezier): snap back from overshoot to hold position
-     *   (PEEK_HOLD_SYMBOLS above final target), building tension.
-     * Phase B (PEEK_DURATION ms, ease-out): slowly reveal the final symbols.
-     * @param {number} reelIndex - Which reel to animate
-     * @param {number} targetY - Final target translate Y position
-     * @param {function} onComplete - Callback when animation finishes
-     */
-    _doPeekReveal: function(reelIndex, targetY, onComplete) {
-        var self = this;
-        var gen = this._spinGeneration;
-        var strip = this.strips[reelIndex];
-        var sz = this.symbolSize;
-        var turbo = SlotGame.State.turboMode;
-        var turboFactor = SlotGame.Config.TURBO_SPEED_FACTOR;
-
-        var phaseADuration = turbo ? Math.round(800 * turboFactor) : 800;
-        var phaseBDuration = turbo ? Math.round(SlotGame.Config.PEEK_DURATION * turboFactor) : SlotGame.Config.PEEK_DURATION;
-
-        // holdPos: PEEK_HOLD_SYMBOLS above the final target (strip scrolled back, shows rows above target)
-        var holdPos = targetY + sz * SlotGame.Config.PEEK_HOLD_SYMBOLS;
-
-        // Phase A: snap back from current overshoot to holdPos (same cubic-bezier as main spin)
-        strip.style.transition = 'transform ' + phaseADuration + 'ms cubic-bezier(0.2, 0.0, 0.3, 1.0)';
-        strip.style.transform = 'translateY(' + holdPos + 'px)';
-
-        var phaseAFired = false;
-        var onPhaseAEnd = function() {
-            if (phaseAFired || gen !== self._spinGeneration) return;
-            phaseAFired = true;
-            strip.removeEventListener('transitionend', onPhaseAEnd);
-
-            // Phase B: slow ease-out reveal from holdPos to final target
-            strip.style.transition = 'transform ' + phaseBDuration + 'ms ease-out';
-            strip.style.transform = 'translateY(' + targetY + 'px)';
-
-            var phaseBFired = false;
-            var onPhaseBEnd = function() {
-                if (phaseBFired || gen !== self._spinGeneration) return;
-                phaseBFired = true;
-                strip.removeEventListener('transitionend', onPhaseBEnd);
-                if (onComplete) onComplete();
-            };
-            strip.addEventListener('transitionend', onPhaseBEnd);
-            setTimeout(onPhaseBEnd, phaseBDuration + 100);
-        };
-        strip.addEventListener('transitionend', onPhaseAEnd);
-        setTimeout(onPhaseAEnd, phaseADuration + 100);
-    },
 };
