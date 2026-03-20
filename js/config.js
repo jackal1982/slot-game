@@ -118,8 +118,4 @@ SlotGame.Config = {
     TURBO_SPEED_FACTOR: 0.4,   // Turbo mode multiplier
     WIN_LINE_CYCLE_DELAY: 1500, // ms per win line display
 
-    // --- Scatter Peek Animation (瞇牌) ---
-    PEEK_HOLD_SYMBOLS: 2,      // Phase A snaps back this many symbol-heights above final target
-    PEEK_DURATION: 1200,       // ms for slow-reveal Phase 2 (CSS ease-out transition)
-    PEEK_REEL_STAGGER: 300,    // ms delay between each peek reel starting its reveal
 };
