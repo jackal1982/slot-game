@@ -17,13 +17,13 @@ SlotGame.Config = {
 
     // --- Symbol Definitions ---
     symbols: [
-        { id: 0, name: 'Wild',    img: 'images/wild.svg',    weight: 2,  pay: { 3: 31, 4: 118, 5: 435 } },
+        { id: 0, name: 'Wild',    img: 'images/wild.svg',    weight: 2,  pay: { 3: 40, 4: 100, 5: 300 } },
         { id: 1, name: 'Scatter', img: 'images/scatter.svg',  weight: 3,  pay: null }, // Scatter pays via free spins
-        { id: 2, name: 'Crown',   img: 'images/crown.svg',    weight: 4,  pay: { 3: 24, 4: 80, 5: 248 } },
-        { id: 3, name: 'Bell',    img: 'images/bell.svg',     weight: 6,  pay: { 3: 15, 4: 48, 5: 150 } },
-        { id: 4, name: 'Seven',   img: 'images/seven.svg',    weight: 8,  pay: { 3: 12, 4: 40, 5: 97 } },
-        { id: 5, name: 'Cherry',  img: 'images/cherry.svg',   weight: 10, pay: { 3: 8,  4: 24, 5: 75 } },
-        { id: 6, name: 'Lemon',   img: 'images/lemon.svg',    weight: 14, pay: { 3: 5,  4: 15, 5: 48 } },
+        { id: 2, name: 'Crown',   img: 'images/crown.svg',    weight: 4,  pay: { 3: 25, 4: 70, 5: 200 } },
+        { id: 3, name: 'Bell',    img: 'images/bell.svg',     weight: 6,  pay: { 3: 15, 4: 50, 5: 125 } },
+        { id: 4, name: 'Seven',   img: 'images/seven.svg',    weight: 8,  pay: { 3: 12, 4: 35, 5: 100 } },
+        { id: 5, name: 'Cherry',  img: 'images/cherry.svg',   weight: 10, pay: { 3: 8,  4: 25, 5: 75 } },
+        { id: 6, name: 'Lemon',   img: 'images/lemon.svg',    weight: 14, pay: { 3: 5,  4: 15, 5: 50 } },
         { id: 7, name: 'Grape',   img: 'images/grape.svg',    weight: 14, pay: { 3: 3,  4: 8,  5: 40 } },
     ],
 
