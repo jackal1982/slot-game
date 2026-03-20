@@ -117,4 +117,8 @@ SlotGame.Config = {
     REEL_STOP_STAGGER: 200,    // ms between each reel stopping
     TURBO_SPEED_FACTOR: 0.4,   // Turbo mode multiplier
     WIN_LINE_CYCLE_DELAY: 1500, // ms per win line display
+
+    // --- Scatter Peek Animation (瞇牌) ---
+    PEEK_STEP_COUNT: 8,        // Number of steps for reveal animation
+    PEEK_STEP_INTERVAL: 80,    // ms between each step (8 × 80ms = 640ms total)
 };

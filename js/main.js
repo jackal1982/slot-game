@@ -121,18 +121,26 @@ SlotGame.Main = {
             var fsCount = SlotGame.Config.scatterFreeSpins[Math.min(result.scatterCount, 5)] || 10;
             this.pendingFreeSpins = fsCount;
 
-            // Animate scatter symbols
+            // Animate scatter symbols with sparkle effect
             for (var s = 0; s < result.scatterPositions.length; s++) {
                 var pos = result.scatterPositions[s];
                 var visible = SlotGame.Reels.getVisibleSymbols();
                 visible[pos.reel][pos.row].classList.add('scatter-hit');
             }
+
+            // Add cyan frame highlight for scatter positions (free spins trigger)
+            SlotGame.Reels.highlightScatters(result.scatterPositions);
             SlotGame.Audio.scatterHit();
         }
 
         // Check bonus trigger
         if (result.bonusWin && !isFree) {
             this.pendingBonus = true;
+
+            // Highlight Crown symbols that triggered the bonus
+            if (result.bonusWin.positions && result.bonusWin.positions.length > 0) {
+                SlotGame.Reels.highlightCrowns(result.bonusWin.positions);
+            }
         }
 
         // Check jackpot (only during paid spins)
@@ -212,6 +220,10 @@ SlotGame.Main = {
         // Handle pending bonus
         if (this.pendingBonus) {
             this.pendingBonus = false;
+            // Clear Crown highlight after brief delay
+            setTimeout(function() {
+                SlotGame.Reels.clearHighlights();
+            }, 1500);
             this.startBonusGame();
             return;
         }
@@ -226,6 +238,10 @@ SlotGame.Main = {
                 SlotGame.Features.freeSpins.addSpins(count);
                 SlotGame.UI.showMessage('+' + count + ' FREE SPINS!', 2000);
                 SlotGame.UI.updateFreeSpinsHud();
+                // Clear Scatter highlight after brief delay
+                setTimeout(function() {
+                    SlotGame.Reels.clearHighlights();
+                }, 2500);
                 // Continue free spins after brief delay
                 setTimeout(function() {
                     SlotGame.Main.continueAfterSpin();
@@ -235,6 +251,10 @@ SlotGame.Main = {
                 // New free spins session
                 SlotGame.Audio.freeSpinStart();
                 SlotGame.UI.showFreeSpinsIntro(count);
+                // Clear Scatter highlight after brief delay
+                setTimeout(function() {
+                    SlotGame.Reels.clearHighlights();
+                }, 2500);
                 // Store for when player clicks Start
                 this._pendingFsCount = count;
                 return;
