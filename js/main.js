@@ -225,6 +225,7 @@ SlotGame.Main = {
         // Handle pending bonus - delay overlay so crown highlights are visible
         if (this.pendingBonus) {
             this.pendingBonus = false;
+            state.phase = 'FEATURE_PENDING'; // Block all input during highlight delay
             setTimeout(function() {
                 SlotGame.Reels.clearHighlights();
                 SlotGame.Main.startBonusGame();
@@ -236,6 +237,8 @@ SlotGame.Main = {
         if (this.pendingFreeSpins > 0) {
             var count = this.pendingFreeSpins;
             this.pendingFreeSpins = 0;
+
+            state.phase = 'FEATURE_PENDING'; // Block all input during highlight delay
 
             if (state.inFreeSpins) {
                 // Retrigger: add more spins
