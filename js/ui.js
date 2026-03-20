@@ -535,8 +535,8 @@ SlotGame.UI = {
         var features = [
             { title: 'Wild', desc: 'Wild substitutes for all symbols except Scatter. 5 Wilds on middle row wins the JACKPOT!' },
             { title: 'Scatter', desc: '3+ Scatter symbols anywhere trigger Free Spins with ' + SlotGame.Config.FREE_SPIN_MULTIPLIER + 'x multiplier. Can retrigger during free spins.' },
-            { title: 'Bonus Game', desc: '3+ Crown symbols on a payline trigger the Treasure Chest bonus game. Pick chests to reveal prizes!' },
-            { title: 'Jackpot', desc: 'Progressive jackpot grows with ' + (SlotGame.Config.JACKPOT_CONTRIBUTION_RATE * 100) + '% of every bet. Win by getting 5 Wilds on the middle row.' },
+            { title: 'Bonus Game', desc: '3+ Crown symbols on a payline trigger the Treasure Chest bonus game. Pick chests to reveal credits, extra picks, or even the JACKPOT! If you hit the Jackpot, all previously opened chest prizes are also collected.' },
+            { title: 'Jackpot', desc: 'Progressive jackpot grows with ' + (SlotGame.Config.JACKPOT_CONTRIBUTION_RATE * 100) + '% of every bet. Win by: (1) 5 Wilds on the middle row, (2) finding the Jackpot chest in the Bonus Game, or (3) a rare random chance on any paid spin.' },
         ];
 
         features.forEach(function(feat) {
