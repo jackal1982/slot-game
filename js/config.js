@@ -119,6 +119,8 @@ SlotGame.Config = {
     WIN_LINE_CYCLE_DELAY: 1500, // ms per win line display
 
     // --- Scatter Peek Animation (瞇牌) ---
-    PEEK_STEP_COUNT: 8,        // Number of steps for reveal animation
-    PEEK_STEP_INTERVAL: 80,    // ms between each step (8 × 80ms = 640ms total)
+    PEEK_STEP_COUNT: 20,       // Number of steps for reveal animation (more = smoother)
+    PEEK_STEP_INTERVAL: 80,    // ms between each step (20 × 80ms = 1600ms total)
+    PEEK_OVERSHOOT_SYMBOLS: 2, // How many symbol-heights above target to start peek from
+    PEEK_REEL_STAGGER: 300,    // ms delay between each peek reel starting its reveal
 };
