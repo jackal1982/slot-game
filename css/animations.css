@@ -156,10 +156,14 @@
 
 /* === Scatter Highlight (cyan) === */
 .symbol.highlight-scatter {
+    position: relative;
+    z-index: 10;
     animation: scatterFramePulse 0.8s ease-in-out infinite;
 }
 
 /* === Crown Highlight (gold/orange) === */
 .symbol.highlight-crown {
+    position: relative;
+    z-index: 10;
     animation: crownFramePulse 0.8s ease-in-out infinite;
 }

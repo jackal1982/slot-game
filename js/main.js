@@ -7,6 +7,7 @@ SlotGame.Main = {
     pendingFreeSpins: 0,
     pendingBonus: false,
     pendingJackpot: false,
+    pendingScatterPositions: null, // stored scatter positions for re-applying highlight after stopWinLines
     jackpotAmount: 0,
     _showWinsTimer: null,
 
@@ -70,8 +71,9 @@ SlotGame.Main = {
             SlotGame.UI.updateFreeSpinsHud();
         }
 
-        // Clear previous win display
+        // Clear previous win display (including scatter/crown highlights from prior spin)
         SlotGame.Animations.stopWinLines();
+        SlotGame.Reels.clearHighlights();
         SlotGame.UI.updateWin(0);
         SlotGame.UI.updateBalance();
 
@@ -115,18 +117,15 @@ SlotGame.Main = {
         this.pendingFreeSpins = 0;
         this.pendingBonus = false;
         this.pendingJackpot = false;
+        this.pendingScatterPositions = null;
 
         // Check scatter (free spins trigger)
         if (result.scatterCount >= 3) {
             var fsCount = SlotGame.Config.scatterFreeSpins[Math.min(result.scatterCount, 5)] || 10;
             this.pendingFreeSpins = fsCount;
 
-            // Animate scatter symbols with sparkle effect
-            for (var s = 0; s < result.scatterPositions.length; s++) {
-                var pos = result.scatterPositions[s];
-                var visible = SlotGame.Reels.getVisibleSymbols();
-                visible[pos.reel][pos.row].classList.add('scatter-hit');
-            }
+            // Store scatter positions so we can re-apply highlight after stopWinLines() clears it
+            this.pendingScatterPositions = result.scatterPositions;
 
             // Add cyan frame highlight for scatter positions (free spins trigger)
             SlotGame.Reels.highlightScatters(result.scatterPositions);
@@ -207,6 +206,12 @@ SlotGame.Main = {
         // Restore total win display (was showing individual line wins during cycling)
         SlotGame.UI.updateWin(state.totalWin);
 
+        // Re-apply scatter highlight: stopWinLines() calls clearHighlights() which erased it.
+        // Keep it visible until the free spins intro fires (the 2000ms timeout below).
+        if (this.pendingFreeSpins > 0 && this.pendingScatterPositions) {
+            SlotGame.Reels.highlightScatters(this.pendingScatterPositions);
+        }
+
         // Handle pending jackpot first
         if (this.pendingJackpot) {
             this.pendingJackpot = false;
@@ -240,6 +245,7 @@ SlotGame.Main = {
                 // Clear Scatter highlight after brief delay
                 setTimeout(function() {
                     SlotGame.Reels.clearHighlights();
+                    SlotGame.Main.pendingScatterPositions = null;
                 }, 2500);
                 // Continue free spins after brief delay
                 setTimeout(function() {
@@ -251,6 +257,7 @@ SlotGame.Main = {
                 this._pendingFsCount = count;
                 setTimeout(function() {
                     SlotGame.Reels.clearHighlights();
+                    SlotGame.Main.pendingScatterPositions = null;
                     SlotGame.Audio.freeSpinStart();
                     SlotGame.UI.showFreeSpinsIntro(count);
                 }, 2000);

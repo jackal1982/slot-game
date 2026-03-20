@@ -120,7 +120,7 @@ SlotGame.Animations = {
         if (this.ctx) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
-        SlotGame.Reels.clearHighlights();
+        SlotGame.Reels.clearWinHighlights();
     },
 
     /**
