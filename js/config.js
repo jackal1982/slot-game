@@ -113,8 +113,8 @@ SlotGame.Config = {
     ],
 
     // --- Animation Timing ---
-    REEL_SPIN_DURATION: 300,   // ms per reel base
-    REEL_STOP_STAGGER: 200,    // ms between each reel stopping
+    REEL_SPIN_DURATION: 1000,  // ms per reel base
+    REEL_STOP_STAGGER: 400,    // ms between each reel stopping
     TURBO_SPEED_FACTOR: 0.4,   // Turbo mode multiplier
     WIN_LINE_CYCLE_DELAY: 1500, // ms per win line display
 
