@@ -217,14 +217,13 @@ SlotGame.Main = {
             return; // Wait for collect
         }
 
-        // Handle pending bonus
+        // Handle pending bonus - delay overlay so crown highlights are visible
         if (this.pendingBonus) {
             this.pendingBonus = false;
-            // Clear Crown highlight after brief delay
             setTimeout(function() {
                 SlotGame.Reels.clearHighlights();
-            }, 1500);
-            this.startBonusGame();
+                SlotGame.Main.startBonusGame();
+            }, 2000);
             return;
         }
 
@@ -248,15 +247,13 @@ SlotGame.Main = {
                 }, 2000);
                 return;
             } else {
-                // New free spins session
-                SlotGame.Audio.freeSpinStart();
-                SlotGame.UI.showFreeSpinsIntro(count);
-                // Clear Scatter highlight after brief delay
+                // New free spins session - delay overlay so scatter highlights are visible
+                this._pendingFsCount = count;
                 setTimeout(function() {
                     SlotGame.Reels.clearHighlights();
-                }, 2500);
-                // Store for when player clicks Start
-                this._pendingFsCount = count;
+                    SlotGame.Audio.freeSpinStart();
+                    SlotGame.UI.showFreeSpinsIntro(count);
+                }, 2000);
                 return;
             }
         }

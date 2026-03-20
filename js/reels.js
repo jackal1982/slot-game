@@ -229,7 +229,7 @@ SlotGame.Reels = {
 
                         // Phase 2: Either bounce animation or peek reveal
                         if (isPeekMode) {
-                            // Peek mode: gradual reveal animation
+                            // Peek mode: gradual reveal animation with stagger delay
                             var onPhase2End = function() {
                                 self._reelStopped[r] = true;
                                 reelsStopped++;
@@ -240,7 +240,23 @@ SlotGame.Reels = {
                                     if (onAllStopped) onAllStopped();
                                 }
                             };
-                            self._doPeekReveal(r, targetY, onPhase2End);
+                            // Calculate stagger: count how many peek reels came before this one
+                            var peekOrder = 0;
+                            for (var pi = 0; pi < r; pi++) {
+                                if (self._reelPeekMode[pi]) peekOrder++;
+                            }
+                            var peekStagger = SlotGame.Config.PEEK_REEL_STAGGER * peekOrder;
+                            if (SlotGame.State.turboMode) {
+                                peekStagger *= SlotGame.Config.TURBO_SPEED_FACTOR;
+                            }
+                            if (peekStagger > 0) {
+                                setTimeout(function() {
+                                    if (gen !== self._spinGeneration) return;
+                                    self._doPeekReveal(r, targetY, onPhase2End);
+                                }, peekStagger);
+                            } else {
+                                self._doPeekReveal(r, targetY, onPhase2End);
+                            }
                         } else {
                             // Normal mode: bounce back animation
                             strip.style.transition = 'transform ' + BOUNCE_DURATION + 'ms cubic-bezier(0.34, 1.56, 0.64, 1)';
@@ -477,8 +493,8 @@ SlotGame.Reels = {
         }
         var symbolSize = this.symbolSize;
 
-        // Start position: slightly above target (like overshoot but closer)
-        var startY = targetY - symbolSize * 0.15;
+        // Start position: several symbol-heights above target for dramatic reveal
+        var startY = targetY - symbolSize * SlotGame.Config.PEEK_OVERSHOOT_SYMBOLS;
         var step = 0;
         var timerId = null; // Track the timer so we can cancel it if needed
 
