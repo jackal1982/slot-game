@@ -126,3 +126,40 @@
 .count-up {
     transition: none;
 }
+
+/* === Scatter Frame Pulse (Free Spins Trigger) === */
+@keyframes scatterFramePulse {
+    0%, 100% {
+        box-shadow: inset 0 0 0 3px #00D4FF, 0 0 15px rgba(0, 212, 255, 0.6), 0 0 30px rgba(0, 212, 255, 0.4);
+    }
+    50% {
+        box-shadow: inset 0 0 0 3px #00D4FF, 0 0 25px rgba(0, 212, 255, 1), 0 0 45px rgba(0, 212, 255, 0.8);
+    }
+}
+
+/* === Crown Frame Pulse (Bonus Game Trigger) === */
+@keyframes crownFramePulse {
+    0%, 100% {
+        box-shadow: inset 0 0 0 3px #FFD700, 0 0 18px rgba(255, 215, 0, 0.65), 0 0 35px rgba(255, 215, 0, 0.45);
+    }
+    50% {
+        box-shadow: inset 0 0 0 3px #FFD700, 0 0 25px rgba(255, 215, 0, 1), 0 0 45px rgba(255, 215, 0, 0.9);
+    }
+}
+
+/* === Symbol Highlight Base Class === */
+.symbol.highlight {
+    border-radius: 8px;
+    position: relative;
+    z-index: 10;
+}
+
+/* === Scatter Highlight (cyan) === */
+.symbol.highlight-scatter {
+    animation: scatterFramePulse 0.8s ease-in-out infinite;
+}
+
+/* === Crown Highlight (gold/orange) === */
+.symbol.highlight-crown {
+    animation: crownFramePulse 0.8s ease-in-out infinite;
+}

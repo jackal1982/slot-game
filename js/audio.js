@@ -165,6 +165,15 @@ SlotGame.Audio = {
         this.playNoise(0.05, 0.08);
     },
 
+    /**
+     * Scatter reel stop sound (used for peek reveal animation).
+     * Higher-pitched, more magical tone than regular reel stop.
+     */
+    scatterReelStop: function(reelIndex) {
+        this.playTone(200 - reelIndex * 8, 0.15, 'sine', 0.3);
+        this.playTone(200 - reelIndex * 8 + 50, 0.08, 'sine', 0.15);
+    },
+
     buttonClick: function() {
         this.playTone(600, 0.05, 'sine', 0.15);
     },
