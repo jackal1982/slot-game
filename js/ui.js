@@ -370,7 +370,7 @@ SlotGame.UI = {
                 break;
             case 'jackpot':
                 label = 'JACKPOT!';
-                back.style.color = '#ffd700';
+                back.style.color = '#FF9F1C';
                 break;
         }
         back.textContent = label;

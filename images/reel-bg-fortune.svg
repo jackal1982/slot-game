@@ -1,119 +1,57 @@
 <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <!-- 祥雲漸層定義 -->
-    <radialGradient id="cloudGradient" cx="40%" cy="30%">
-      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:0.15" />
-      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:0.02" />
+    <radialGradient id="cg" cx="40%" cy="30%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.18" />
+      <stop offset="100%" style="stop-color:#B8DCFF;stop-opacity:0.03" />
     </radialGradient>
-
-    <!-- 金幣漸層 -->
-    <radialGradient id="coinGradient" cx="35%" cy="35%">
-      <stop offset="0%" style="stop-color:#ffed4e;stop-opacity:0.2" />
-      <stop offset="70%" style="stop-color:#ffd700;stop-opacity:0.08" />
-      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:0.03" />
+    <radialGradient id="bb" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.22" />
+      <stop offset="70%" style="stop-color:#66E6FF;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#00D4FF;stop-opacity:0.03" />
     </radialGradient>
-
-    <!-- 光暈濾鏡 -->
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-
-    <!-- 漸層遮罩：上下邊界漸變 -->
-    <linearGradient id="fadeMask" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:white;stop-opacity:0.5" />
-      <stop offset="20%" style="stop-color:white;stop-opacity:1" />
-      <stop offset="80%" style="stop-color:white;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:white;stop-opacity:0.5" />
-    </linearGradient>
   </defs>
-
-  <!-- 背景層 -->
   <rect width="520" height="300" fill="none" />
-
-  <!-- 祥雲群組 1 - 左上 -->
-  <g opacity="0.4" transform="translate(50, 40)">
-    <!-- 主雲體 -->
-    <circle cx="0" cy="0" r="35" fill="url(#cloudGradient)" />
-    <circle cx="25" cy="-8" r="28" fill="url(#cloudGradient)" />
-    <circle cx="45" cy="5" r="32" fill="url(#cloudGradient)" />
-    <circle cx="65" cy="-5" r="26" fill="url(#cloudGradient)" />
-    <!-- 金色邊線 -->
-    <path d="M -35,0 Q -20,-20 0,-25 Q 20,-22 45,-28 Q 70,-32 65,-5 Q 75,10 45,20 Q 20,25 0,20 Q -20,22 -35,0"
-          stroke="#ffd700" stroke-width="0.5" fill="none" opacity="0.3"/>
+  <g opacity="0.5" transform="translate(50, 40)">
+    <circle cx="0" cy="0" r="35" fill="url(#cg)" />
+    <circle cx="25" cy="-8" r="28" fill="url(#cg)" />
+    <circle cx="45" cy="5" r="32" fill="url(#cg)" />
+    <circle cx="65" cy="-5" r="26" fill="url(#cg)" />
   </g>
-
-  <!-- 祥雲群組 2 - 右上 -->
-  <g opacity="0.35" transform="translate(420, 60)">
-    <circle cx="0" cy="0" r="32" fill="url(#cloudGradient)" />
-    <circle cx="28" cy="-6" r="26" fill="url(#cloudGradient)" />
-    <circle cx="50" cy="4" r="30" fill="url(#cloudGradient)" />
-    <path d="M -32,0 Q -15,-18 0,-22 Q 20,-20 50,-26 Q 60,-25 50,15 Q 25,22 0,18 Q -20,20 -32,0"
-          stroke="#ffd700" stroke-width="0.5" fill="none" opacity="0.3"/>
+  <g opacity="0.4" transform="translate(400, 55)">
+    <circle cx="0" cy="0" r="30" fill="url(#cg)" />
+    <circle cx="25" cy="-6" r="24" fill="url(#cg)" />
+    <circle cx="45" cy="3" r="28" fill="url(#cg)" />
   </g>
-
-  <!-- 祥雲群組 3 - 中下 -->
-  <g opacity="0.38" transform="translate(260, 230)">
-    <circle cx="0" cy="0" r="30" fill="url(#cloudGradient)" />
-    <circle cx="25" cy="-5" r="27" fill="url(#cloudGradient)" />
-    <circle cx="48" cy="3" r="28" fill="url(#cloudGradient)" />
-    <circle cx="70" cy="-4" r="24" fill="url(#cloudGradient)" />
-    <path d="M -30,0 Q -15,-16 0,-20 Q 22,-18 48,-24 Q 72,-28 70,-2 Q 78,8 48,18 Q 22,20 0,16 Q -18,18 -30,0"
-          stroke="#ffd700" stroke-width="0.5" fill="none" opacity="0.25"/>
+  <g opacity="0.45" transform="translate(230, 230)">
+    <circle cx="0" cy="0" r="32" fill="url(#cg)" />
+    <circle cx="28" cy="-6" r="26" fill="url(#cg)" />
+    <circle cx="52" cy="3" r="30" fill="url(#cg)" />
+    <circle cx="75" cy="-4" r="24" fill="url(#cg)" />
   </g>
-
-  <!-- 金幣群組 1 - 左側 -->
-  <g opacity="0.25" transform="translate(80, 120)">
-    <circle cx="0" cy="0" r="20" fill="url(#coinGradient)" />
-    <circle cx="0" cy="0" r="20" stroke="#ffd700" stroke-width="0.8" fill="none" opacity="0.2"/>
-    <!-- 幣面細節 -->
-    <circle cx="-5" cy="-3" r="2" fill="#ffd700" opacity="0.3"/>
-    <circle cx="6" cy="4" r="1.5" fill="#ffd700" opacity="0.2"/>
+  <g opacity="0.5" transform="translate(85, 130)">
+    <circle cx="0" cy="0" r="20" fill="url(#bb)" />
+    <circle cx="0" cy="0" r="20" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.2"/>
+    <circle cx="-5" cy="-5" r="3" fill="#ffffff" opacity="0.35"/>
   </g>
-
-  <!-- 金幣群組 2 - 右側 -->
-  <g opacity="0.22" transform="translate(460, 150)">
-    <circle cx="0" cy="0" r="18" fill="url(#coinGradient)" />
-    <circle cx="0" cy="0" r="18" stroke="#ffd700" stroke-width="0.8" fill="none" opacity="0.2"/>
-    <circle cx="-4" cy="-2" r="1.5" fill="#ffd700" opacity="0.3"/>
-    <circle cx="5" cy="3" r="1" fill="#ffd700" opacity="0.2"/>
+  <g opacity="0.45" transform="translate(450, 160)">
+    <circle cx="0" cy="0" r="18" fill="url(#bb)" />
+    <circle cx="0" cy="0" r="18" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.2"/>
+    <circle cx="-4" cy="-4" r="2.5" fill="#ffffff" opacity="0.3"/>
   </g>
-
-  <!-- 金幣群組 3 - 中央下方 -->
-  <g opacity="0.2" transform="translate(260, 80)">
-    <circle cx="0" cy="0" r="16" fill="url(#coinGradient)" />
-    <circle cx="0" cy="0" r="16" stroke="#ffd700" stroke-width="0.7" fill="none" opacity="0.15"/>
-    <circle cx="-3" cy="-2" r="1.2" fill="#ffd700" opacity="0.25"/>
+  <g opacity="0.4" transform="translate(260, 90)">
+    <circle cx="0" cy="0" r="15" fill="url(#bb)" />
+    <circle cx="0" cy="0" r="15" stroke="#ffffff" stroke-width="0.7" fill="none" opacity="0.18"/>
   </g>
-
-  <!-- 金幣群組 4 - 左下 -->
-  <g opacity="0.18" transform="translate(120, 260)">
-    <circle cx="0" cy="0" r="15" fill="url(#coinGradient)" />
-    <circle cx="0" cy="0" r="15" stroke="#ffd700" stroke-width="0.6" fill="none" opacity="0.15"/>
+  <g opacity="0.35" transform="translate(140, 260)">
+    <circle cx="0" cy="0" r="14" fill="url(#bb)" />
   </g>
-
-  <!-- 金幣群組 5 - 右下 -->
-  <g opacity="0.19" transform="translate(410, 270)">
-    <circle cx="0" cy="0" r="17" fill="url(#coinGradient)" />
-    <circle cx="0" cy="0" r="17" stroke="#ffd700" stroke-width="0.7" fill="none" opacity="0.15"/>
+  <g opacity="0.38" transform="translate(400, 260)">
+    <circle cx="0" cy="0" r="16" fill="url(#bb)" />
   </g>
-
-  <!-- 微光線條 1 - 斜向 -->
-  <line x1="40" y1="30" x2="120" y2="80" stroke="#ffd700" stroke-width="0.5" opacity="0.15" />
-  <!-- 微光線條 2 - 斜向 -->
-  <line x1="420" y1="120" x2="480" y2="200" stroke="#ffd700" stroke-width="0.4" opacity="0.1" />
-  <!-- 微光線條 3 - 縱向 -->
-  <line x1="260" y1="20" x2="260" y2="100" stroke="#ff8c00" stroke-width="0.4" opacity="0.08" />
-
-  <!-- 星星點綴 1 -->
-  <circle cx="150" cy="50" r="1.5" fill="#ffd700" opacity="0.15" />
-  <!-- 星星點綴 2 -->
-  <circle cx="380" cy="200" r="1" fill="#ffd700" opacity="0.12" />
-  <!-- 星星點綴 3 -->
-  <circle cx="100" cy="250" r="1.2" fill="#ff8c00" opacity="0.1" />
-  <!-- 星星點綴 4 -->
-  <circle cx="440" cy="80" r="1" fill="#ffd700" opacity="0.1" />
+  <path d="M 0,150 Q 130,130 260,150 T 520,150" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.08" />
+  <path d="M 0,170 Q 130,190 260,170 T 520,170" stroke="#ffffff" stroke-width="0.6" fill="none" opacity="0.06" />
+  <circle cx="170" cy="50" r="1.8" fill="#ffffff" opacity="0.2" />
+  <circle cx="360" cy="200" r="1.3" fill="#ffffff" opacity="0.18" />
+  <circle cx="110" cy="220" r="1.5" fill="#66E6FF" opacity="0.15" />
+  <circle cx="430" cy="90" r="1.2" fill="#ffffff" opacity="0.15" />
 </svg>

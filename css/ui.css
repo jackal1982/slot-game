@@ -6,7 +6,7 @@
     gap: 12px;
     padding: 10px 15px;
     background: linear-gradient(180deg, var(--bg-tertiary), var(--bg-primary));
-    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    border-top: 1px solid rgba(0, 153, 255, 0.2);
     flex-shrink: 0;
 }
 
@@ -63,8 +63,8 @@
 }
 
 .ctrl-btn:hover {
-    background: rgba(255, 215, 0, 0.15);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    background: rgba(0, 153, 255, 0.15);
+    box-shadow: 0 0 10px rgba(0, 153, 255, 0.3);
 }
 
 .ctrl-btn:active {
@@ -93,7 +93,7 @@
 
 .ctrl-btn.small.active {
     background: var(--accent-gold);
-    color: var(--bg-primary);
+    color: #ffffff;
 }
 
 /* === Spin Button === */
@@ -102,7 +102,7 @@
     height: 90px;
     border: 3px solid var(--accent-gold);
     background: var(--btn-gradient);
-    color: var(--bg-primary);
+    color: #ffffff;
     font-size: 1.1rem;
     font-weight: bold;
     letter-spacing: 2px;
@@ -180,7 +180,7 @@
 
 .icon-btn {
     background: transparent;
-    border: 1px solid rgba(255, 215, 0, 0.3);
+    border: 1px solid rgba(0, 153, 255, 0.3);
     color: var(--text-secondary);
     font-size: 0.75rem;
     padding: 4px 12px;
@@ -202,7 +202,7 @@
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.8);
-    border: 2px solid var(--accent-gold);
+    border: 2px solid #00D4FF;
     border-radius: 8px;
     padding: 8px 20px;
     display: flex;
@@ -210,8 +210,8 @@
     gap: 20px;
     z-index: 30;
     font-weight: bold;
-    color: var(--accent-gold);
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    color: #00D4FF;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
     white-space: nowrap;
     max-width: 90vw;
     font-size: clamp(0.7rem, 2vw, 1rem);
@@ -265,21 +265,21 @@
 
 .bonus-chest-front {
     background: linear-gradient(135deg, #8B4513, #D2691E);
-    border: 2px solid var(--accent-gold);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    border: 2px solid #0099FF;
+    box-shadow: 0 0 10px rgba(0, 153, 255, 0.3);
 }
 
 .bonus-chest-front:hover {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 20px rgba(0, 153, 255, 0.6);
 }
 
 .bonus-chest-back {
-    background: linear-gradient(135deg, #2d1b4e, #3d2a5e);
-    border: 2px solid var(--accent-gold);
+    background: linear-gradient(135deg, #D0E8FF, #B8DCFF);
+    border: 2px solid #0099FF;
     transform: rotateY(180deg);
     flex-direction: column;
     font-size: clamp(0.45rem, 1.5vw, 0.65rem);
-    color: var(--accent-gold);
+    color: #0A1929;
     font-weight: bold;
     text-align: center;
     padding: 2px;
@@ -298,16 +298,16 @@
 
 #jackpot-win-amount {
     font-size: 2.5rem;
-    color: var(--accent-gold);
+    color: #FF9F1C;
     margin: 20px 0;
     font-weight: bold;
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    text-shadow: 0 0 30px rgba(255, 159, 28, 0.8);
 }
 
 /* === Paytable Modal === */
 #paytable-modal {
     background: var(--bg-secondary);
-    border: 2px solid var(--accent-gold);
+    border: 2px solid #0099FF;
     border-radius: 12px;
     padding: 20px;
     max-width: 500px;
@@ -342,7 +342,7 @@
     align-items: center;
     gap: 12px;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 153, 255, 0.1);
 }
 
 .paytable-symbol {
@@ -380,11 +380,11 @@
 .paytable-section {
     margin-top: 15px;
     padding-top: 10px;
-    border-top: 2px solid rgba(255, 215, 0, 0.2);
+    border-top: 2px solid rgba(0, 153, 255, 0.2);
 }
 
 .paytable-section h3 {
-    color: var(--accent-gold);
+    color: #0099FF;
     font-size: 1rem;
     margin-bottom: 8px;
 }
@@ -471,7 +471,7 @@
 
 #bonus-total-win {
     font-size: 1rem;
-    color: var(--accent-gold);
+    color: #FF9F1C;
     font-weight: bold;
     margin-top: 5px;
 }

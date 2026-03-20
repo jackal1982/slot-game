@@ -7,7 +7,7 @@
     100% {
         transform: scale(1.15);
         filter: brightness(1.4);
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        text-shadow: 0 0 20px rgba(0, 153, 255, 0.8);
     }
 }
 
@@ -15,21 +15,21 @@
 @keyframes jackpotPulse {
     0% {
         transform: scale(1);
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        text-shadow: 0 0 20px rgba(255, 159, 28, 0.6);
     }
     100% {
         transform: scale(1.1);
-        text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 140, 0, 0.8);
+        text-shadow: 0 0 40px rgba(255, 159, 28, 1), 0 0 60px rgba(255, 159, 28, 0.8);
     }
 }
 
 /* === Jackpot Ticker Glow === */
 @keyframes tickerGlow {
     0%, 100% {
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        text-shadow: 0 0 10px rgba(255, 159, 28, 0.4);
     }
     50% {
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 140, 0, 0.4);
+        text-shadow: 0 0 20px rgba(255, 159, 28, 0.8), 0 0 30px rgba(255, 159, 28, 0.4);
     }
 }
 
@@ -40,10 +40,10 @@
 /* === Spin Button Pulse (when idle) === */
 @keyframes spinPulse {
     0%, 100% {
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 20px rgba(0, 153, 255, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3);
     }
     50% {
-        box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 35px rgba(0, 153, 255, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
     }
 }
 
@@ -64,8 +64,8 @@
 .big-win-text {
     animation: bigWinFlash 0.3s ease-in-out 5;
     font-size: 2.5rem;
-    color: var(--accent-gold);
-    text-shadow: 0 0 30px rgba(255, 215, 0, 1);
+    color: #FF9F1C;
+    text-shadow: 0 0 30px rgba(255, 159, 28, 1);
 }
 
 /* === Scatter Hit Sparkle === */
