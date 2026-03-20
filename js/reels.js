@@ -378,6 +378,18 @@ SlotGame.Reels = {
     },
 
     /**
+     * Clear only win-cycle highlights (dimmed/winning), preserving scatter/crown highlights.
+     */
+    clearWinHighlights: function() {
+        var visible = this.getVisibleSymbols();
+        for (var r = 0; r < SlotGame.Config.REELS; r++) {
+            for (var row = 0; row < SlotGame.Config.ROWS; row++) {
+                visible[r][row].classList.remove('dimmed', 'winning');
+            }
+        }
+    },
+
+    /**
      * Highlight Scatter symbols with cyan pulse frame effect.
      * @param {Array<{reel: number, row: number}>} positions - Scatter symbol positions
      */
