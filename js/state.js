@@ -50,7 +50,52 @@ SlotGame.State = {
 
     // --- State Methods ---
     init: function() {
-        this.load();
+        // If platform module exists, sync from it; else legacy load
+        if (SlotGame.Platform && localStorage.getItem(SlotGame.Platform.STORAGE_KEY)) {
+            this.syncFromPlatform();
+        } else {
+            this.load();
+        }
+    },
+
+    /**
+     * Pull balance + settings from Platform into game state.
+     * Called when entering game from lobby.
+     */
+    syncFromPlatform: function() {
+        var p = SlotGame.Platform;
+        this.balance = p.getBalance();
+
+        var gs = p.getGameState('slot_game');
+        if (gs) {
+            if (typeof gs.betIndex === 'number') {
+                this.betIndex = Math.max(0, Math.min(gs.betIndex, SlotGame.Config.BET_LEVELS.length - 1));
+            }
+            if (typeof gs.jackpotPool === 'number') {
+                this.jackpotPool = gs.jackpotPool;
+            }
+        }
+
+        var s = p.getSettings();
+        this.soundEnabled = s.soundEnabled;
+        this.musicEnabled = s.musicEnabled;
+        this.turboMode = s.turboMode;
+    },
+
+    /**
+     * Push current game state back to Platform.
+     * Called when returning to lobby.
+     */
+    syncToPlatform: function() {
+        var p = SlotGame.Platform;
+        p.setBalance(this.balance);
+        p.updateGameState('slot_game', {
+            betIndex: this.betIndex,
+            jackpotPool: this.jackpotPool
+        });
+        p.updateSetting('soundEnabled', this.soundEnabled);
+        p.updateSetting('musicEnabled', this.musicEnabled);
+        p.updateSetting('turboMode', this.turboMode);
     },
 
     reset: function() {

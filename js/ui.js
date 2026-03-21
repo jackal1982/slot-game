@@ -55,6 +55,8 @@ SlotGame.UI = {
             paytableOverlay: document.getElementById('paytable-overlay'),
             paytableContent: document.getElementById('paytable-content'),
             paytableClose: document.getElementById('paytable-close'),
+            // Return to lobby
+            btnReturnLobby: document.getElementById('btn-return-lobby'),
         };
 
         // Bind events
@@ -78,6 +80,13 @@ SlotGame.UI = {
 
         // Jackpot collect
         this.els.btnJackpotCollect.addEventListener('click', function() { SlotGame.Main.collectJackpot(); });
+
+        // Return to lobby
+        if (this.els.btnReturnLobby) {
+            this.els.btnReturnLobby.addEventListener('click', function() {
+                SlotGame.Main.returnToLobby();
+            });
+        }
 
         // Cooldown to prevent accidental double-spin from rapid taps
         var lastActionTime = 0;
@@ -174,6 +183,16 @@ SlotGame.UI = {
         this.els.btnBetUp.disabled = !canChangeBet;
         this.els.btnBetDown.disabled = !canChangeBet;
         this.els.btnMaxBet.disabled = !canChangeBet;
+
+        // Also update return-to-lobby button state
+        this.updateReturnButtonState();
+    },
+
+    updateReturnButtonState: function() {
+        var btn = this.els.btnReturnLobby;
+        if (!btn) return;
+        var canReturn = SlotGame.State.phase === 'IDLE' && !SlotGame.State.inFreeSpins && !SlotGame.State.inBonusGame;
+        btn.disabled = !canReturn;
     },
 
     updateSoundButton: function() {

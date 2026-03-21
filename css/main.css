@@ -46,11 +46,12 @@ body {
     color: var(--text-primary);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     -ms-touch-action: manipulation;
+    overflow-y: auto;
 }
 
 /* === Splash Screen === */

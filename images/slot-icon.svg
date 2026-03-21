@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Slot machine body -->
+  <rect x="15" y="20" width="90" height="80" rx="10" fill="#1A5B99" stroke="#0099FF" stroke-width="3"/>
+  <!-- Screen area -->
+  <rect x="25" y="30" width="70" height="40" rx="5" fill="#0A1929"/>
+  <!-- Reel symbols: 7, cherry, star -->
+  <text x="38" y="58" font-size="24" font-weight="bold" fill="#FF9F1C" font-family="Arial" text-anchor="middle">7</text>
+  <circle cx="60" cy="50" r="8" fill="#FF4444"/>
+  <circle cx="57" cy="47" r="8" fill="#FF6666"/>
+  <line x1="60" y1="50" x2="60" y2="62" stroke="#228B22" stroke-width="2"/>
+  <text x="84" y="58" font-size="22" font-weight="bold" fill="#FFD700" font-family="Arial" text-anchor="middle">&#9733;</text>
+  <!-- Lever -->
+  <rect x="108" y="35" width="6" height="30" rx="3" fill="#0077CC"/>
+  <circle cx="111" cy="33" r="6" fill="#FF9F1C"/>
+  <!-- Bottom panel -->
+  <rect x="30" y="78" width="60" height="14" rx="4" fill="#0077CC"/>
+  <text x="60" y="89" font-size="8" font-weight="bold" fill="#fff" font-family="Arial" text-anchor="middle">FORTUNE SLOTS</text>
+</svg>

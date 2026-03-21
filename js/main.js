@@ -10,6 +10,7 @@ SlotGame.Main = {
     pendingScatterPositions: null, // stored scatter positions for re-applying highlight after stopWinLines
     jackpotAmount: 0,
     _showWinsTimer: null,
+    _initialized: false,
 
     /**
      * Initialize the game.
@@ -424,9 +425,68 @@ SlotGame.Main = {
 
         this.continueAfterSpin();
     },
+
+    // === Platform Integration ===
+
+    /**
+     * Clean up game state before leaving (stop audio, timers, sync balance).
+     */
+    cleanup: function() {
+        // Stop audio
+        try { SlotGame.Audio.stopBGM(); } catch (e) {}
+
+        // Stop win animations
+        try { SlotGame.Animations.stopWinLines(); } catch (e) {}
+
+        // Clear pending timers
+        if (this._showWinsTimer) {
+            clearTimeout(this._showWinsTimer);
+            this._showWinsTimer = null;
+        }
+
+        // Cancel auto-spin
+        SlotGame.State.autoSpinActive = false;
+        SlotGame.State.autoSpinCount = 0;
+
+        // Reset game phase
+        SlotGame.State.phase = 'IDLE';
+        SlotGame.State.inFreeSpins = false;
+        SlotGame.State.inBonusGame = false;
+
+        // Hide all overlays
+        var overlays = ['free-spins-intro', 'free-spins-summary', 'bonus-overlay', 'jackpot-overlay'];
+        for (var i = 0; i < overlays.length; i++) {
+            var el = document.getElementById(overlays[i]);
+            if (el) el.classList.remove('active');
+        }
+        var hud = document.getElementById('free-spins-hud');
+        if (hud) hud.classList.add('hidden');
+
+        // Sync state back to platform
+        SlotGame.State.syncToPlatform();
+    },
+
+    /**
+     * Return to lobby — called by "← LOBBY" button.
+     */
+    returnToLobby: function() {
+        // Only allow return in IDLE state
+        if (SlotGame.State.phase !== 'IDLE') return;
+
+        this.cleanup();
+        SlotGame.Platform.returnToLobby();
+        SlotGame.Router.goToLobby();
+    },
 };
 
-// === Bootstrap ===
+// === Bootstrap (Platform-aware) ===
 document.addEventListener('DOMContentLoaded', function() {
-    SlotGame.Main.init();
+    // Initialize platform first
+    SlotGame.Platform.init();
+
+    // Initialize lobby
+    SlotGame.Lobby.init();
+
+    // Start router (determines initial view)
+    SlotGame.Router.init();
 });
