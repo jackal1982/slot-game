@@ -433,7 +433,7 @@ SlotGame.Main = {
      */
     cleanup: function() {
         // Stop audio
-        try { SlotGame.Audio.stopBGM(); } catch (e) {}
+        try { SlotGame.Audio.bgmStop(); } catch (e) {}
 
         // Stop win animations
         try { SlotGame.Animations.stopWinLines(); } catch (e) {}

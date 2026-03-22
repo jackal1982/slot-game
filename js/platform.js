@@ -11,6 +11,9 @@ SlotGame.Platform = {
             slot_game: {
                 betIndex: 2,
                 jackpotPool: 5000
+            },
+            dragon_wolf: {
+                betIndex: 0
             }
         },
         settings: {
@@ -162,6 +165,13 @@ SlotGame.Platform = {
             }
         }
 
+        if (data.games && data.games.dragon_wolf) {
+            var dw = data.games.dragon_wolf;
+            if (typeof dw.betIndex === 'number') {
+                this._state.games.dragon_wolf.betIndex = dw.betIndex;
+            }
+        }
+
         if (data.settings) {
             var s = data.settings;
             if (typeof s.soundEnabled === 'boolean') this._state.settings.soundEnabled = s.soundEnabled;
@@ -177,7 +187,7 @@ SlotGame.Platform = {
         this._state = {
             totalBalance: 10000,
             currentGame: null,
-            games: { slot_game: { betIndex: 2, jackpotPool: 5000 } },
+            games: { slot_game: { betIndex: 2, jackpotPool: 5000 }, dragon_wolf: { betIndex: 0 } },
             settings: { soundEnabled: true, musicEnabled: true, turboMode: false }
         };
         this.save();
