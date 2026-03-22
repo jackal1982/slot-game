@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 黑白郎君 M1 -->
+  <defs>
+    <radialGradient id="m1Glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#8B0000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="m1Body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="50%" stop-color="#888888"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#0D0A1A" stroke="#FFD700" stroke-width="3"/>
+  <circle cx="50" cy="50" r="48" fill="url(#m1Glow)"/>
+  <!-- 身體（黑白陰陽分割） -->
+  <path d="M50 18 Q36 30 34 50 Q32 70 50 82 Q68 70 66 50 Q64 30 50 18" fill="url(#m1Body)" stroke="#FFD700" stroke-width="2"/>
+  <!-- 頭部 -->
+  <circle cx="50" cy="26" r="10" fill="url(#m1Body)" stroke="#FFD700" stroke-width="1.5"/>
+  <!-- 左半黑臉右半白臉 -->
+  <path d="M50 16 A10 10 0 0 0 50 36" fill="#1A1A1A"/>
+  <!-- 眼睛 -->
+  <circle cx="46" cy="24" r="2.5" fill="#FFD700"/>
+  <circle cx="54" cy="24" r="2.5" fill="#1A1A1A"/>
+  <!-- 髮冠 -->
+  <path d="M40 18 Q50 8 60 18" fill="none" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="50" cy="10" r="4" fill="#FFD700"/>
+  <!-- 武器：劍（斜）-->
+  <line x1="28" y1="75" x2="72" y2="32" stroke="#C0C0C0" stroke-width="3" stroke-linecap="round"/>
+  <line x1="68" y1="30" x2="74" y2="28" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>
+  <!-- 氣功光輝 -->
+  <circle cx="50" cy="50" r="35" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.3"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#E03030" stroke-width="0.8" opacity="0.2"/>
+  <!-- M1 文字 -->
+  <text x="50" y="97" font-family="Arial" font-size="8" font-weight="900" fill="#FFD700" text-anchor="middle" letter-spacing="0.5">黑白郎君</text>
+</svg>

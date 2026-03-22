@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/lobby.css">
+    <link rel="stylesheet" href="css/dragon_wolf.css">
 </head>
 <body>
     <!-- ===== LOBBY VIEW ===== -->
@@ -170,6 +171,133 @@
         </div>
     </div>
 
+    <!-- ===== DRAGON WOLF GAME VIEW ===== -->
+    <div id="dw-game-container" class="view-hidden">
+        <!-- 返回大廳 -->
+        <button id="dw-btn-return-lobby" title="返回大廳">&#9664; LOBBY</button>
+
+        <!-- 標題列 -->
+        <div id="dw-header">
+            <h1>黑白龍狼傳</h1>
+            <p class="dw-subtitle">Legend of Dragon &amp; Wolf</p>
+        </div>
+
+        <!-- Info Bar -->
+        <div id="dw-info-bar">
+            <div class="dw-info-box">
+                <span class="dw-info-label">BALANCE</span>
+                <span class="dw-info-value" id="dw-balance">10,000</span>
+            </div>
+            <div class="dw-info-box">
+                <span class="dw-info-label">WIN</span>
+                <span class="dw-info-value" id="dw-win-amount">0</span>
+            </div>
+            <div class="dw-info-box">
+                <span class="dw-info-label">TOTAL BET</span>
+                <span class="dw-info-value" id="dw-total-bet">50</span>
+            </div>
+        </div>
+
+        <!-- Free Spins HUD -->
+        <div id="dw-fs-hud" class="hidden">
+            <div id="dw-fs-counter">FREE SPINS: <span id="dw-fs-remaining">0</span> / <span id="dw-fs-total">0</span></div>
+            <div id="dw-fs-win-display">WIN: <span id="dw-fs-win-amount">0</span></div>
+        </div>
+
+        <!-- Main Reel Area -->
+        <div id="dw-reel-area">
+            <div id="dw-reel-grid">
+                <div class="dw-reel-viewport" data-reel="0">
+                    <div class="dw-reel-strip" id="dw-reel-strip-0"></div>
+                </div>
+                <div class="dw-reel-viewport" data-reel="1">
+                    <div class="dw-reel-strip" id="dw-reel-strip-1"></div>
+                </div>
+                <div class="dw-reel-viewport" data-reel="2">
+                    <div class="dw-reel-strip" id="dw-reel-strip-2"></div>
+                </div>
+                <div class="dw-reel-viewport" data-reel="3">
+                    <div class="dw-reel-strip" id="dw-reel-strip-3"></div>
+                </div>
+                <div class="dw-reel-viewport" data-reel="4">
+                    <div class="dw-reel-strip" id="dw-reel-strip-4"></div>
+                </div>
+            </div>
+            <!-- 訊息顯示 -->
+            <div id="dw-message-display"></div>
+            <!-- 氣功特效層 -->
+            <div id="dw-qigong-overlay" class="hidden"></div>
+        </div>
+
+        <!-- Control Panel -->
+        <div id="dw-controls">
+            <div id="dw-left-controls">
+                <div id="dw-bet-controls">
+                    <button id="dw-btn-bet-down" class="dw-ctrl-btn" aria-label="減少倍數">&#8722;</button>
+                    <div id="dw-bet-display">
+                        <div class="dw-bet-label">BET ×</div>
+                        <div id="dw-bet-multiplier">1x</div>
+                    </div>
+                    <button id="dw-btn-bet-up" class="dw-ctrl-btn" aria-label="增加倍數">+</button>
+                </div>
+                <div id="dw-total-bet-display">1注 = <span id="dw-base-bet-label">50</span> 分</div>
+            </div>
+
+            <button id="dw-btn-spin">SPIN</button>
+
+            <div id="dw-extra-controls">
+                <button id="dw-btn-max-bet" class="dw-ctrl-btn small">MAX BET</button>
+                <button id="dw-btn-turbo" class="dw-ctrl-btn small">TURBO</button>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div id="dw-bottom-bar">
+            <button id="dw-btn-paytable" class="dw-icon-btn">PAYTABLE</button>
+            <button id="dw-btn-sound" class="dw-icon-btn">SOUND: ON</button>
+            <button id="dw-btn-music" class="dw-icon-btn">MUSIC: ON</button>
+        </div>
+
+        <!-- FS 轉場動畫 -->
+        <div id="dw-fs-transition" class="hidden">
+            <div id="dw-trans-fog-bg"></div>
+            <img id="dw-trans-dragon" src="images/dragon_wolf/m2.svg" alt="黑龍">
+            <img id="dw-trans-wolf"   src="images/dragon_wolf/m3.svg" alt="白狼">
+            <div id="dw-trans-mw-wrap">
+                <img id="dw-trans-mw" src="images/dragon_wolf/m1.svg" alt="黑白郎君">
+            </div>
+            <div id="dw-trans-text">
+                <p>自由旋轉</p>
+                <span id="dw-trans-spin-count">× 10</span>
+            </div>
+        </div>
+
+        <!-- Retrigger Overlay -->
+        <div id="dw-retrigger-overlay" class="hidden">
+            <div>RETRIGGER!</div>
+            <div class="dw-retrigger-count">+10</div>
+        </div>
+
+        <!-- FS Summary Overlay -->
+        <div id="dw-fs-summary" class="dw-overlay hidden">
+            <div class="dw-overlay-box">
+                <h2>自由旋轉完成！</h2>
+                <p>本次總獎金</p>
+                <span class="dw-big-number" id="dw-fs-summary-amount">0</span>
+                <button class="dw-btn-overlay" id="dw-btn-fs-collect">收取</button>
+            </div>
+        </div>
+
+        <!-- Paytable Modal -->
+        <div id="dw-paytable-overlay" class="dw-overlay hidden">
+            <div id="dw-paytable-modal">
+                <button id="dw-paytable-close">&times;</button>
+                <h2>PAYTABLE</h2>
+                <div id="dw-paytable-content"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts: platform & router first, then game modules, then lobby & bootstrap -->
     <script src="js/config.js"></script>
     <script src="js/platform.js"></script>
@@ -185,5 +313,16 @@
     <script src="js/ui.js"></script>
     <script src="js/lobby.js"></script>
     <script src="js/main.js"></script>
+    <!-- Dragon Wolf modules -->
+    <script src="js/dragon_wolf/dw-config.js"></script>
+    <script src="js/dragon_wolf/dw-rng.js"></script>
+    <script src="js/dragon_wolf/dw-paylines.js"></script>
+    <script src="js/dragon_wolf/dw-features.js"></script>
+    <script src="js/dragon_wolf/dw-state.js"></script>
+    <script src="js/dragon_wolf/dw-reels.js"></script>
+    <script src="js/dragon_wolf/dw-audio.js"></script>
+    <script src="js/dragon_wolf/dw-animations.js"></script>
+    <script src="js/dragon_wolf/dw-ui.js"></script>
+    <script src="js/dragon_wolf/dw-main.js"></script>
 </body>
 </html>

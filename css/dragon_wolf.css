@@ -1,0 +1,791 @@
+/* ============================================================
+   Dragon Wolf（黑白龍狼傳）遊戲主題 CSS
+   配色：深紫黑底 + 金紅配色，--dw- 前綴
+   ============================================================ */
+
+/* ── CSS 變數 ────────────────────────────────────────────── */
+:root {
+    --dw-bg-primary:     #0D0A1A;   /* 深紫黑 */
+    --dw-bg-secondary:   #1A1228;   /* 稍淺紫黑 */
+    --dw-bg-reel:        #120E22;   /* 滾輪背景 */
+    --dw-accent-gold:    #FFD700;   /* 金色 */
+    --dw-accent-red:     #E03030;   /* 紅色 */
+    --dw-accent-purple:  #9B59B6;   /* 紫色 */
+    --dw-text-primary:   #F5E6C8;   /* 米金色文字 */
+    --dw-text-secondary: #B8967A;   /* 暗金色 */
+    --dw-border-gold:    #C9A227;   /* 金色邊框 */
+    --dw-border-dark:    #3D2B50;   /* 深紫邊框 */
+    --dw-btn-gradient:   linear-gradient(135deg, #C9A227, #FFD700, #C9A227);
+    --dw-btn-red:        linear-gradient(135deg, #8B0000, #E03030, #8B0000);
+    --dw-shadow-gold:    rgba(255, 215, 0, 0.35);
+    --dw-shadow-red:     rgba(224, 48, 48, 0.5);
+    --dw-symbol-size-desktop: 90px;
+    --dw-symbol-size-tablet:  72px;
+    --dw-symbol-size-mobile:  calc((100vw - 40px) / 5);
+    --dw-symbol-size-small:   54px;
+}
+
+/* ── Container ───────────────────────────────────────────── */
+#dw-game-container {
+    position:        relative;
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    width:           100%;
+    min-height:      100vh;
+    background:      var(--dw-bg-primary);
+    background-image: radial-gradient(ellipse at top, #2D1B4E 0%, #0D0A1A 60%);
+    color:           var(--dw-text-primary);
+    font-family:     'Segoe UI', Arial, sans-serif;
+    overflow:        hidden;
+    touch-action:    manipulation;
+    box-sizing:      border-box;
+}
+
+/* ── 返回按鈕 ────────────────────────────────────────────── */
+#dw-btn-return-lobby {
+    position:    absolute;
+    top:         8px;
+    left:        10px;
+    z-index:     100;
+    padding:     6px 14px;
+    background:  var(--dw-bg-secondary);
+    color:       var(--dw-accent-gold);
+    border:      1px solid var(--dw-border-gold);
+    border-radius: 6px;
+    font-size:   0.8rem;
+    font-weight: 700;
+    cursor:      pointer;
+    transition:  background 0.2s, opacity 0.2s;
+}
+#dw-btn-return-lobby:hover:not(:disabled) {
+    background: #2D1B4E;
+}
+#dw-btn-return-lobby:disabled,
+#dw-btn-return-lobby.disabled {
+    opacity:  0.4;
+    cursor:   not-allowed;
+}
+
+/* ── 標題列 ──────────────────────────────────────────────── */
+#dw-header {
+    width:      100%;
+    text-align: center;
+    padding:    8px 4px 4px;
+    background: linear-gradient(180deg, #1F1030 0%, transparent 100%);
+}
+#dw-header h1 {
+    font-size:      1.25rem;
+    font-weight:    900;
+    letter-spacing: 2px;
+    color:          var(--dw-accent-gold);
+    text-shadow:    0 0 12px var(--dw-shadow-gold),
+                    0 2px 4px rgba(0,0,0,0.8);
+    margin:         0;
+}
+#dw-header .dw-subtitle {
+    font-size:   0.72rem;
+    color:       var(--dw-text-secondary);
+    letter-spacing: 1px;
+}
+
+/* ── Info Bar ────────────────────────────────────────────── */
+#dw-info-bar {
+    display:         flex;
+    justify-content: space-around;
+    align-items:     center;
+    width:           100%;
+    max-width:       620px;
+    padding:         4px 12px;
+    gap:             8px;
+}
+.dw-info-box {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    background:     rgba(30, 15, 50, 0.7);
+    border:         1px solid var(--dw-border-dark);
+    border-radius:  8px;
+    padding:        4px 14px;
+    min-width:      80px;
+}
+.dw-info-label {
+    font-size:   0.62rem;
+    color:       var(--dw-text-secondary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.dw-info-value {
+    font-size:   1rem;
+    font-weight: 700;
+    color:       var(--dw-accent-gold);
+    letter-spacing: 0.5px;
+}
+#dw-win-amount {
+    color:       var(--dw-accent-red);
+    text-shadow: 0 0 8px var(--dw-shadow-red);
+}
+
+/* ── 滾輪區 ──────────────────────────────────────────────── */
+#dw-reel-area {
+    position:     relative;
+    width:        100%;
+    max-width:    590px;
+    padding:      4px 8px;
+    cursor:       pointer;
+    user-select:  none;
+    -webkit-user-select: none;
+}
+
+#dw-reel-grid {
+    display:        grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:            4px;
+    background:     var(--dw-bg-reel);
+    border:         2px solid var(--dw-border-gold);
+    border-radius:  12px;
+    padding:        6px;
+    box-shadow:     0 0 20px var(--dw-shadow-gold),
+                    inset 0 0 30px rgba(0,0,0,0.5);
+    position:       relative;
+}
+
+.dw-reel-viewport {
+    overflow:     hidden;
+    border-radius: 6px;
+    background:   rgba(0, 0, 0, 0.35);
+    height:       calc(var(--dw-symbol-size-desktop) * 4);
+    border:       1px solid rgba(201, 162, 39, 0.25);
+    position:     relative;
+}
+
+.dw-reel-strip {
+    position:  absolute;
+    top:       0;
+    left:      0;
+    width:     100%;
+    will-change: transform;
+}
+
+/* ── 符號 ────────────────────────────────────────────────── */
+.dw-symbol {
+    width:           var(--dw-symbol-size-desktop);
+    height:          var(--dw-symbol-size-desktop);
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    position:        relative;
+    transition:      filter 0.2s, transform 0.15s;
+    box-sizing:      border-box;
+}
+.dw-symbol img {
+    width:        82%;
+    height:       82%;
+    object-fit:   contain;
+    display:      block;
+    pointer-events: none;
+    user-select:  none;
+}
+
+/* 暗淡（非中獎） */
+.dw-symbol.dw-dimmed {
+    filter:    brightness(0.3) saturate(0.3);
+    transform: scale(0.95);
+}
+
+/* 中獎高亮 */
+.dw-symbol.dw-winning {
+    filter:    brightness(1.2) saturate(1.3);
+    transform: scale(1.06);
+    animation: dw-win-pulse 0.7s ease-in-out infinite alternate;
+}
+
+/* Scatter 紫金色脈衝 */
+.dw-symbol.dw-scatter-pulse {
+    animation: dw-scatter-pulse 0.6s ease-in-out infinite alternate;
+    filter:    brightness(1.3);
+}
+
+/* M1 紅金色脈衝 */
+.dw-symbol.dw-m1-pulse {
+    animation: dw-m1-pulse 0.6s ease-in-out infinite alternate;
+    filter:    brightness(1.4);
+}
+
+/* 剛放置的 Wild */
+.dw-symbol.dw-wild-placed {
+    animation: dw-wild-appear 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── 訊息顯示 ────────────────────────────────────────────── */
+#dw-message-display {
+    position:    absolute;
+    top:         50%;
+    left:        50%;
+    transform:   translate(-50%, -50%);
+    background:  rgba(13, 10, 26, 0.88);
+    color:       var(--dw-accent-gold);
+    font-size:   1.1rem;
+    font-weight: 700;
+    padding:     8px 20px;
+    border-radius: 8px;
+    border:      1px solid var(--dw-border-gold);
+    opacity:     0;
+    pointer-events: none;
+    z-index:     30;
+    transition:  opacity 0.25s;
+}
+#dw-message-display.visible {
+    opacity: 1;
+}
+
+/* ── Free Spins HUD ──────────────────────────────────────── */
+#dw-fs-hud {
+    width:      100%;
+    max-width:  590px;
+    text-align: center;
+    padding:    4px 12px;
+    background: linear-gradient(90deg, rgba(155, 89, 182, 0.2), rgba(224, 48, 48, 0.2));
+    border:     1px solid var(--dw-accent-purple);
+    border-radius: 8px;
+    font-size:  0.82rem;
+    color:      var(--dw-text-primary);
+    display:    flex;
+    justify-content: space-around;
+}
+#dw-fs-hud.hidden { display: none; }
+#dw-fs-counter { color: #C39BDD; font-weight: 700; }
+#dw-fs-win-display { color: var(--dw-accent-gold); font-weight: 700; }
+
+/* ── 控制區 ──────────────────────────────────────────────── */
+#dw-controls {
+    display:        flex;
+    flex-direction: row;
+    align-items:    center;
+    justify-content: center;
+    width:          100%;
+    max-width:      590px;
+    padding:        8px 12px;
+    gap:            12px;
+}
+
+#dw-left-controls {
+    display:     flex;
+    flex-direction: column;
+    align-items: center;
+    gap:         6px;
+}
+
+#dw-bet-controls {
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+}
+
+.dw-ctrl-btn {
+    background:  rgba(30, 15, 50, 0.8);
+    color:       var(--dw-accent-gold);
+    border:      1px solid var(--dw-border-gold);
+    border-radius: 6px;
+    width:       32px;
+    height:      32px;
+    font-size:   1.1rem;
+    font-weight: 700;
+    cursor:      pointer;
+    transition:  background 0.15s, transform 0.1s;
+    display:     flex;
+    align-items: center;
+    justify-content: center;
+}
+.dw-ctrl-btn:hover:not(:disabled) {
+    background: #2D1B4E;
+    transform:  scale(1.05);
+}
+.dw-ctrl-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+#dw-bet-display {
+    text-align:  center;
+    min-width:   60px;
+}
+.dw-bet-label {
+    font-size:  0.6rem;
+    color:      var(--dw-text-secondary);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+#dw-bet-multiplier {
+    font-size:  1.1rem;
+    font-weight: 900;
+    color:      var(--dw-accent-gold);
+}
+
+#dw-total-bet-display {
+    text-align: center;
+    font-size:  0.7rem;
+    color:      var(--dw-text-secondary);
+}
+
+/* SPIN 按鈕 */
+#dw-btn-spin {
+    background:    var(--dw-btn-gradient);
+    color:         #1A0A00;
+    border:        none;
+    border-radius: 50%;
+    width:         90px;
+    height:        90px;
+    font-size:     1.1rem;
+    font-weight:   900;
+    letter-spacing: 1px;
+    cursor:        pointer;
+    box-shadow:    0 0 18px var(--dw-shadow-gold),
+                   0 4px 12px rgba(0,0,0,0.6);
+    transition:    transform 0.12s, box-shadow 0.12s;
+    flex-shrink:   0;
+}
+#dw-btn-spin:hover:not(:disabled) {
+    transform:  scale(1.06);
+    box-shadow: 0 0 28px var(--dw-shadow-gold);
+}
+#dw-btn-spin:active:not(:disabled) {
+    transform: scale(0.93);
+}
+#dw-btn-spin:disabled {
+    opacity: 0.55;
+    cursor:  not-allowed;
+}
+#dw-btn-spin.dw-btn-stop {
+    background:  var(--dw-btn-red);
+    box-shadow:  0 0 18px var(--dw-shadow-red);
+    color:       #fff;
+}
+
+#dw-extra-controls {
+    display:        flex;
+    flex-direction: column;
+    gap:            6px;
+    align-items:    center;
+}
+.dw-ctrl-btn.small {
+    width:  64px;
+    height: 28px;
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+}
+.dw-ctrl-btn.active {
+    background: #2D1B4E;
+    border-color: var(--dw-accent-purple);
+    color: var(--dw-accent-purple);
+}
+
+/* ── 底部按鈕列 ──────────────────────────────────────────── */
+#dw-bottom-bar {
+    display:         flex;
+    justify-content: center;
+    gap:             10px;
+    padding:         6px;
+    width:           100%;
+    max-width:       590px;
+}
+.dw-icon-btn {
+    background:  rgba(30, 15, 50, 0.7);
+    color:       var(--dw-text-secondary);
+    border:      1px solid var(--dw-border-dark);
+    border-radius: 6px;
+    padding:     5px 14px;
+    font-size:   0.72rem;
+    font-weight: 700;
+    cursor:      pointer;
+    letter-spacing: 0.5px;
+    transition:  color 0.2s, border-color 0.2s;
+}
+.dw-icon-btn:hover {
+    color:         var(--dw-accent-gold);
+    border-color:  var(--dw-border-gold);
+}
+
+/* ── Overlay 通用 ────────────────────────────────────────── */
+.dw-overlay {
+    position:   fixed;
+    top:        0;
+    left:       0;
+    width:      100%;
+    height:     100%;
+    background: rgba(0,0,0,0.78);
+    display:    flex;
+    align-items: center;
+    justify-content: center;
+    z-index:    200;
+    opacity:    0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.dw-overlay.dw-overlay-active {
+    opacity:        1;
+    pointer-events: all;
+}
+.dw-overlay.hidden {
+    display: none;
+}
+
+.dw-overlay-box {
+    background:    linear-gradient(160deg, #2D1B4E, #1A0A2E);
+    border:        2px solid var(--dw-border-gold);
+    border-radius: 16px;
+    padding:       32px 40px;
+    text-align:    center;
+    box-shadow:    0 0 40px var(--dw-shadow-gold);
+    max-width:     400px;
+    width:         90%;
+}
+.dw-overlay-box h2 {
+    font-size:   1.8rem;
+    color:       var(--dw-accent-gold);
+    margin:      0 0 12px;
+    text-shadow: 0 0 16px var(--dw-shadow-gold);
+}
+.dw-overlay-box p {
+    font-size:  1rem;
+    color:      var(--dw-text-primary);
+    margin:     6px 0;
+}
+.dw-overlay-box .dw-big-number {
+    font-size:   2.2rem;
+    font-weight: 900;
+    color:       var(--dw-accent-gold);
+    text-shadow: 0 0 16px var(--dw-shadow-gold);
+    display:     block;
+    margin:      8px 0;
+}
+.dw-btn-overlay {
+    background:    var(--dw-btn-gradient);
+    color:         #1A0A00;
+    border:        none;
+    border-radius: 8px;
+    padding:       10px 36px;
+    font-size:     1rem;
+    font-weight:   900;
+    cursor:        pointer;
+    margin-top:    16px;
+    letter-spacing: 1px;
+    box-shadow:    0 0 12px var(--dw-shadow-gold);
+    transition:    transform 0.12s;
+}
+.dw-btn-overlay:hover {
+    transform: scale(1.04);
+}
+
+/* ── FS 轉場動畫 ─────────────────────────────────────────── */
+#dw-fs-transition {
+    position:    fixed;
+    top:         0;
+    left:        0;
+    width:       100%;
+    height:      100%;
+    z-index:     300;
+    overflow:    hidden;
+    pointer-events: none;
+    display:     flex;
+    align-items: center;
+    justify-content: center;
+}
+#dw-fs-transition.hidden { display: none; }
+
+#dw-trans-fog-bg {
+    position:   absolute;
+    inset:      0;
+    background: radial-gradient(ellipse, rgba(80,20,120,0.9) 0%, rgba(0,0,0,0.95) 70%);
+    opacity:    0;
+}
+#dw-trans-dragon {
+    position:   absolute;
+    width:      220px;
+    height:     220px;
+    object-fit: contain;
+    left:       -240px;
+    top:        50%;
+    transform:  translateY(-50%);
+    filter:     drop-shadow(0 0 20px #6A0DAD);
+}
+#dw-trans-wolf {
+    position:   absolute;
+    width:      220px;
+    height:     220px;
+    object-fit: contain;
+    right:      -240px;
+    top:        50%;
+    transform:  translateY(-50%) scaleX(-1);
+    filter:     drop-shadow(0 0 20px #E03030);
+}
+#dw-trans-mw-wrap {
+    position:    absolute;
+    top:         50%;
+    left:        50%;
+    transform:   translate(-50%, -50%) scale(0);
+    z-index:     5;
+    text-align:  center;
+}
+#dw-trans-mw {
+    width:  180px;
+    height: 180px;
+    filter: drop-shadow(0 0 30px var(--dw-accent-gold));
+}
+#dw-trans-text {
+    position:   absolute;
+    bottom:     25%;
+    left:       50%;
+    transform:  translateX(-50%) translateY(30px);
+    text-align: center;
+    opacity:    0;
+    z-index:    5;
+}
+#dw-trans-text p {
+    font-size:   1.6rem;
+    font-weight: 900;
+    color:       var(--dw-accent-gold);
+    text-shadow: 0 0 20px var(--dw-shadow-gold);
+    margin:      0;
+}
+#dw-trans-spin-count {
+    font-size:   2.5rem;
+    font-weight: 900;
+    color:       #fff;
+    text-shadow: 0 0 20px var(--dw-shadow-gold);
+}
+
+/* 轉場動畫 keyframes */
+#dw-fs-transition.dw-trans-playing #dw-trans-fog-bg {
+    animation: dw-fog-in 0.6s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-dragon {
+    animation: dw-dragon-enter 1s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-wolf {
+    animation: dw-wolf-enter 1s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-mw-wrap {
+    animation: dw-mw-appear 0.8s 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-text {
+    animation: dw-text-appear 0.5s 2.5s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing {
+    animation: dw-overlay-fadeout 0.5s 3.5s ease-in forwards;
+}
+
+/* ── 氣功 Overlay ────────────────────────────────────────── */
+#dw-qigong-overlay {
+    position:    absolute;
+    inset:       0;
+    background:  radial-gradient(ellipse, rgba(155,89,182,0.3) 0%, transparent 70%);
+    pointer-events: none;
+    z-index:     20;
+    opacity:     0;
+    transition:  opacity 0.3s;
+}
+#dw-qigong-overlay.dw-qigong-active { opacity: 1; }
+#dw-qigong-overlay.hidden { display: none; }
+
+/* ── Retrigger Overlay ───────────────────────────────────── */
+#dw-retrigger-overlay {
+    position:    absolute;
+    top:         50%;
+    left:        50%;
+    transform:   translate(-50%, -50%) scale(0);
+    background:  linear-gradient(135deg, rgba(155,89,182,0.95), rgba(80,20,120,0.95));
+    border:      2px solid var(--dw-accent-gold);
+    border-radius: 12px;
+    padding:     12px 30px;
+    text-align:  center;
+    color:       var(--dw-accent-gold);
+    font-size:   1.4rem;
+    font-weight: 900;
+    z-index:     50;
+    pointer-events: none;
+    box-shadow:  0 0 24px var(--dw-shadow-gold);
+}
+#dw-retrigger-overlay.hidden { display: none; }
+#dw-retrigger-overlay.dw-retrigger-active {
+    animation: dw-retrigger-pop 1.5s ease-out forwards;
+}
+
+/* ── Paytable ────────────────────────────────────────────── */
+#dw-paytable-overlay {
+    overflow-y: auto;
+    align-items: flex-start;
+    padding:    20px;
+}
+#dw-paytable-modal {
+    background:  linear-gradient(160deg, #1A1228, #0D0A1A);
+    border:      2px solid var(--dw-border-gold);
+    border-radius: 16px;
+    padding:     24px;
+    width:       100%;
+    max-width:   520px;
+    position:    relative;
+}
+#dw-paytable-modal h2 {
+    text-align:  center;
+    font-size:   1.5rem;
+    color:       var(--dw-accent-gold);
+    margin:      0 0 16px;
+    letter-spacing: 2px;
+}
+#dw-paytable-close {
+    position:   absolute;
+    top:        12px;
+    right:      16px;
+    background: transparent;
+    border:     none;
+    color:      var(--dw-text-secondary);
+    font-size:  1.6rem;
+    cursor:     pointer;
+    line-height: 1;
+    padding:    0;
+}
+#dw-paytable-close:hover { color: var(--dw-accent-gold); }
+
+.dw-pt-section { margin-bottom: 20px; }
+.dw-pt-title {
+    font-size:  1rem;
+    font-weight: 700;
+    color:      var(--dw-accent-gold);
+    border-bottom: 1px solid var(--dw-border-dark);
+    padding-bottom: 4px;
+    margin:     0 0 8px;
+}
+.dw-pt-title.dw-pt-free { color: var(--dw-accent-purple); }
+.dw-pt-note {
+    font-size:  0.75rem;
+    color:      var(--dw-text-secondary);
+    margin:     0 0 8px;
+}
+.dw-pt-note.dw-pt-free { color: #C39BDD; }
+
+.dw-pt-table {
+    width:          100%;
+    border-collapse: collapse;
+    font-size:      0.82rem;
+}
+.dw-pt-table th,
+.dw-pt-table td {
+    text-align:  center;
+    padding:     5px 6px;
+    border-bottom: 1px solid rgba(61, 43, 80, 0.5);
+    color:       var(--dw-text-primary);
+}
+.dw-pt-table th {
+    color:       var(--dw-text-secondary);
+    font-size:   0.72rem;
+    font-weight: 700;
+}
+.dw-pt-table td:first-child { text-align: left; }
+.dw-pt-table tr.dw-pt-highlight td { color: var(--dw-accent-gold); font-weight: 700; }
+.dw-pt-icon {
+    width:  22px;
+    height: 22px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.dw-pt-icon-lg {
+    width:  40px;
+    height: 40px;
+    vertical-align: middle;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.dw-pt-special { display: flex; flex-direction: column; gap: 10px; }
+.dw-pt-special-item {
+    display:     flex;
+    align-items: flex-start;
+    gap:         10px;
+    font-size:   0.8rem;
+    color:       var(--dw-text-primary);
+    line-height: 1.5;
+}
+
+/* ── Keyframe Animations ─────────────────────────────────── */
+@keyframes dw-win-pulse {
+    from { filter: brightness(1.2) saturate(1.3); transform: scale(1.06); }
+    to   { filter: brightness(1.5) saturate(1.6) drop-shadow(0 0 12px var(--dw-accent-gold)); transform: scale(1.12); }
+}
+@keyframes dw-scatter-pulse {
+    from { filter: brightness(1.2) drop-shadow(0 0 6px #9B59B6); transform: scale(1.04); }
+    to   { filter: brightness(1.5) drop-shadow(0 0 16px #E040FB); transform: scale(1.1); }
+}
+@keyframes dw-m1-pulse {
+    from { filter: brightness(1.2) drop-shadow(0 0 8px var(--dw-accent-red)); transform: scale(1.04); }
+    to   { filter: brightness(1.5) drop-shadow(0 0 18px var(--dw-accent-gold)); transform: scale(1.12); }
+}
+@keyframes dw-wild-appear {
+    0%   { transform: scale(0) rotate(-15deg); opacity: 0; filter: brightness(2); }
+    60%  { transform: scale(1.2) rotate(5deg); opacity: 1; filter: brightness(1.5); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+}
+@keyframes dw-fog-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes dw-dragon-enter {
+    from { left: -240px; opacity: 1; transform: translateY(-50%) scale(1); }
+    80%  { left: -8%; transform: translateY(-50%) scale(1); opacity: 1; }
+    100% { left: -8%; transform: translateY(-50%) scale(0.2); opacity: 0; }
+}
+@keyframes dw-wolf-enter {
+    from { right: -240px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    80%  { right: -8%; transform: translateY(-50%) scaleX(-1) scale(1); opacity: 1; }
+    100% { right: -8%; transform: translateY(-50%) scaleX(-1) scale(0.2); opacity: 0; }
+}
+@keyframes dw-mw-appear {
+    from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    60%  { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+}
+@keyframes dw-text-appear {
+    from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes dw-overlay-fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+@keyframes dw-retrigger-pop {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    30%  { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    60%  { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+    85%  { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+}
+
+/* ── RWD ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .dw-symbol {
+        width:  var(--dw-symbol-size-tablet);
+        height: var(--dw-symbol-size-tablet);
+    }
+    .dw-reel-viewport {
+        height: calc(var(--dw-symbol-size-tablet) * 4);
+    }
+    #dw-btn-spin { width: 78px; height: 78px; font-size: 1rem; }
+}
+@media (max-width: 480px) {
+    .dw-symbol {
+        width:  var(--dw-symbol-size-mobile);
+        height: var(--dw-symbol-size-mobile);
+    }
+    .dw-reel-viewport {
+        height: calc(var(--dw-symbol-size-mobile) * 4);
+    }
+    #dw-btn-spin { width: 70px; height: 70px; font-size: 0.9rem; }
+    #dw-header h1 { font-size: 1rem; }
+}
+@media (max-width: 360px) {
+    .dw-symbol {
+        width:  var(--dw-symbol-size-small);
+        height: var(--dw-symbol-size-small);
+    }
+    .dw-reel-viewport {
+        height: calc(var(--dw-symbol-size-small) * 4);
+    }
+}

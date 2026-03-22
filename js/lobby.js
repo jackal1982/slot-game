@@ -12,6 +12,14 @@ SlotGame.Lobby = {
             description: '5 軸 20 線經典老虎機，Wild、Scatter、Free Spins、Bonus Game、累積 Jackpot',
             rtp: '96.29%',
             icon: 'images/slot-icon.svg'
+        },
+        {
+            id: 'dragon_wolf',
+            name: '黑白龍狼傳',
+            subtitle: 'Legend of Dragon &amp; Wolf',
+            description: '5軸4行 1024-Ways，M1黑白郎君隨機百搭特色，Free Game高爆發',
+            rtp: '96.0%',
+            icon: 'images/dragon_wolf/dw-icon.svg'
         }
     ],
 

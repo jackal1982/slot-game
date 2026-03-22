@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 符號 A -->
+  <defs>
+    <linearGradient id="a1Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#C9A227"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="92" height="92" rx="12" fill="#1A1000" stroke="#C9A227" stroke-width="2.5"/>
+  <!-- 裝飾角 -->
+  <path d="M4 20 L20 4" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+  <path d="M80 4 L96 20" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+  <path d="M4 80 L20 96" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+  <path d="M80 96 L96 80" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+  <!-- A 字 -->
+  <text x="50" y="68" font-family="serif" font-size="62" font-weight="900" fill="url(#a1Grad)" text-anchor="middle" dominant-baseline="middle">A</text>
+  <!-- 底部裝飾 -->
+  <text x="50" y="88" font-family="serif" font-size="10" fill="#C9A227" text-anchor="middle" opacity="0.7">◆</text>
+</svg>
