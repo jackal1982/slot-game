@@ -102,6 +102,11 @@ SlotGame.Lobby = {
             btnMusic.addEventListener('click', function() {
                 var on = !SlotGame.Platform.getSettings().musicEnabled;
                 SlotGame.Platform.updateSetting('musicEnabled', on);
+                // Immediately stop any BGM that may still be playing
+                if (!on) {
+                    try { SlotGame.Audio.bgmStop(); } catch(e) {}
+                    try { if (window.DragonWolf) DragonWolf.Audio.bgmStop(); } catch(e) {}
+                }
                 self.updateSettingsDisplay();
             });
         }
