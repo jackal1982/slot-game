@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 符號 J -->
+  <defs>
+    <linearGradient id="a4Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60B0E0"/>
+      <stop offset="100%" stop-color="#206898"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="92" height="92" rx="12" fill="#000A15" stroke="#206898" stroke-width="2.5"/>
+  <path d="M4 20 L20 4" stroke="#60B0E0" stroke-width="1.5" opacity="0.5"/>
+  <path d="M80 4 L96 20" stroke="#60B0E0" stroke-width="1.5" opacity="0.5"/>
+  <path d="M4 80 L20 96" stroke="#60B0E0" stroke-width="1.5" opacity="0.5"/>
+  <path d="M80 96 L96 80" stroke="#60B0E0" stroke-width="1.5" opacity="0.5"/>
+  <text x="50" y="68" font-family="serif" font-size="62" font-weight="900" fill="url(#a4Grad)" text-anchor="middle" dominant-baseline="middle">J</text>
+  <text x="50" y="88" font-family="serif" font-size="10" fill="#60B0E0" text-anchor="middle" opacity="0.7">♠</text>
+</svg>

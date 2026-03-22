@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 太極圖案 Wild -->
+  <defs>
+    <radialGradient id="wdGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#C9A227" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#1A1000" stroke="#C9A227" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="48" fill="url(#wdGlow)"/>
+  <!-- 太極 -->
+  <path d="M50 14 A36 36 0 0 1 50 86 A18 18 0 0 1 50 50 A18 18 0 0 0 50 14" fill="#F5F5F5" stroke="#C9A227" stroke-width="1.5"/>
+  <path d="M50 14 A36 36 0 0 0 50 86 A18 18 0 0 0 50 50 A18 18 0 0 1 50 14" fill="#1A1000" stroke="#C9A227" stroke-width="1.5"/>
+  <circle cx="50" cy="32" r="7" fill="#1A1000"/>
+  <circle cx="50" cy="68" r="7" fill="#F5F5F5"/>
+  <circle cx="50" cy="32" r="3" fill="#F5F5F5"/>
+  <circle cx="50" cy="68" r="3" fill="#1A1000"/>
+  <!-- 八角外框裝飾 -->
+  <polygon points="50,8 62,12 70,22 72,35 66,47 70,60 62,70 50,74 38,70 30,60 28,47 34,35 30,22 38,12" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+  <!-- WILD 文字 -->
+  <text x="50" y="96" font-family="Arial" font-size="9" font-weight="900" fill="#FFD700" text-anchor="middle" letter-spacing="1">WILD</text>
+</svg>

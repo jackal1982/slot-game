@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- 黑白龍狼傳遊戲卡片 Icon -->
+  <defs>
+    <radialGradient id="iconBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2D1B4E"/>
+      <stop offset="100%" stop-color="#0D0A1A"/>
+    </radialGradient>
+    <radialGradient id="iconGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="120" height="120" rx="16" fill="url(#iconBg)"/>
+  <rect width="120" height="120" rx="16" fill="url(#iconGlow)"/>
+  <!-- 外框 -->
+  <rect x="4" y="4" width="112" height="112" rx="13" fill="none" stroke="#C9A227" stroke-width="2"/>
+  <!-- 太極主圖案 -->
+  <path d="M60 20 A40 40 0 0 1 60 100 A20 20 0 0 1 60 60 A20 20 0 0 0 60 20" fill="#E8E8E8"/>
+  <path d="M60 20 A40 40 0 0 0 60 100 A20 20 0 0 0 60 60 A20 20 0 0 1 60 20" fill="#1A1A1A"/>
+  <circle cx="60" cy="40" r="7" fill="#1A1A1A"/>
+  <circle cx="60" cy="80" r="7" fill="#E8E8E8"/>
+  <circle cx="60" cy="40" r="3" fill="#E8E8E8"/>
+  <circle cx="60" cy="80" r="3" fill="#1A1A1A"/>
+  <circle cx="60" cy="60" r="42" fill="none" stroke="#FFD700" stroke-width="2.5"/>
+  <!-- 左下角龍紋 -->
+  <path d="M10 95 Q20 85 25 75 Q30 65 22 58 Q18 62 20 68 Q16 72 14 80 Q10 88 12 96" fill="#6A0DAD" opacity="0.7" stroke="#9B59B6" stroke-width="1"/>
+  <!-- 右下角狼紋 -->
+  <path d="M110 95 Q100 85 95 75 Q90 65 98 58 Q102 62 100 68 Q104 72 106 80 Q110 88 108 96" fill="#A0C0FF" opacity="0.7" stroke="#A0C0FF" stroke-width="1"/>
+  <!-- 底部文字 -->
+  <text x="60" y="114" font-family="Arial" font-size="8" font-weight="900" fill="#C9A227" text-anchor="middle" letter-spacing="0.5">龍狼傳</text>
+</svg>

@@ -3,7 +3,7 @@
  * SPA hash-based routing between lobby and game views.
  */
 SlotGame.Router = {
-    ROUTES: { LOBBY: 'lobby', GAME_SLOT: 'game/slot' },
+    ROUTES: { LOBBY: 'lobby', GAME_SLOT: 'game/slot', GAME_DW: 'game/dragon_wolf' },
 
     _currentRoute: null,
     _isTransitioning: false,
@@ -25,7 +25,10 @@ SlotGame.Router = {
         if (this._isTransitioning) return;
 
         var hash = window.location.hash.replace(/^#\/?/, '') || this.ROUTES.LOBBY;
-        var route = (hash.indexOf('game/') === 0) ? this.ROUTES.GAME_SLOT : this.ROUTES.LOBBY;
+        var route;
+        if (hash === this.ROUTES.GAME_SLOT)    route = this.ROUTES.GAME_SLOT;
+        else if (hash === this.ROUTES.GAME_DW) route = this.ROUTES.GAME_DW;
+        else                                   route = this.ROUTES.LOBBY;
 
         if (route === this._currentRoute) return;
 
@@ -35,8 +38,10 @@ SlotGame.Router = {
 
         if (route === this.ROUTES.LOBBY) {
             this._showLobby(prevRoute);
-        } else {
-            this._showGame();
+        } else if (route === this.ROUTES.GAME_SLOT) {
+            this._showGame('slot');
+        } else if (route === this.ROUTES.GAME_DW) {
+            this._showGame('dragon_wolf');
         }
 
         this._isTransitioning = false;
@@ -47,16 +52,23 @@ SlotGame.Router = {
     _showLobby: function(prevRoute) {
         var lobby = document.getElementById('lobby-container');
         var game  = document.getElementById('game-container');
+        var dwGame = document.getElementById('dw-game-container');
         var splash = document.getElementById('splash-screen');
 
         // Clean up game if coming from it
         if (prevRoute === this.ROUTES.GAME_SLOT && SlotGame.Main._initialized) {
             SlotGame.Main.cleanup();
+        } else if (prevRoute === this.ROUTES.GAME_DW && window.DragonWolf && DragonWolf.Main._initialized) {
+            DragonWolf.Main.cleanup();
         }
 
         if (splash) splash.style.display = 'none';
         game.classList.add('view-hidden');
         game.classList.remove('view-active');
+        if (dwGame) {
+            dwGame.classList.add('view-hidden');
+            dwGame.classList.remove('view-active');
+        }
 
         lobby.classList.remove('view-hidden');
         // Trigger reflow then animate in
@@ -67,33 +79,38 @@ SlotGame.Router = {
         SlotGame.Lobby.updateBalance();
     },
 
-    _showGame: function() {
-        var lobby = document.getElementById('lobby-container');
-        var game  = document.getElementById('game-container');
+    _showGame: function(gameType) {
+        var lobby  = document.getElementById('lobby-container');
         var splash = document.getElementById('splash-screen');
 
         lobby.classList.add('view-hidden');
         lobby.classList.remove('view-active');
+
+        if (gameType === 'slot') {
+            this._showSlotGame(splash);
+        } else if (gameType === 'dragon_wolf') {
+            this._showDWGame(splash);
+        }
+    },
+
+    _showSlotGame: function(splash) {
+        var game = document.getElementById('game-container');
 
         // Sync platform state into game
         SlotGame.State.syncFromPlatform();
 
         // Initialize game (only once; re-entry re-syncs state)
         if (!SlotGame.Main._initialized) {
-            // If launched from lobby, audio was pre-unlocked by the PLAY NOW click.
-            // Only show splash if user navigated directly (no lobby gesture).
             var fromLobby = SlotGame.Lobby._launchedFromLobby;
             SlotGame.Lobby._launchedFromLobby = false;
 
             if (!fromLobby) {
-                // Direct URL navigation — need splash for AudioContext unlock
                 if (splash) {
                     splash.style.display = '';
                     splash.classList.remove('hidden');
                 }
             }
 
-            // Show game container
             game.classList.remove('view-hidden');
             void game.offsetHeight;
             game.classList.add('view-active');
@@ -101,12 +118,10 @@ SlotGame.Router = {
             SlotGame.Main.init();
             SlotGame.Main._initialized = true;
 
-            // If launched from lobby, ensure splash is hidden
             if (fromLobby && splash) {
                 splash.style.display = 'none';
             }
         } else {
-            // Re-entering: just show game and update UI
             game.classList.remove('view-hidden');
             void game.offsetHeight;
             game.classList.add('view-active');
@@ -114,9 +129,50 @@ SlotGame.Router = {
             SlotGame.UI.updateAll();
             SlotGame.Reels.renderStaticGrid(SlotGame.RNG.generateGrid());
 
-            // Re-sync audio settings
             if (SlotGame.State.musicEnabled && SlotGame.Audio && SlotGame.Audio.ctx) {
                 try { SlotGame.Audio.bgmStart(); } catch(e) {}
+            }
+        }
+    },
+
+    _showDWGame: function(splash) {
+        var game = document.getElementById('dw-game-container');
+        if (!game || !window.DragonWolf) return;
+
+        DragonWolf.State.syncFromPlatform();
+
+        var fromLobby = SlotGame.Lobby._launchedFromLobby;
+        SlotGame.Lobby._launchedFromLobby = false;
+
+        if (!DragonWolf.Main._initialized) {
+            if (!fromLobby) {
+                if (splash) {
+                    splash.style.display = '';
+                    splash.classList.remove('hidden');
+                }
+            }
+
+            game.classList.remove('view-hidden');
+            void game.offsetHeight;
+            game.classList.add('view-active');
+
+            DragonWolf.Main.init();
+            DragonWolf.Main._initialized = true;
+
+            if (fromLobby && splash) {
+                splash.style.display = 'none';
+            }
+        } else {
+            game.classList.remove('view-hidden');
+            void game.offsetHeight;
+            game.classList.add('view-active');
+
+            DragonWolf.State.syncFromPlatform();
+            DragonWolf.UI.updateAll();
+            DragonWolf.Reels.renderStaticGrid(DragonWolf.RNG.generateGrid(false));
+
+            if (DragonWolf.State.musicEnabled && DragonWolf.Audio && DragonWolf.Audio.ctx) {
+                try { DragonWolf.Audio.bgmStart('base'); } catch(e) {}
             }
         }
     },
@@ -130,6 +186,8 @@ SlotGame.Router = {
     goToGame: function(gameId) {
         if (gameId === 'slot_game') {
             window.location.hash = '#' + this.ROUTES.GAME_SLOT;
+        } else if (gameId === 'dragon_wolf') {
+            window.location.hash = '#' + this.ROUTES.GAME_DW;
         }
     },
 

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 白狼 M3 -->
+  <defs>
+    <radialGradient id="m3Glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E0E0FF" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0D0A1A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#0D1220" stroke="#A0C0FF" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="48" fill="url(#m3Glow)"/>
+  <!-- 狼身體 -->
+  <ellipse cx="50" cy="60" rx="22" ry="18" fill="#E8E8F0" stroke="#A0C0FF" stroke-width="1.5"/>
+  <!-- 狼頭 -->
+  <ellipse cx="50" cy="36" rx="18" ry="16" fill="#F0F0F8" stroke="#A0C0FF" stroke-width="2"/>
+  <!-- 狼耳 -->
+  <polygon points="36,22 32,8 44,20" fill="#E0E0F0" stroke="#A0C0FF" stroke-width="1.5"/>
+  <polygon points="64,22 68,8 56,20" fill="#E0E0F0" stroke="#A0C0FF" stroke-width="1.5"/>
+  <polygon points="37,20 34,10 43,20" fill="#FFB0C0" opacity="0.5"/>
+  <polygon points="63,20 66,10 57,20" fill="#FFB0C0" opacity="0.5"/>
+  <!-- 狼眼 -->
+  <ellipse cx="43" cy="34" rx="4" ry="3.5" fill="#1A1A2E"/>
+  <ellipse cx="57" cy="34" rx="4" ry="3.5" fill="#1A1A2E"/>
+  <circle cx="43" cy="34" r="2" fill="#FF3030"/>
+  <circle cx="57" cy="34" r="2" fill="#FF3030"/>
+  <circle cx="44" cy="33" r="1" fill="white"/>
+  <circle cx="58" cy="33" r="1" fill="white"/>
+  <!-- 狼鼻口 -->
+  <ellipse cx="50" cy="42" rx="4" ry="3" fill="#C0C0D0"/>
+  <path d="M46 46 Q50 50 54 46" fill="none" stroke="#A0C0FF" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 狼尾 -->
+  <path d="M68 60 Q80 50 78 40 Q82 55 72 65" fill="#E8E8F0" stroke="#A0C0FF" stroke-width="1.5"/>
+  <!-- 月光光輝 -->
+  <circle cx="50" cy="50" r="38" fill="none" stroke="#A0C0FF" stroke-width="0.8" opacity="0.3" stroke-dasharray="4 4"/>
+  <!-- 月亮 -->
+  <circle cx="80" cy="15" r="8" fill="#F0F0A0" opacity="0.8"/>
+  <circle cx="84" cy="13" r="6" fill="#0D1220" opacity="0.5"/>
+  <!-- M3 文字 -->
+  <text x="50" y="97" font-family="Arial" font-size="9" font-weight="900" fill="#A0C0FF" text-anchor="middle" letter-spacing="0.5">白狼</text>
+</svg>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 憶無心 M4 -->
+  <defs>
+    <radialGradient id="m4Glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF6B9D" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0D0A1A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="#1A0810" stroke="#C0507A" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="48" fill="url(#m4Glow)"/>
+  <!-- 人物身形 -->
+  <path d="M38 80 Q36 60 40 50 Q44 40 50 38 Q56 40 60 50 Q64 60 62 80" fill="#2A1020" stroke="#C0507A" stroke-width="1.5"/>
+  <!-- 頭部 -->
+  <ellipse cx="50" cy="28" rx="13" ry="14" fill="#F0D0C0" stroke="#C0507A" stroke-width="1.5"/>
+  <!-- 髮型（長髮） -->
+  <path d="M37 24 Q30 20 32 35 Q28 25 35 38" fill="#1A1A1A" stroke="none"/>
+  <path d="M63 24 Q70 20 68 35 Q72 25 65 38" fill="#1A1A1A" stroke="none"/>
+  <path d="M38 16 Q50 10 62 16 Q58 8 50 6 Q42 8 38 16" fill="#1A1A1A"/>
+  <!-- 面紗部分遮臉 -->
+  <path d="M37 30 Q40 38 50 40 Q60 38 63 30" fill="rgba(200,180,220,0.4)" stroke="#C0507A" stroke-width="0.8"/>
+  <!-- 眼睛（露出部分） -->
+  <ellipse cx="44" cy="26" rx="3.5" ry="2.5" fill="#1A0A20"/>
+  <ellipse cx="56" cy="26" rx="3.5" ry="2.5" fill="#1A0A20"/>
+  <circle cx="44" cy="26" r="1.5" fill="#FF6B9D"/>
+  <circle cx="56" cy="26" r="1.5" fill="#FF6B9D"/>
+  <!-- 服裝 -->
+  <rect x="40" y="46" width="20" height="30" rx="2" fill="#2A1020" stroke="#C0507A" stroke-width="1"/>
+  <!-- 桃花 -->
+  <g transform="translate(22,42)">
+    <circle cx="0" cy="-6" r="4" fill="#FF8FAB" opacity="0.8"/>
+    <circle cx="5" cy="-2" r="4" fill="#FF8FAB" opacity="0.8"/>
+    <circle cx="3" cy="4" r="4" fill="#FF8FAB" opacity="0.8"/>
+    <circle cx="-3" cy="4" r="4" fill="#FF8FAB" opacity="0.8"/>
+    <circle cx="-5" cy="-2" r="4" fill="#FF8FAB" opacity="0.8"/>
+    <circle cx="0" cy="0" r="2.5" fill="#FFD700"/>
+  </g>
+  <!-- 劍 -->
+  <line x1="70" y1="25" x2="58" y2="75" stroke="#C0C0C0" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="65" y1="22" x2="74" y2="22" stroke="#C0507A" stroke-width="3" stroke-linecap="round"/>
+  <!-- M4 文字 -->
+  <text x="50" y="97" font-family="Arial" font-size="9" font-weight="900" fill="#FF6B9D" text-anchor="middle" letter-spacing="0.5">憶無心</text>
+</svg>
