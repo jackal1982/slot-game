@@ -1,67 +1,120 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 黑龍 M2: 冷酷黑臉 / 龍角 / 臉頰龍鱗 / 紫瞳 / 深色鎧甲 -->
   <defs>
-    <radialGradient id="m2bg" cx="50%" cy="45%" r="50%">
-      <stop offset="0%" stop-color="#1a0a2e"/>
-      <stop offset="100%" stop-color="#0a0515"/>
+    <radialGradient id="m2bg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#1e0835"/><stop offset="100%" stop-color="#0a0318"/>
     </radialGradient>
-    <linearGradient id="m2face" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2a2035"/>
-      <stop offset="100%" stop-color="#1a1525"/>
+    <linearGradient id="m2purp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9b4dca"/><stop offset="50%" stop-color="#6a0dad"/><stop offset="100%" stop-color="#3d0080"/>
     </linearGradient>
-    <linearGradient id="m2horn" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%" stop-color="#4a3060"/>
-      <stop offset="50%" stop-color="#7B2FBE"/>
-      <stop offset="100%" stop-color="#FFD700"/>
+    <linearGradient id="m2horn" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d4aa20"/><stop offset="50%" stop-color="#9a7a00"/><stop offset="100%" stop-color="#4a3a00"/>
     </linearGradient>
-    <linearGradient id="m2armor" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2a1a3e"/>
-      <stop offset="100%" stop-color="#0d0520"/>
+    <linearGradient id="m2face" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a1e2e"/><stop offset="100%" stop-color="#140c1e"/>
     </linearGradient>
-    <filter id="m2glow">
-      <feGaussianBlur stdDeviation="1.5" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <radialGradient id="m2eye" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#cc88ff"/><stop offset="50%" stop-color="#8800cc"/><stop offset="100%" stop-color="#3d0060"/>
+    </radialGradient>
+    <linearGradient id="m2armor" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1e2e"/><stop offset="100%" stop-color="#060610"/>
+    </linearGradient>
+    <linearGradient id="m2scale" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a1a6e"/><stop offset="100%" stop-color="#2a0848"/>
+    </linearGradient>
+    <filter id="m2pg" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feFlood flood-color="#6a0dad" flood-opacity="0.6" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="m2gw" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
-  <circle cx="50" cy="50" r="48" fill="url(#m2bg)" stroke="#7B2FBE" stroke-width="2"/>
-  <!-- Armor/shoulders -->
-  <path d="M22,88 Q28,72 35,68 Q42,65 50,63 Q58,65 65,68 Q72,72 78,88" fill="url(#m2armor)" stroke="#4a3060" stroke-width="0.5"/>
-  <!-- Shoulder scales -->
-  <path d="M30,78 Q33,74 36,72 L38,74 Q35,76 32,80Z" fill="#4a3060" opacity="0.7"/>
-  <path d="M70,78 Q67,74 64,72 L62,74 Q65,76 68,80Z" fill="#4a3060" opacity="0.7"/>
-  <!-- Neck -->
-  <rect x="44" y="60" width="12" height="8" rx="3" fill="#2a2035"/>
-  <!-- Face -->
-  <ellipse cx="50" cy="44" rx="18" ry="21" fill="url(#m2face)"/>
-  <!-- Hair - long black -->
-  <path d="M32,30 Q28,35 26,50 Q25,60 27,70 Q30,55 32,42Z" fill="#0d0d15"/>
-  <path d="M68,30 Q72,35 74,50 Q75,60 73,70 Q70,55 68,42Z" fill="#0d0d15"/>
-  <path d="M32,30 Q38,22 50,20 Q62,22 68,30 Q63,25 50,23 Q37,25 32,30Z" fill="#0d0d15"/>
-  <!-- Dragon horns -->
-  <path d="M36,28 Q33,18 28,8 Q32,12 35,20 Q36,24 36,28Z" fill="url(#m2horn)" filter="url(#m2glow)"/>
-  <path d="M64,28 Q67,18 72,8 Q68,12 65,20 Q64,24 64,28Z" fill="url(#m2horn)" filter="url(#m2glow)"/>
-  <!-- Small horn branches -->
-  <path d="M32,16 Q28,14 26,11" stroke="#7B2FBE" stroke-width="1" fill="none"/>
-  <path d="M68,16 Q72,14 74,11" stroke="#7B2FBE" stroke-width="1" fill="none"/>
-  <!-- Scale patterns on cheeks -->
-  <path d="M33,42 L35,40 L37,42 L35,44Z" fill="#4a3060" opacity="0.5"/>
-  <path d="M34,46 L36,44 L38,46 L36,48Z" fill="#4a3060" opacity="0.4"/>
-  <path d="M63,42 L65,40 L67,42 L65,44Z" fill="#4a3060" opacity="0.5"/>
-  <path d="M62,46 L64,44 L66,46 L64,48Z" fill="#4a3060" opacity="0.4"/>
-  <!-- Eyes - purple dragon eyes -->
-  <ellipse cx="42" cy="42" rx="5" ry="3.5" fill="#1a1028" stroke="#7B2FBE" stroke-width="0.5"/>
-  <ellipse cx="42" cy="42" rx="2" ry="3" fill="#7B2FBE"/>
-  <ellipse cx="42" cy="42" rx="0.8" ry="2" fill="#FFD700"/>
-  <circle cx="41" cy="41" r="0.5" fill="white"/>
-  <ellipse cx="58" cy="42" rx="5" ry="3.5" fill="#1a1028" stroke="#7B2FBE" stroke-width="0.5"/>
-  <ellipse cx="58" cy="42" rx="2" ry="3" fill="#7B2FBE"/>
-  <ellipse cx="58" cy="42" rx="0.8" ry="2" fill="#FFD700"/>
-  <circle cx="57" cy="41" r="0.5" fill="white"/>
-  <!-- Eyebrows - sharp -->
-  <path d="M34,37 Q38,34 47,37" stroke="#4a3060" stroke-width="1.2" fill="none"/>
-  <path d="M53,37 Q62,34 66,37" stroke="#4a3060" stroke-width="1.2" fill="none"/>
-  <!-- Nose -->
-  <path d="M49,45 L50,51 L51,50" stroke="#3a2a45" stroke-width="0.6" fill="none"/>
-  <!-- Mouth - stern -->
-  <path d="M43,55 Q47,57 50,56 Q53,57 57,55" stroke="#4a2a4a" stroke-width="0.8" fill="none"/>
-  <text x="50" y="96" text-anchor="middle" font-size="8" font-weight="bold" fill="#7B2FBE" font-family="serif">黑龍</text>
+
+  <circle cx="50" cy="50" r="49" fill="url(#m2bg)"/>
+  <circle cx="50" cy="50" r="48.5" fill="none" stroke="url(#m2purp)" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#6a0dad" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- 黑色鎧甲身體 -->
+  <path d="M5 100 Q10 78 22 70 Q33 64 50 63 L50 100Z" fill="url(#m2armor)"/>
+  <path d="M95 100 Q90 78 78 70 Q67 64 50 63 L50 100Z" fill="url(#m2armor)"/>
+  <path d="M5 100 Q10 78 22 70 Q33 64 50 63" fill="none" stroke="#6a0dad" stroke-width="1.2"/>
+  <path d="M95 100 Q90 78 78 70 Q67 64 50 63" fill="none" stroke="#6a0dad" stroke-width="1.2"/>
+  <polygon points="18,72 14,66 22,68" fill="#3d0060"/>
+  <polygon points="24,68 21,62 28,65" fill="#3d0060"/>
+  <polygon points="82,72 86,66 78,68" fill="#3d0060"/>
+  <polygon points="76,68 79,62 72,65" fill="#3d0060"/>
+  <path d="M44 70 L50 65 L56 70 L50 78Z" fill="#6a0dad" opacity="0.8"/>
+
+  <!-- 頸部+龍鱗 -->
+  <path d="M44 58 Q44 66 50 67 Q56 66 56 58" fill="url(#m2face)"/>
+  <path d="M45 61 Q50 59 55 61" fill="none" stroke="#4a1a6e" stroke-width="0.8" opacity="0.6"/>
+  <path d="M45 64 Q50 62 55 64" fill="none" stroke="#4a1a6e" stroke-width="0.7" opacity="0.5"/>
+
+  <!-- 臉 -->
+  <path d="M29 41 Q29 28 50 18 Q71 28 71 41 Q71 58 50 64 Q29 58 29 41Z" fill="url(#m2face)"/>
+  <ellipse cx="38" cy="30" rx="9" ry="6" fill="#4a3060" opacity="0.15"/>
+
+  <!-- 臉頰龍鱗（左） -->
+  <path d="M33 42 Q36 39 39 42 Q36 45 33 42Z" fill="url(#m2scale)" opacity="0.85"/>
+  <path d="M35 47 Q38 44 41 47 Q38 50 35 47Z" fill="url(#m2scale)" opacity="0.75"/>
+  <path d="M31 47.5 Q33 45.5 35 47.5 Q33 49.5 31 47.5Z" fill="url(#m2scale)" opacity="0.65"/>
+  <!-- 臉頰龍鱗（右） -->
+  <path d="M61 42 Q64 39 67 42 Q64 45 61 42Z" fill="url(#m2scale)" opacity="0.85"/>
+  <path d="M59 47 Q62 44 65 47 Q62 50 59 47Z" fill="url(#m2scale)" opacity="0.75"/>
+  <path d="M65 47.5 Q67 45.5 69 47.5 Q67 49.5 65 47.5Z" fill="url(#m2scale)" opacity="0.65"/>
+
+  <!-- 黑色長髮 -->
+  <path d="M30 22 Q20 35 18 55 Q17 65 20 75" stroke="#0a0a0a" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M32 19 Q22 32 20 48" stroke="#080808" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M70 22 Q80 35 82 55 Q83 65 80 75" stroke="#0a0a0a" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M68 19 Q78 32 80 48" stroke="#080808" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M31 22 Q50 12 69 22 Q65 15 50 13 Q35 15 31 22Z" fill="#0a0a0a"/>
+
+  <!-- 龍角（左右） -->
+  <path d="M37 20 Q32 11 35 4 Q38 8 40 14 Q41 18 38 22Z" fill="url(#m2horn)" filter="url(#m2gw)"/>
+  <path d="M37.5 20 Q33 12 35.5 5.5 Q37 9 38.5 14 Q39.5 18 37.5 21Z" fill="#6a5000" opacity="0.6"/>
+  <path d="M36 16 Q37 13 37.5 10" fill="none" stroke="#c8a000" stroke-width="0.5" opacity="0.6"/>
+  <path d="M63 20 Q68 11 65 4 Q62 8 60 14 Q59 18 62 22Z" fill="url(#m2horn)" filter="url(#m2gw)"/>
+  <path d="M62.5 20 Q67 12 64.5 5.5 Q63 9 61.5 14 Q60.5 18 62.5 21Z" fill="#6a5000" opacity="0.6"/>
+  <path d="M64 16 Q63 13 62.5 10" fill="none" stroke="#c8a000" stroke-width="0.5" opacity="0.6"/>
+
+  <!-- 耳朵 -->
+  <ellipse cx="29" cy="43" rx="3" ry="4.5" fill="#1a1028"/>
+  <ellipse cx="71" cy="43" rx="3" ry="4.5" fill="#1a1028"/>
+
+  <!-- 左眼（紫瞳） -->
+  <ellipse cx="41" cy="40" rx="5.5" ry="4" fill="#1a0828"/>
+  <ellipse cx="41" cy="40" rx="4.5" ry="3" fill="url(#m2eye)" filter="url(#m2pg)"/>
+  <circle cx="41" cy="40" r="2.5" fill="#1a0040"/>
+  <circle cx="42.5" cy="38.5" r="1" fill="#cc88ff" opacity="0.8"/>
+  <path d="M35.5 37 Q41 34 46.5 37" fill="none" stroke="#1a0a2e" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M35 33.5 Q40 30 46 32.5" fill="none" stroke="#1a0a0a" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- 右眼（紫瞳） -->
+  <ellipse cx="59" cy="40" rx="5.5" ry="4" fill="#1a0828"/>
+  <ellipse cx="59" cy="40" rx="4.5" ry="3" fill="url(#m2eye)" filter="url(#m2pg)"/>
+  <circle cx="59" cy="40" r="2.5" fill="#1a0040"/>
+  <circle cx="60.5" cy="38.5" r="1" fill="#cc88ff" opacity="0.8"/>
+  <path d="M53.5 37 Q59 34 64.5 37" fill="none" stroke="#1a0a2e" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M54 32.5 Q60 30 65 33.5" fill="none" stroke="#1a0a0a" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- 鼻 -->
+  <path d="M48 46 Q50 49 52 46" fill="none" stroke="#6a5070" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- 嘴（冷酷） -->
+  <path d="M43 54 Q50 57 57 54" fill="none" stroke="#4a1a5e" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M45 55.5 Q50 57.5 55 55.5" fill="none" stroke="#6a3a7a" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- 額龍紋 -->
+  <path d="M47 27 Q50 24 53 27 Q51 29 50 28 Q49 29 47 27Z" fill="#6a0dad" opacity="0.6" filter="url(#m2gw)"/>
+
+  <!-- 紫色靈氣 -->
+  <path d="M15 50 Q18 45 20 50 Q18 55 15 50" fill="none" stroke="#6a0dad" stroke-width="0.8" opacity="0.5"/>
+  <path d="M85 40 Q88 35 90 40 Q88 45 85 40" fill="none" stroke="#6a0dad" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="12" cy="35" r="1" fill="#6a0dad" opacity="0.4" filter="url(#m2gw)"/>
+  <circle cx="88" cy="65" r="1.2" fill="#8800cc" opacity="0.3" filter="url(#m2gw)"/>
 </svg>
