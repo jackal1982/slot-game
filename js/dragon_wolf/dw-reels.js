@@ -224,9 +224,20 @@ DragonWolf.Reels = {
             cancelAnimationFrame(this.spinAnimFrames[i]);
         }
 
-        // 各軸依序快速彈跳停止
+        // 只對尚未停止的滾輪播放 slam stop 動畫；已停止的軸跳過
+        var hasSpinning = false;
         for (var ii = 0; ii < cfg.REELS; ii++) {
-            this._slamStopReel(ii, targetGrid, gen, onAllStopped);
+            if (!this._reelStopped[ii]) {
+                hasSpinning = true;
+                this._slamStopReel(ii, targetGrid, gen, onAllStopped);
+            }
+        }
+
+        // 若所有軸已停止（邊界情況），直接觸發回呼
+        if (!hasSpinning) {
+            this.spinning = false;
+            DragonWolf.State.grid = targetGrid;
+            if (onAllStopped) onAllStopped();
         }
     },
 
