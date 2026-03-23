@@ -1,39 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- 白狼 M3 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
   <defs>
-    <radialGradient id="m3Glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#E0E0FF" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#0D0A1A" stop-opacity="0"/>
+    <radialGradient id="m3bg" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#d0d8e8"/>
+      <stop offset="100%" stop-color="#8090a8"/>
     </radialGradient>
+    <linearGradient id="m3face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8f4f0"/>
+      <stop offset="100%" stop-color="#e8e0d8"/>
+    </linearGradient>
+    <linearGradient id="m3hair" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#c8c0b8"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="m3fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0ece8"/>
+      <stop offset="100%" stop-color="#c8c0b8"/>
+    </linearGradient>
+    <filter id="m3glow">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <circle cx="50" cy="50" r="48" fill="#0D1220" stroke="#A0C0FF" stroke-width="2.5"/>
-  <circle cx="50" cy="50" r="48" fill="url(#m3Glow)"/>
-  <!-- 狼身體 -->
-  <ellipse cx="50" cy="60" rx="22" ry="18" fill="#E8E8F0" stroke="#A0C0FF" stroke-width="1.5"/>
-  <!-- 狼頭 -->
-  <ellipse cx="50" cy="36" rx="18" ry="16" fill="#F0F0F8" stroke="#A0C0FF" stroke-width="2"/>
-  <!-- 狼耳 -->
-  <polygon points="36,22 32,8 44,20" fill="#E0E0F0" stroke="#A0C0FF" stroke-width="1.5"/>
-  <polygon points="64,22 68,8 56,20" fill="#E0E0F0" stroke="#A0C0FF" stroke-width="1.5"/>
-  <polygon points="37,20 34,10 43,20" fill="#FFB0C0" opacity="0.5"/>
-  <polygon points="63,20 66,10 57,20" fill="#FFB0C0" opacity="0.5"/>
-  <!-- 狼眼 -->
-  <ellipse cx="43" cy="34" rx="4" ry="3.5" fill="#1A1A2E"/>
-  <ellipse cx="57" cy="34" rx="4" ry="3.5" fill="#1A1A2E"/>
-  <circle cx="43" cy="34" r="2" fill="#FF3030"/>
-  <circle cx="57" cy="34" r="2" fill="#FF3030"/>
-  <circle cx="44" cy="33" r="1" fill="white"/>
-  <circle cx="58" cy="33" r="1" fill="white"/>
-  <!-- 狼鼻口 -->
-  <ellipse cx="50" cy="42" rx="4" ry="3" fill="#C0C0D0"/>
-  <path d="M46 46 Q50 50 54 46" fill="none" stroke="#A0C0FF" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- 狼尾 -->
-  <path d="M68 60 Q80 50 78 40 Q82 55 72 65" fill="#E8E8F0" stroke="#A0C0FF" stroke-width="1.5"/>
-  <!-- 月光光輝 -->
-  <circle cx="50" cy="50" r="38" fill="none" stroke="#A0C0FF" stroke-width="0.8" opacity="0.3" stroke-dasharray="4 4"/>
-  <!-- 月亮 -->
-  <circle cx="80" cy="15" r="8" fill="#F0F0A0" opacity="0.8"/>
-  <circle cx="84" cy="13" r="6" fill="#0D1220" opacity="0.5"/>
-  <!-- M3 文字 -->
-  <text x="50" y="97" font-family="Arial" font-size="9" font-weight="900" fill="#A0C0FF" text-anchor="middle" letter-spacing="0.5">白狼</text>
+  <circle cx="50" cy="50" r="48" fill="url(#m3bg)" stroke="#e0e8f0" stroke-width="2"/>
+  <!-- Fur collar/shoulders -->
+  <path d="M20,88 Q25,70 32,65 Q38,62 44,60 L50,59 L56,60 Q62,62 68,65 Q75,70 80,88" fill="url(#m3fur)"/>
+  <!-- Fur texture lines -->
+  <path d="M28,75 Q30,72 32,70" stroke="#a8a098" stroke-width="0.5" fill="none"/>
+  <path d="M34,72 Q36,69 38,67" stroke="#a8a098" stroke-width="0.5" fill="none"/>
+  <path d="M72,75 Q70,72 68,70" stroke="#a8a098" stroke-width="0.5" fill="none"/>
+  <path d="M66,72 Q64,69 62,67" stroke="#a8a098" stroke-width="0.5" fill="none"/>
+  <!-- Neck -->
+  <rect x="44" y="56" width="12" height="7" rx="3" fill="#e8ddd0"/>
+  <!-- Face -->
+  <ellipse cx="50" cy="42" rx="17" ry="20" fill="url(#m3face)"/>
+  <!-- Wolf ears -->
+  <path d="M32,25 L28,8 L38,22Z" fill="url(#m3hair)" stroke="#c0b8b0" stroke-width="0.5"/>
+  <path d="M34,20 L30,12 L37,22Z" fill="#ffcccc" opacity="0.4"/>
+  <path d="M68,25 L72,8 L62,22Z" fill="url(#m3hair)" stroke="#c0b8b0" stroke-width="0.5"/>
+  <path d="M66,20 L70,12 L63,22Z" fill="#ffcccc" opacity="0.4"/>
+  <!-- Spiky punk hair -->
+  <path d="M35,26 Q38,18 42,14 Q45,10 48,6 Q49,12 50,18 Q51,12 52,6 Q55,10 58,14 Q62,18 65,26 Q60,22 55,20 Q50,19 45,20 Q40,22 35,26Z" fill="url(#m3hair)"/>
+  <!-- Hair spikes highlight -->
+  <path d="M44,14 L46,8 L47,16" fill="white" opacity="0.4"/>
+  <path d="M52,12 L54,5 L55,14" fill="white" opacity="0.4"/>
+  <!-- Eyes - ice blue, fierce -->
+  <ellipse cx="42" cy="40" rx="5" ry="3.5" fill="white" stroke="#8090a8" stroke-width="0.5"/>
+  <circle cx="43" cy="40" r="2.2" fill="#00BFFF"/>
+  <ellipse cx="43" cy="40" rx="1" ry="2" fill="#0080FF"/>
+  <circle cx="42.5" cy="39.5" r="0.6" fill="white"/>
+  <ellipse cx="58" cy="40" rx="5" ry="3.5" fill="white" stroke="#8090a8" stroke-width="0.5"/>
+  <circle cx="57" cy="40" r="2.2" fill="#00BFFF"/>
+  <ellipse cx="57" cy="40" rx="1" ry="2" fill="#0080FF"/>
+  <circle cx="57.5" cy="39.5" r="0.6" fill="white"/>
+  <!-- Eyebrows - fierce -->
+  <path d="M35,35 Q39,33 46,36" stroke="#a0988e" stroke-width="1.2" fill="none"/>
+  <path d="M54,36 Q61,33 65,35" stroke="#a0988e" stroke-width="1.2" fill="none"/>
+  <!-- Nose -->
+  <path d="M49,43 L50,48 L51,47" stroke="#b8a898" stroke-width="0.5" fill="none"/>
+  <!-- Mouth with fangs -->
+  <path d="M42,52 Q46,55 50,54 Q54,55 58,52" stroke="#a08080" stroke-width="0.8" fill="none"/>
+  <!-- Fangs -->
+  <path d="M44,53 L43,56 L45,54" fill="white" stroke="#ccc" stroke-width="0.3"/>
+  <path d="M56,53 L57,56 L55,54" fill="white" stroke="#ccc" stroke-width="0.3"/>
+  <!-- Scar on cheek -->
+  <path d="M62,44 L66,48 M63,46 L67,44" stroke="#cc8888" stroke-width="0.5" opacity="0.6"/>
+  <text x="50" y="96" text-anchor="middle" font-size="8" font-weight="bold" fill="#5070a0" font-family="serif">白狼</text>
 </svg>

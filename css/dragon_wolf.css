@@ -274,6 +274,7 @@
     flex-direction: column;
     align-items: center;
     gap:         6px;
+    flex:        1;
 }
 
 #dw-bet-controls {
@@ -366,6 +367,7 @@
     flex-direction: column;
     gap:            6px;
     align-items:    center;
+    flex:           1;
 }
 .dw-ctrl-btn.small {
     width:  64px;
@@ -728,14 +730,18 @@
     to   { opacity: 1; }
 }
 @keyframes dw-dragon-enter {
-    from { left: -240px; opacity: 1; transform: translateY(-50%) scale(1); }
-    80%  { left: -8%; transform: translateY(-50%) scale(1); opacity: 1; }
-    100% { left: -8%; transform: translateY(-50%) scale(0.2); opacity: 0; }
+    0%   { left: -240px; opacity: 1; transform: translateY(-50%) scale(1); }
+    55%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1); }
+    75%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1); }
+    90%  { left: calc(50% - 110px); opacity: 0.4; transform: translateY(-50%) scale(0.35); }
+    100% { left: calc(50% - 110px); opacity: 0; transform: translateY(-50%) scale(0); }
 }
 @keyframes dw-wolf-enter {
-    from { right: -240px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    80%  { right: -8%; transform: translateY(-50%) scaleX(-1) scale(1); opacity: 1; }
-    100% { right: -8%; transform: translateY(-50%) scaleX(-1) scale(0.2); opacity: 0; }
+    0%   { right: -240px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    55%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    75%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    90%  { right: calc(50% - 110px); opacity: 0.4; transform: translateY(-50%) scaleX(-1) scale(0.35); }
+    100% { right: calc(50% - 110px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0); }
 }
 @keyframes dw-mw-appear {
     from { transform: translate(-50%, -50%) scale(0); opacity: 0; }

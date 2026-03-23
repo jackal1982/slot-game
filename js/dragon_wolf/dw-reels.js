@@ -123,18 +123,13 @@ DragonWolf.Reels = {
         var extraCount = Math.max(minSymbols, 30);
 
         // 建立 strip：[extra 滾動符號...][目標符號]
-        // translateY(0) 時顯示最前面的 ROWS 個符號（extra的前段）
-        // translateY(-(extraCount * symSize)) 時顯示最後 ROWS 個（目標符號）
         strip.style.transition = 'none';
         strip.style.transform  = 'translateY(0)';
         strip.innerHTML        = '';
 
-        // 從 _lastStops 取 stopIndex，讓 extra 符號末尾自然銜接 targetColumn[0]，
-        // 避免跨邊界的 4-row 視窗出現多個 SC/WD。
         var stopIndex = (DragonWolf.RNG._lastStops && DragonWolf.RNG._lastStops[reelIndex] !== undefined)
             ? DragonWolf.RNG._lastStops[reelIndex]
             : Math.floor(Math.random() * reel.length);
-        // extra[extraCount-1] = reel[(stopIndex-1+len)%len]，即 targetColumn[0] 的前一格
         var startPos = ((stopIndex - extraCount) % reel.length + reel.length) % reel.length;
 
         for (var p = 0; p < extraCount; p++) {
@@ -144,28 +139,40 @@ DragonWolf.Reels = {
             strip.appendChild(this.createSymbolEl(targetColumn[r]));
         }
 
-        var targetY = -(extraCount * symSize); // 滾到目標符號
+        var targetY    = -(extraCount * symSize);
+        var overshootY = targetY + symSize * 0.15;
+        var stopDelay  = duration + reelIndex * stagger;
+        var BOUNCE_DUR = 180;
 
-        // 用 setTimeout(20ms) 代替 double-rAF，確保頁面隱藏時也能觸發
-        setTimeout(function() {
-            if (gen !== self._spinGeneration) return;
-
-                var stopDelay = duration + reelIndex * stagger;
+        // double-rAF 確保初始位置已繪製才啟動 transition
+        self.spinAnimFrames[reelIndex] = requestAnimationFrame(function() {
+            self.spinAnimFrames[reelIndex] = requestAnimationFrame(function() {
+                if (gen !== self._spinGeneration) return;
 
                 // Phase 1：主要滾動動畫
-                strip.style.transition = 'transform ' + (stopDelay / 1000).toFixed(3) + 's cubic-bezier(0.2, 0, 0.3, 1)';
-                strip.style.transform  = 'translateY(' + (targetY + symSize * 0.15) + 'px)';
+                strip.style.transition = 'transform ' + (stopDelay / 1000).toFixed(3) + 's cubic-bezier(0.2, 0.0, 0.3, 1.0)';
+                strip.style.transform  = 'translateY(' + overshootY + 'px)';
 
-                // Phase 2：彈跳回正
-                var t1 = setTimeout(function() {
-                    if (gen !== self._spinGeneration) return;
-                    strip.style.transition = 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    strip.style.transform  = 'translateY(' + targetY + 'px)';
+                var phase1Fired = false;
+                var onPhase1End = function() {
+                    if (phase1Fired || gen !== self._spinGeneration) return;
+                    phase1Fired = true;
+                    strip.removeEventListener('transitionend', onPhase1End);
+                    clearTimeout(self.reelTimers[reelIndex]);
 
                     try { DragonWolf.Audio.play('reel_stop'); } catch(e) {}
 
-                    var t2 = setTimeout(function() {
-                        if (gen !== self._spinGeneration) return;
+                    // Phase 2：彈跳回正
+                    strip.style.transition = 'transform ' + BOUNCE_DUR + 'ms cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    strip.style.transform  = 'translateY(' + targetY + 'px)';
+
+                    var phase2Fired = false;
+                    var onPhase2End = function() {
+                        if (phase2Fired || gen !== self._spinGeneration) return;
+                        phase2Fired = true;
+                        strip.removeEventListener('transitionend', onPhase2End);
+                        clearTimeout(self.reelTimers[reelIndex]);
+
                         // 清理並渲染最終靜態畫面
                         strip.style.transition = 'none';
                         strip.style.transform  = 'translateY(0)';
@@ -176,13 +183,16 @@ DragonWolf.Reels = {
 
                         self._reelStopped[reelIndex] = true;
                         self._checkAllStopped(gen, targetGrid, onAllStopped);
-                    }, 200);
-
-                    self.reelTimers[reelIndex] = t2;
-                }, stopDelay);
-
-                self.reelTimers[reelIndex] = t1;
-        }, 20);
+                    };
+                    strip.addEventListener('transitionend', onPhase2End);
+                    // Phase 2 安全備援
+                    self.reelTimers[reelIndex] = setTimeout(onPhase2End, BOUNCE_DUR + 100);
+                };
+                strip.addEventListener('transitionend', onPhase1End);
+                // Phase 1 安全備援
+                self.reelTimers[reelIndex] = setTimeout(onPhase1End, stopDelay + 150);
+            });
+        });
     },
 
     _checkAllStopped: function(gen, targetGrid, callback) {
