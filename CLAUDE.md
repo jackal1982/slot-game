@@ -150,6 +150,17 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 13. **大廳 SOUND/MUSIC 按鈕無效（PR #24）**：main.js `cleanup()` 呼叫 `Audio.stopBGM()` 但實際方法名為 `Audio.bgmStop()`，從遊戲返回大廳時 BGM 殘留，導致大廳切換按鈕失效 → 修正方法名；lobby.js MUSIC OFF 時同步呼叫 `bgmStop()`
 14. **黑白龍狼傳 PLAY NOW 無反應（PR #24）**：platform.js 預設 `_state.games` 缺少 `dragon_wolf` key，`Platform.startGame('dragon_wolf')` 回傳 false，launchGame 提前返回 → 在 `_state.games`、`_applyLoaded()`、`reset()` 三處加入 `dragon_wolf: { betIndex: 0 }`
 15. **DW SC/WD 同軸重複**：dw-rng.js `generateGrid` SC/WD 重試邏輯不足 → 改為最多 1000 次重試 + fallback 全掃描，確保每軸最多 1 個特殊符號
+16. **滾輪區 click 不驅動遊戲**：dw-ui.js 缺少 reelArea click handler → 新增點擊滾輪區觸發 spin/slamStop 邏輯
+17. **SPIN 按鈕未置中**：CSS 缺少 flex:1 → 修正使按鈕置中對齊
+18. **Paytable 顯示 xways**：移除佔位文字，改為顯示實際贏分金額
+19. **缺少 STOP/SKIP 按鈕**：SPINNING 狀態時顯示 STOP（快停），SHOWING_WINS 時顯示 SKIP（跳過展示）
+20. **滾輪停止頓感生硬**：改用 transitionend 事件 + double-rAF 確保動畫流暢
+21. **Free Spins 未自動開始**：Free Spins 觸發後需手動點擊 → 加入 500ms 延遲自動觸發
+22. **轉場動畫不符腳本**：修正 keyframes 實現黑龍白狼融合序列
+23. **連點滾輪區抖動**：快速連點導致動畫異常 → 加入 500ms cooldown + SPINNING 狀態鎖定
+24. **滾輪往上滾（方向錯誤）**：translateY 方向計算錯誤 → 修正為向下滾動
+25. **Bet 倍數跳動不連續**：BET_MULTIPLIERS 含非連續值 → 改為 [1,2,3,4,5,6,7,8,9,10] 連續整數
+26. **Slam Stop 已停止滾輪回彈**：slam stop 時已停止的滾輪仍觸發 bounce 動畫 → 加入 `_reelStopped[]` 陣列檢查，已停止者跳過 bounce
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
@@ -178,6 +189,9 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - PR #22: 更新 README.md 和 README.zh-TW.md（修正賠率表、Free Spins/Bonus/Jackpot 參數、新增平台架構/音效系統/架構圖、更新專案結構）
 - PR #23: 新增第二款遊戲「黑白龍狼傳」（Dragon Wolf Legend）— 5×4、1024-Ways、RTP 96%，獨立 window.DragonWolf 命名空間，10 個 JS 模組 + CSS + 11 個 SVG 符號
 - PR #24: 修復大廳音效控制 + 黑白龍狼傳進入遊戲（main.js stopBGM→bgmStop、lobby.js MUSIC OFF 同步停止、platform.js 補 dragon_wolf game state）
+- PR #25: 修復黑白龍狼傳 UI/UX 問題（滾輪區 click 驅動遊戲、SPIN 按鈕置中、TOTAL BET 顯示、Paytable 移除 xways 改為實際贏分、SPINNING 時顯示 STOP + SHOWING_WINS 時顯示 SKIP、滾輪停止動畫改 transitionend + double-rAF、Free Spins 500ms 延遲自動開始、轉場動畫修正黑龍白狼融合序列、文字與賠率修正）+ 更新角色 SVG
+- PR #26: 修復遊戲體驗問題（連點滾輪區 500ms cooldown + SPINNING 鎖定防抖動、滾輪 translateY 方向修正改為向下滾、BET_MULTIPLIERS 改為連續 [1,2,3,4,5,6,7,8,9,10]、新增 AUTO 自動連續 Spin 功能、M1 出現率提升 + FREE_PAY 降低）
+- PR #27: Free Game 觸發率提高至 ~1/57（Base Game SC 增加至軸1=7、軸2=8、軸3=8 + FREE_PAY 降低，RTP 96.09%）+ Slam Stop 修復（_reelStopped[] 檢查，已停止滾輪不再回彈）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
@@ -212,9 +226,11 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 ### 遊戲規格
 - **軸數/列數**：5 軸 4 列（20 格）
 - **賠付方式**：1024-Ways（不用固定線，計算相鄰軸上的符號數量組合）
-- **RTP 目標**：96%
+- **RTP 目標**：96%（實測 96.09%，Base ~57.6% + Free ~38.5%）
 - **匹配規則**：由左至右連續匹配，Wild 可替代任何非 Scatter 符號
 - **隨機機制**：Reel Strip-based，每軸固定序列，隨機選取停止位置
+- **BET_MULTIPLIERS**：[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 連續整數
+- **AUTO 功能**：自動連續 Spin，餘額不足自動取消
 
 ### Symbol 賠率表（黑白龍狼傳）
 | Symbol  | 說明 | 1連 | 2連 | 3連 | 4連 | 5連 |
@@ -231,7 +247,7 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 | Sword   | 劍   | —   | —   | 2   | 5   | 15  |
 | Jade    | 玉   | —   | —   | 2   | 5   | 15  |
 
-- Scatter 觸發 Free Spins（3顆=10次、4顆=15次、5顆=20次，2x 倍率，可重觸發）
+- Scatter 觸發 Free Spins（3顆=10次、4顆=15次、5顆=20次，2x 倍率，可重觸發）；觸發率 ~1.75%（約 1/57），Base Game SC 數量：軸1=7、軸2=8、軸3=8
 - 1024-Ways 賠付：每軸各有幾個相符符號就乘幾（如軸1×2×1×3×2=12 種 way）
 
 ### 命名空間與模組
@@ -240,11 +256,14 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 
 ### 關鍵實作細節
 - **dw-rng.js `generateGrid`**：SC/WD 每軸最多出現 1 個，透過最多 1000 次重試 + fallback 全掃描安全位置確保
-- **dw-reels.js**：動畫 extra 符號使用 `_lastStops` 確保每次 spin 啟動畫面與上次結果一致
+- **dw-reels.js**：動畫 extra 符號使用 `_lastStops` 確保每次 spin 啟動畫面與上次結果一致；`_reelStopped[]` 陣列防止已停止軸再次回彈
 - **dw-main.js `onSpin`**：立即更新 `State.grid`，防止 M1 特色（Free Spins 等）污染 grid 狀態
 - **dw-payways.js**：1024-Ways 計算方式：統計每軸相符符號數，乘積即為 way 數，再乘賠率
+- **Free Spins M1 數量（最新）**：軸1=10、軸2=9、軸3=9、軸4=8、軸5=8
+- **Free Game 賠率（最新）**：M1: 3連=0.12, 4連=0.34, 5連=0.66；M4: 3連=0.06, 4連=0.12, 5連=0.24
 
 ### RTP 驗證
 - 驗證腳本：`rtp_verify_dragon_wolf_final.js`（Node.js，獨立執行）
 - 指令：`node rtp_verify_dragon_wolf_final.js`
 - 目標：95.5%~96.5%
+- 實測（PR #27）：Total 96.09%（Base ~57.6% + Free ~38.5%）
