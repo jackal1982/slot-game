@@ -16,11 +16,20 @@ DragonWolf.UI = {
     _bindButtons: function() {
         var self = this;
 
-        // SPIN
+        // SPIN / STOP / SKIP
         var spinBtn = document.getElementById('dw-btn-spin');
         if (spinBtn) {
             spinBtn.addEventListener('click', function() {
-                DragonWolf.Main.onSpin();
+                var phase = DragonWolf.State.phase;
+                if (phase === 'IDLE') {
+                    DragonWolf.Main.onSpin();
+                } else if (phase === 'SPINNING') {
+                    DragonWolf.Main.onSlamStop();
+                } else if (phase === 'SHOWING_WINS') {
+                    var isFree = DragonWolf.State.inFreeSpins;
+                    DragonWolf.Animations.stopWinCycle();
+                    DragonWolf.Main.onWinsShown(isFree);
+                }
             });
         }
 
@@ -107,13 +116,26 @@ DragonWolf.UI = {
             });
         }
 
-        // 點擊 reel area = slam stop
+        // 點擊 reel area = spin / slam stop / skip wins
+        var lastReelActionTime = 0;
+        var REEL_COOLDOWN = 500;
         var reelArea = document.getElementById('dw-reel-area');
         if (reelArea) {
-            reelArea.addEventListener('click', function() {
+            reelArea.addEventListener('click', function(e) {
+                if (e.target.closest && e.target.closest('#dw-fs-hud')) return;
+                var now   = Date.now();
                 var state = DragonWolf.State;
-                if (state.phase === 'SPINNING') {
+                if (state.phase === 'IDLE') {
+                    if (now - lastReelActionTime < REEL_COOLDOWN) return;
+                    lastReelActionTime = now;
+                    DragonWolf.Main.onSpin();
+                } else if (state.phase === 'SPINNING') {
+                    lastReelActionTime = now;
                     DragonWolf.Main.onSlamStop();
+                } else if (state.phase === 'SHOWING_WINS') {
+                    var isFreeSkip = state.inFreeSpins;
+                    DragonWolf.Animations.stopWinCycle();
+                    DragonWolf.Main.onWinsShown(isFreeSkip);
                 }
             });
         }
@@ -146,10 +168,12 @@ DragonWolf.UI = {
         var mult = cfg.BET_MULTIPLIERS[idx];
         var bet  = cfg.BASE_BET * mult;
 
-        var betMultEl  = document.getElementById('dw-bet-multiplier');
-        var totalBetEl = document.getElementById('dw-total-bet');
-        if (betMultEl)  betMultEl.textContent  = mult + 'x';
-        if (totalBetEl) totalBetEl.textContent = bet.toLocaleString();
+        var betMultEl     = document.getElementById('dw-bet-multiplier');
+        var totalBetEl    = document.getElementById('dw-total-bet');
+        var baseBetLblEl  = document.getElementById('dw-base-bet-label');
+        if (betMultEl)    betMultEl.textContent  = mult + 'x';
+        if (totalBetEl)   totalBetEl.textContent = bet.toLocaleString();
+        if (baseBetLblEl) baseBetLblEl.textContent = bet.toLocaleString();
     },
 
     updateSpinButton: function() {
@@ -157,20 +181,23 @@ DragonWolf.UI = {
         var state = DragonWolf.State;
         if (!btn) return;
 
-        var canSpin = (state.phase === 'IDLE');
-        var inFS    = state.inFreeSpins;
-
-        btn.disabled = !canSpin;
+        btn.classList.remove('dw-btn-stop');
 
         if (state.phase === 'SPINNING') {
+            btn.disabled    = false;
             btn.textContent = 'STOP';
             btn.classList.add('dw-btn-stop');
-        } else if (inFS && canSpin) {
-            btn.textContent = 'FREE SPIN';
-            btn.classList.remove('dw-btn-stop');
+        } else if (state.phase === 'SHOWING_WINS') {
+            btn.disabled    = false;
+            btn.textContent = 'SKIP';
+        } else if (state.phase === 'IDLE') {
+            var inFS = state.inFreeSpins;
+            btn.disabled    = !inFS && (state.balance < state.getBet());
+            btn.textContent = inFS ? 'FREE SPIN' : 'SPIN';
         } else {
+            // EVALUATING / FEATURE_PENDING / FREE_SPINS_INTRO / RANDOM_WILDS
+            btn.disabled    = true;
             btn.textContent = 'SPIN';
-            btn.classList.remove('dw-btn-stop');
         }
     },
 
@@ -251,7 +278,7 @@ DragonWolf.UI = {
 
         html += '<div class="dw-pt-section">';
         html += '<h3 class="dw-pt-title">Base Game 賠率</h3>';
-        html += '<p class="dw-pt-note">1024 Ways｜1注 = ' + cfg.BASE_BET + ' 分</p>';
+        html += '<p class="dw-pt-note">1024 Ways｜最小押注(' + cfg.BASE_BET + '分)每路贏分</p>';
         html += '<table class="dw-pt-table">';
         html += '<tr><th>符號</th><th>3 連</th><th>4 連</th><th>5 連</th></tr>';
 
@@ -261,9 +288,9 @@ DragonWolf.UI = {
             var pay = cfg.BASE_PAY[sym];
             html += '<tr>';
             html += '<td><img class="dw-pt-icon" src="' + cfg.SYMBOL_IMGS[sym] + '" alt="' + sym + '"> ' + cfg.SYMBOL_NAMES[sym] + '</td>';
-            html += '<td>' + (pay[3] * 100).toFixed(0) + '×ways</td>';
-            html += '<td>' + (pay[4] * 100).toFixed(0) + '×ways</td>';
-            html += '<td>' + (pay[5] * 100).toFixed(0) + '×ways</td>';
+            html += '<td>' + (pay[3] * cfg.BASE_BET).toFixed(0) + '</td>';
+            html += '<td>' + (pay[4] * cfg.BASE_BET).toFixed(0) + '</td>';
+            html += '<td>' + (pay[5] * cfg.BASE_BET).toFixed(0) + '</td>';
             html += '</tr>';
         }
         html += '</table>';
@@ -281,9 +308,9 @@ DragonWolf.UI = {
             var fpay = cfg.FREE_PAY[fsym];
             html += '<tr' + (fsym === 'M1' ? ' class="dw-pt-highlight"' : '') + '>';
             html += '<td><img class="dw-pt-icon" src="' + cfg.SYMBOL_IMGS[fsym] + '" alt="' + fsym + '"> ' + cfg.SYMBOL_NAMES[fsym] + '</td>';
-            html += '<td>' + (fpay[3] * 100).toFixed(0) + '×ways</td>';
-            html += '<td>' + (fpay[4] * 100).toFixed(0) + '×ways</td>';
-            html += '<td>' + (fpay[5] * 100).toFixed(0) + '×ways</td>';
+            html += '<td>' + (fpay[3] * cfg.BASE_BET).toFixed(0) + '</td>';
+            html += '<td>' + (fpay[4] * cfg.BASE_BET).toFixed(0) + '</td>';
+            html += '<td>' + (fpay[5] * cfg.BASE_BET).toFixed(0) + '</td>';
             html += '</tr>';
         }
         html += '</table>';

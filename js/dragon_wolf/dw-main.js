@@ -289,9 +289,10 @@ DragonWolf.Main = {
         DragonWolf.UI.updateReturnButton();
         DragonWolf.UI.updateBalance();
 
-        // 如果 Free Spins 中還有局數，繼續
+        // 如果 Free Spins 中還有局數，自動開始下一局
         if (isFreeContext && DragonWolf.Features.freeSpins.isActive()) {
             DragonWolf.UI.updateFreeSpinsHud();
+            setTimeout(function() { DragonWolf.Main.onSpin(); }, 500);
         }
     },
 

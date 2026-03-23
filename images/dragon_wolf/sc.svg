@@ -1,31 +1,81 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- 幽靈馬車 Scatter -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
   <defs>
-    <radialGradient id="scGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#E040FB" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#4A0080" stop-opacity="0"/>
+    <radialGradient id="scbg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a2a1a"/>
+      <stop offset="100%" stop-color="#0a0f0a"/>
     </radialGradient>
+    <linearGradient id="scghost" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00ff88"/>
+      <stop offset="100%" stop-color="#008844"/>
+    </linearGradient>
+    <linearGradient id="sccarriage" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a3a3a"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+    <filter id="scglow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="scglow2">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <circle cx="50" cy="50" r="48" fill="#1A0028" stroke="#9B59B6" stroke-width="2.5"/>
-  <circle cx="50" cy="50" r="48" fill="url(#scGlow)"/>
-  <!-- 馬車輪 -->
-  <circle cx="30" cy="72" r="12" fill="none" stroke="#C39BDD" stroke-width="2.5"/>
-  <line x1="30" y1="60" x2="30" y2="84" stroke="#C39BDD" stroke-width="1.5"/>
-  <line x1="18" y1="72" x2="42" y2="72" stroke="#C39BDD" stroke-width="1.5"/>
-  <line x1="21" y1="63" x2="39" y2="81" stroke="#C39BDD" stroke-width="1.5"/>
-  <line x1="21" y1="81" x2="39" y2="63" stroke="#C39BDD" stroke-width="1.5"/>
-  <circle cx="70" cy="72" r="12" fill="none" stroke="#C39BDD" stroke-width="2.5"/>
-  <line x1="70" y1="60" x2="70" y2="84" stroke="#C39BDD" stroke-width="1.5"/>
-  <line x1="58" y1="72" x2="82" y2="72" stroke="#C39BDD" stroke-width="1.5"/>
-  <line x1="61" y1="63" x2="79" y2="81" stroke="#C39BDD" stroke-width="1.5"/>
-  <line x1="61" y1="81" x2="79" y2="63" stroke="#C39BDD" stroke-width="1.5"/>
-  <!-- 馬車廂 -->
-  <rect x="20" y="38" width="60" height="32" rx="4" fill="#2D0A4E" stroke="#9B59B6" stroke-width="2"/>
-  <rect x="26" y="44" width="18" height="14" rx="2" fill="none" stroke="#E040FB" stroke-width="1.5"/>
-  <rect x="56" y="44" width="18" height="14" rx="2" fill="none" stroke="#E040FB" stroke-width="1.5"/>
-  <!-- 幽靈光輝 -->
-  <ellipse cx="50" cy="22" rx="16" ry="10" fill="#E040FB" opacity="0.7"/>
-  <ellipse cx="50" cy="18" rx="10" ry="6" fill="white" opacity="0.8"/>
-  <!-- SC 文字 -->
-  <text x="50" y="96" font-family="Arial" font-size="9" font-weight="900" fill="#E040FB" text-anchor="middle" letter-spacing="1">SCATTER</text>
+  <circle cx="50" cy="50" r="48" fill="url(#scbg)" stroke="#00ff88" stroke-width="1.5" opacity="0.8"/>
+  <!-- Ghost glow background -->
+  <ellipse cx="50" cy="50" rx="35" ry="25" fill="#00ff88" opacity="0.06" filter="url(#scglow2)"/>
+  <!-- Ground line -->
+  <line x1="10" y1="75" x2="90" y2="75" stroke="#2a3a2a" stroke-width="0.5"/>
+  <!-- Carriage body -->
+  <rect x="48" y="42" width="30" height="22" rx="3" fill="url(#sccarriage)" stroke="#555" stroke-width="0.5"/>
+  <!-- Carriage roof -->
+  <path d="M46,42 Q55,34 80,42" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
+  <!-- Carriage window -->
+  <rect x="55" y="47" width="10" height="10" rx="1" fill="#0a1a0a" stroke="#00ff88" stroke-width="0.5" opacity="0.8"/>
+  <!-- Skull in window -->
+  <circle cx="60" cy="50" r="3" fill="none" stroke="#00ff88" stroke-width="0.5" opacity="0.6"/>
+  <circle cx="58.5" cy="49.5" r="0.8" fill="#00ff88" opacity="0.5"/>
+  <circle cx="61.5" cy="49.5" r="0.8" fill="#00ff88" opacity="0.5"/>
+  <path d="M59,52 L60,53 L61,52" stroke="#00ff88" stroke-width="0.3" opacity="0.5"/>
+  <!-- Second window -->
+  <rect x="67" y="47" width="8" height="10" rx="1" fill="#0a1a0a" stroke="#00ff88" stroke-width="0.5" opacity="0.6"/>
+  <!-- Carriage wheel - back -->
+  <circle cx="60" cy="68" r="7" fill="none" stroke="#555" stroke-width="1.5"/>
+  <circle cx="60" cy="68" r="1.5" fill="#555"/>
+  <line x1="60" y1="61" x2="60" y2="75" stroke="#444" stroke-width="0.5"/>
+  <line x1="53" y1="68" x2="67" y2="68" stroke="#444" stroke-width="0.5"/>
+  <line x1="55" y1="63" x2="65" y2="73" stroke="#444" stroke-width="0.5"/>
+  <line x1="65" y1="63" x2="55" y2="73" stroke="#444" stroke-width="0.5"/>
+  <!-- Wheel spikes -->
+  <path d="M60,61 L61,59 L59,59Z" fill="#555"/>
+  <path d="M67,68 L69,69 L69,67Z" fill="#555"/>
+  <path d="M53,68 L51,69 L51,67Z" fill="#555"/>
+  <!-- Front wheel -->
+  <circle cx="76" cy="70" r="5" fill="none" stroke="#555" stroke-width="1"/>
+  <circle cx="76" cy="70" r="1" fill="#555"/>
+  <!-- Shaft connecting to horse -->
+  <line x1="48" y1="58" x2="30" y2="50" stroke="#444" stroke-width="1.5"/>
+  <line x1="48" y1="56" x2="30" y2="48" stroke="#444" stroke-width="1"/>
+  <!-- Skeleton horse -->
+  <!-- Body -->
+  <path d="M18,42 Q22,38 28,40 Q32,42 34,48 Q32,52 28,54 Q22,52 18,48Z" fill="none" stroke="url(#scghost)" stroke-width="1" filter="url(#scglow)"/>
+  <!-- Ribs -->
+  <line x1="22" y1="42" x2="22" y2="50" stroke="#00cc66" stroke-width="0.5" opacity="0.6"/>
+  <line x1="25" y1="41" x2="25" y2="51" stroke="#00cc66" stroke-width="0.5" opacity="0.6"/>
+  <line x1="28" y1="42" x2="28" y2="50" stroke="#00cc66" stroke-width="0.5" opacity="0.6"/>
+  <!-- Legs -->
+  <path d="M20,52 L18,65 L16,68 L20,68 L22,65 L20,52" stroke="#00cc66" stroke-width="0.8" fill="none"/>
+  <path d="M30,52 L32,65 L34,68 L30,68 L28,65 L30,52" stroke="#00cc66" stroke-width="0.8" fill="none"/>
+  <!-- Head -->
+  <path d="M16,40 Q12,36 10,34 Q8,32 10,30 Q14,28 18,32 Q20,36 18,40Z" fill="none" stroke="url(#scghost)" stroke-width="1" filter="url(#scglow)"/>
+  <!-- Horse skull eye -->
+  <circle cx="13" cy="33" r="1.5" fill="#00ff88" filter="url(#scglow)"/>
+  <!-- Horse jaw -->
+  <path d="M10,34 Q9,36 10,37 L14,37 Q13,36 12,35" stroke="#00cc66" stroke-width="0.5" fill="none"/>
+  <!-- Ghost flames around carriage -->
+  <path d="M50,40 Q48,35 50,30 Q52,35 50,40Z" fill="#00ff88" opacity="0.2" filter="url(#scglow)"/>
+  <path d="M70,38 Q72,32 70,28 Q68,32 70,38Z" fill="#00ff88" opacity="0.15" filter="url(#scglow)"/>
+  <!-- SCATTER text -->
+  <text x="50" y="22" text-anchor="middle" font-size="9" font-weight="bold" fill="#00ff88" font-family="sans-serif" filter="url(#scglow)">SCATTER</text>
+  <text x="50" y="94" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#00cc66" font-family="serif">幽靈馬車</text>
 </svg>
