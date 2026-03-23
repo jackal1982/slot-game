@@ -122,7 +122,7 @@ DragonWolf.Reels = {
         var minSymbols = Math.ceil((duration / 16)) + ROWS + 10;
         var extraCount = Math.max(minSymbols, 30);
 
-        // 建立 strip：[extra 滾動符號...][目標符號]
+        // 建立 strip：[目標符號][extra 滾動符號...] — 符號從上往下滾動
         strip.style.transition = 'none';
         strip.style.transform  = 'translateY(0)';
         strip.innerHTML        = '';
@@ -132,24 +132,31 @@ DragonWolf.Reels = {
             : Math.floor(Math.random() * reel.length);
         var startPos = ((stopIndex - extraCount) % reel.length + reel.length) % reel.length;
 
-        for (var p = 0; p < extraCount; p++) {
-            strip.appendChild(this.createSymbolEl(reel[(startPos + p) % reel.length]));
-        }
+        // 目標符號放最前（translateY=0 時可見）
         for (var r = 0; r < ROWS; r++) {
             strip.appendChild(this.createSymbolEl(targetColumn[r]));
         }
+        // extra 符號放後面（初始時位於可視區下方，往上移動進入視窗）
+        for (var p = 0; p < extraCount; p++) {
+            strip.appendChild(this.createSymbolEl(reel[(startPos + p) % reel.length]));
+        }
 
-        var targetY    = -(extraCount * symSize);
-        var overshootY = targetY + symSize * 0.15;
+        // 從上往下滾：初始 Y = -(extraCount*symSize)（extras 在視窗底部）→ 動畫到 Y = 0（targets 可見）
+        var startY     = -(extraCount * symSize);  // 初始位置：strip 上移，extras 進入視窗
+        var overshootY = symSize * 0.15;            // 輕微向下超射
+        var targetY    = 0;                         // 最終位置：targets 在視窗頂部
         var stopDelay  = duration + reelIndex * stagger;
         var BOUNCE_DUR = 180;
+
+        // 設定初始位置
+        strip.style.transform = 'translateY(' + startY + 'px)';
 
         // double-rAF 確保初始位置已繪製才啟動 transition
         self.spinAnimFrames[reelIndex] = requestAnimationFrame(function() {
             self.spinAnimFrames[reelIndex] = requestAnimationFrame(function() {
                 if (gen !== self._spinGeneration) return;
 
-                // Phase 1：主要滾動動畫
+                // Phase 1：主要向下滾動動畫（從 startY 到 overshootY）
                 strip.style.transition = 'transform ' + (stopDelay / 1000).toFixed(3) + 's cubic-bezier(0.2, 0.0, 0.3, 1.0)';
                 strip.style.transform  = 'translateY(' + overshootY + 'px)';
 
@@ -162,9 +169,9 @@ DragonWolf.Reels = {
 
                     try { DragonWolf.Audio.play('reel_stop'); } catch(e) {}
 
-                    // Phase 2：彈跳回正
+                    // Phase 2：彈跳回零（targets 在頂部）
                     strip.style.transition = 'transform ' + BOUNCE_DUR + 'ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    strip.style.transform  = 'translateY(' + targetY + 'px)';
+                    strip.style.transform  = 'translateY(' + targetY + 'px)';  // targetY = 0
 
                     var phase2Fired = false;
                     var onPhase2End = function() {

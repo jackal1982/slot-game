@@ -1,81 +1,160 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 幽靈馬車 Scatter: 骷髏骨馬+暗黑馬車+帶刺車輪+幽綠光 -->
   <defs>
-    <radialGradient id="scbg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#1a2a1a"/>
-      <stop offset="100%" stop-color="#0a0f0a"/>
+    <radialGradient id="scbg" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#0a1a0a"/><stop offset="100%" stop-color="#040a04"/>
     </radialGradient>
-    <linearGradient id="scghost" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#00ff88"/>
-      <stop offset="100%" stop-color="#008844"/>
+    <linearGradient id="scgrn" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff88"/><stop offset="50%" stop-color="#00cc66"/><stop offset="100%" stop-color="#008844"/>
     </linearGradient>
-    <linearGradient id="sccarriage" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3a3a3a"/>
-      <stop offset="100%" stop-color="#1a1a1a"/>
+    <linearGradient id="sccar" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a2210"/><stop offset="50%" stop-color="#0d1408"/><stop offset="100%" stop-color="#060a04"/>
     </linearGradient>
-    <filter id="scglow">
-      <feGaussianBlur stdDeviation="2" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <linearGradient id="scbone" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d8e0c0"/><stop offset="50%" stop-color="#b8c0a0"/><stop offset="100%" stop-color="#909878"/>
+    </linearGradient>
+    <radialGradient id="scfog" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.3"/><stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sceyeG" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#aaffcc"/><stop offset="50%" stop-color="#00ff88"/><stop offset="100%" stop-color="#008844"/>
+    </radialGradient>
+    <filter id="scgg" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feFlood flood-color="#00ff88" flood-opacity="0.5" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="scglow2">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <filter id="scsg" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#00ff88" flood-opacity="0.7" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <circle cx="50" cy="50" r="48" fill="url(#scbg)" stroke="#00ff88" stroke-width="1.5" opacity="0.8"/>
-  <!-- Ghost glow background -->
-  <ellipse cx="50" cy="50" rx="35" ry="25" fill="#00ff88" opacity="0.06" filter="url(#scglow2)"/>
-  <!-- Ground line -->
-  <line x1="10" y1="75" x2="90" y2="75" stroke="#2a3a2a" stroke-width="0.5"/>
-  <!-- Carriage body -->
-  <rect x="48" y="42" width="30" height="22" rx="3" fill="url(#sccarriage)" stroke="#555" stroke-width="0.5"/>
-  <!-- Carriage roof -->
-  <path d="M46,42 Q55,34 80,42" fill="#2a2a2a" stroke="#555" stroke-width="0.5"/>
-  <!-- Carriage window -->
-  <rect x="55" y="47" width="10" height="10" rx="1" fill="#0a1a0a" stroke="#00ff88" stroke-width="0.5" opacity="0.8"/>
-  <!-- Skull in window -->
-  <circle cx="60" cy="50" r="3" fill="none" stroke="#00ff88" stroke-width="0.5" opacity="0.6"/>
-  <circle cx="58.5" cy="49.5" r="0.8" fill="#00ff88" opacity="0.5"/>
-  <circle cx="61.5" cy="49.5" r="0.8" fill="#00ff88" opacity="0.5"/>
-  <path d="M59,52 L60,53 L61,52" stroke="#00ff88" stroke-width="0.3" opacity="0.5"/>
-  <!-- Second window -->
-  <rect x="67" y="47" width="8" height="10" rx="1" fill="#0a1a0a" stroke="#00ff88" stroke-width="0.5" opacity="0.6"/>
-  <!-- Carriage wheel - back -->
-  <circle cx="60" cy="68" r="7" fill="none" stroke="#555" stroke-width="1.5"/>
-  <circle cx="60" cy="68" r="1.5" fill="#555"/>
-  <line x1="60" y1="61" x2="60" y2="75" stroke="#444" stroke-width="0.5"/>
-  <line x1="53" y1="68" x2="67" y2="68" stroke="#444" stroke-width="0.5"/>
-  <line x1="55" y1="63" x2="65" y2="73" stroke="#444" stroke-width="0.5"/>
-  <line x1="65" y1="63" x2="55" y2="73" stroke="#444" stroke-width="0.5"/>
-  <!-- Wheel spikes -->
-  <path d="M60,61 L61,59 L59,59Z" fill="#555"/>
-  <path d="M67,68 L69,69 L69,67Z" fill="#555"/>
-  <path d="M53,68 L51,69 L51,67Z" fill="#555"/>
-  <!-- Front wheel -->
-  <circle cx="76" cy="70" r="5" fill="none" stroke="#555" stroke-width="1"/>
-  <circle cx="76" cy="70" r="1" fill="#555"/>
-  <!-- Shaft connecting to horse -->
-  <line x1="48" y1="58" x2="30" y2="50" stroke="#444" stroke-width="1.5"/>
-  <line x1="48" y1="56" x2="30" y2="48" stroke="#444" stroke-width="1"/>
-  <!-- Skeleton horse -->
-  <!-- Body -->
-  <path d="M18,42 Q22,38 28,40 Q32,42 34,48 Q32,52 28,54 Q22,52 18,48Z" fill="none" stroke="url(#scghost)" stroke-width="1" filter="url(#scglow)"/>
-  <!-- Ribs -->
-  <line x1="22" y1="42" x2="22" y2="50" stroke="#00cc66" stroke-width="0.5" opacity="0.6"/>
-  <line x1="25" y1="41" x2="25" y2="51" stroke="#00cc66" stroke-width="0.5" opacity="0.6"/>
-  <line x1="28" y1="42" x2="28" y2="50" stroke="#00cc66" stroke-width="0.5" opacity="0.6"/>
-  <!-- Legs -->
-  <path d="M20,52 L18,65 L16,68 L20,68 L22,65 L20,52" stroke="#00cc66" stroke-width="0.8" fill="none"/>
-  <path d="M30,52 L32,65 L34,68 L30,68 L28,65 L30,52" stroke="#00cc66" stroke-width="0.8" fill="none"/>
-  <!-- Head -->
-  <path d="M16,40 Q12,36 10,34 Q8,32 10,30 Q14,28 18,32 Q20,36 18,40Z" fill="none" stroke="url(#scghost)" stroke-width="1" filter="url(#scglow)"/>
-  <!-- Horse skull eye -->
-  <circle cx="13" cy="33" r="1.5" fill="#00ff88" filter="url(#scglow)"/>
-  <!-- Horse jaw -->
-  <path d="M10,34 Q9,36 10,37 L14,37 Q13,36 12,35" stroke="#00cc66" stroke-width="0.5" fill="none"/>
-  <!-- Ghost flames around carriage -->
-  <path d="M50,40 Q48,35 50,30 Q52,35 50,40Z" fill="#00ff88" opacity="0.2" filter="url(#scglow)"/>
-  <path d="M70,38 Q72,32 70,28 Q68,32 70,38Z" fill="#00ff88" opacity="0.15" filter="url(#scglow)"/>
-  <!-- SCATTER text -->
-  <text x="50" y="22" text-anchor="middle" font-size="9" font-weight="bold" fill="#00ff88" font-family="sans-serif" filter="url(#scglow)">SCATTER</text>
-  <text x="50" y="94" text-anchor="middle" font-size="6.5" font-weight="bold" fill="#00cc66" font-family="serif">幽靈馬車</text>
+
+  <circle cx="50" cy="50" r="49" fill="url(#scbg)"/>
+  <circle cx="50" cy="50" r="48.5" fill="none" stroke="url(#scgrn)" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#00ff88" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- 幽靈霧氣 -->
+  <ellipse cx="50" cy="55" rx="40" ry="25" fill="url(#scfog)" opacity="0.5"/>
+  <ellipse cx="50" cy="82" rx="38" ry="4" fill="#00ff88" opacity="0.08"/>
+
+  <!-- 骷髏骨馬身體 -->
+  <path d="M12 52 Q20 48 32 50 Q38 52 44 50" stroke="url(#scbone)" stroke-width="2.5" fill="none" filter="url(#scgg)"/>
+  <!-- 肋骨 -->
+  <path d="M18 50 Q16 46 16 52" stroke="#b8c0a0" stroke-width="1.2" fill="none"/>
+  <path d="M22 49 Q20 45 20 51" stroke="#b8c0a0" stroke-width="1.2" fill="none"/>
+  <path d="M26 49 Q24 45 24 51" stroke="#b8c0a0" stroke-width="1.2" fill="none"/>
+  <path d="M30 49.5 Q28 45.5 28 51.5" stroke="#b8c0a0" stroke-width="1.2" fill="none"/>
+  <path d="M18 50 Q16 54 16 52" stroke="#b8c0a0" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <path d="M22 49 Q20 53 20 51" stroke="#b8c0a0" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <!-- 頸骨 -->
+  <path d="M10 52 Q10 46 14 42 Q18 38 22 36" stroke="url(#scbone)" stroke-width="2.5" fill="none" filter="url(#scgg)"/>
+
+  <!-- 馬頭骷髏 -->
+  <ellipse cx="24" cy="33" rx="7" ry="5" fill="url(#scbone)" filter="url(#scgg)"/>
+  <path d="M17 33 Q18 38 24 39 Q30 38 31 33" fill="url(#scbone)" filter="url(#scgg)"/>
+  <path d="M17 33 Q18 37 24 38 Q30 37 31 33" fill="none" stroke="#a0a880" stroke-width="0.5"/>
+  <!-- 牙齒 -->
+  <line x1="21" y1="37" x2="21" y2="39.5" stroke="#e8f0d0" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="24" y1="37.5" x2="24" y2="40" stroke="#e8f0d0" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="27" y1="37" x2="27" y2="39.5" stroke="#e8f0d0" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- 發光眼眶 -->
+  <circle cx="21" cy="30" r="3" fill="#001a00"/>
+  <circle cx="21" cy="30" r="2.2" fill="url(#sceyeG)" filter="url(#scsg)"/>
+  <circle cx="21" cy="30" r="1" fill="#00ff88" opacity="0.8"/>
+  <!-- 鼻孔 -->
+  <ellipse cx="17.5" cy="35" rx="1.5" ry="1" fill="#002200"/>
+  <!-- 裂紋 -->
+  <path d="M24 25 L25 29" stroke="#c8d0b0" stroke-width="0.6" opacity="0.5"/>
+  <path d="M26 26 L28 30" stroke="#c8d0b0" stroke-width="0.5" opacity="0.4"/>
+  <!-- 幽靈鬃毛 -->
+  <path d="M24 28 Q18 22 12 20 Q10 22 14 24 Q18 26 22 30" fill="none" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round" opacity="0.6" filter="url(#scgg)"/>
+  <path d="M22 27 Q16 20 10 18" fill="none" stroke="#00dd77" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- 腿骨 -->
+  <path d="M32 50 Q34 58 33 68 Q33 72 35 76" stroke="url(#scbone)" stroke-width="2" fill="none" stroke-linecap="round" filter="url(#scgg)"/>
+  <circle cx="33" cy="68" r="1.5" fill="#c8d0b0"/>
+  <ellipse cx="35" cy="77" rx="3" ry="1.5" fill="#808868"/>
+  <path d="M26 50 Q22 46 20 42 Q18 38 22 36" stroke="url(#scbone)" stroke-width="2" fill="none" stroke-linecap="round" filter="url(#scgg)"/>
+  <path d="M10 52 Q10 60 12 70 Q12 74 14 77" stroke="url(#scbone)" stroke-width="2" fill="none" stroke-linecap="round" filter="url(#scgg)"/>
+  <circle cx="12" cy="70" r="1.5" fill="#c8d0b0"/>
+  <ellipse cx="14" cy="78" rx="3" ry="1.5" fill="#808868"/>
+  <!-- 幽靈尾巴 -->
+  <path d="M10 52 Q6 48 4 44 Q6 46 8 50 Q6 44 8 40" stroke="#00ff88" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5" filter="url(#scgg)"/>
+
+  <!-- 套繩 -->
+  <path d="M36 50 Q40 49 44 50" stroke="#a0a880" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
+
+  <!-- 馬車主體 -->
+  <rect x="44" y="40" width="44" height="32" rx="4" fill="url(#sccar)" stroke="#00cc66" stroke-width="1.5"/>
+  <path d="M44 40 Q66 35 88 40" fill="#0d1408" stroke="#00cc66" stroke-width="1"/>
+  <path d="M46 38 Q66 34 86 38" fill="none" stroke="#00aa55" stroke-width="0.7" opacity="0.6"/>
+  <!-- 車頂尖飾 -->
+  <polygon points="66,31 63,39 69,39" fill="#00cc66" opacity="0.8" filter="url(#scgg)"/>
+  <circle cx="66" cy="30" r="1.5" fill="#00ff88" filter="url(#scsg)"/>
+
+  <!-- 側刺（左右） -->
+  <polygon points="44,46 38,44 44,48" fill="#006633" opacity="0.85"/>
+  <polygon points="44,54 37,52 44,56" fill="#006633" opacity="0.85"/>
+  <polygon points="44,62 38,60 44,64" fill="#006633" opacity="0.85"/>
+  <polygon points="88,46 94,44 88,48" fill="#006633" opacity="0.85"/>
+  <polygon points="88,54 95,52 88,56" fill="#006633" opacity="0.85"/>
+  <polygon points="88,62 94,60 88,64" fill="#006633" opacity="0.85"/>
+
+  <!-- 左窗（骷髏影） -->
+  <rect x="49" y="45" width="14" height="14" rx="2" fill="#001a00"/>
+  <rect x="49" y="45" width="14" height="14" rx="2" fill="none" stroke="#00ff88" stroke-width="1.2"/>
+  <rect x="50" y="46" width="12" height="12" rx="1" fill="#00ff88" opacity="0.06"/>
+  <ellipse cx="56" cy="50" rx="4" ry="3.5" fill="#00aa44" opacity="0.4"/>
+  <circle cx="54.5" cy="49" r="1.2" fill="#001a00"/>
+  <circle cx="57.5" cy="49" r="1.2" fill="#001a00"/>
+  <path d="M54 52 Q56 53.5 58 52" fill="none" stroke="#001a00" stroke-width="0.8"/>
+  <!-- 右窗（骷髏影） -->
+  <rect x="69" y="45" width="14" height="14" rx="2" fill="#001a00"/>
+  <rect x="69" y="45" width="14" height="14" rx="2" fill="none" stroke="#00ff88" stroke-width="1.2"/>
+  <rect x="70" y="46" width="12" height="12" rx="1" fill="#00ff88" opacity="0.06"/>
+  <ellipse cx="76" cy="50" rx="4" ry="3.5" fill="#00aa44" opacity="0.4"/>
+  <circle cx="74.5" cy="49" r="1.2" fill="#001a00"/>
+  <circle cx="77.5" cy="49" r="1.2" fill="#001a00"/>
+  <path d="M74 52 Q76 53.5 78 52" fill="none" stroke="#001a00" stroke-width="0.8"/>
+  <line x1="66" y1="42" x2="66" y2="72" stroke="#00aa55" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- 左車輪+刺 -->
+  <circle cx="55" cy="75" r="11" fill="none" stroke="#00cc66" stroke-width="1.8" filter="url(#scgg)"/>
+  <line x1="55" y1="64" x2="55" y2="86" stroke="#00aa44" stroke-width="1.3"/>
+  <line x1="44" y1="75" x2="66" y2="75" stroke="#00aa44" stroke-width="1.3"/>
+  <line x1="47.2" y1="67.2" x2="62.8" y2="82.8" stroke="#00aa44" stroke-width="1.3"/>
+  <line x1="47.2" y1="82.8" x2="62.8" y2="67.2" stroke="#00aa44" stroke-width="1.3"/>
+  <circle cx="55" cy="75" r="3.5" fill="#0d1a08" stroke="#00ff88" stroke-width="1"/>
+  <circle cx="55" cy="75" r="1.5" fill="#00ff88" opacity="0.7"/>
+  <polygon points="55,63 53.5,65 56.5,65" fill="#00cc66"/>
+  <polygon points="55,87 53.5,85 56.5,85" fill="#00cc66"/>
+  <polygon points="43,75 45,73.5 45,76.5" fill="#00cc66"/>
+  <polygon points="67,75 65,73.5 65,76.5" fill="#00cc66"/>
+
+  <!-- 右車輪+刺 -->
+  <circle cx="79" cy="75" r="11" fill="none" stroke="#00cc66" stroke-width="1.8" filter="url(#scgg)"/>
+  <line x1="79" y1="64" x2="79" y2="86" stroke="#00aa44" stroke-width="1.3"/>
+  <line x1="68" y1="75" x2="90" y2="75" stroke="#00aa44" stroke-width="1.3"/>
+  <line x1="71.2" y1="67.2" x2="86.8" y2="82.8" stroke="#00aa44" stroke-width="1.3"/>
+  <line x1="71.2" y1="82.8" x2="86.8" y2="67.2" stroke="#00aa44" stroke-width="1.3"/>
+  <circle cx="79" cy="75" r="3.5" fill="#0d1a08" stroke="#00ff88" stroke-width="1"/>
+  <circle cx="79" cy="75" r="1.5" fill="#00ff88" opacity="0.7"/>
+  <polygon points="79,63 77.5,65 80.5,65" fill="#00cc66"/>
+  <polygon points="79,87 77.5,85 80.5,85" fill="#00cc66"/>
+  <polygon points="67,75 69,73.5 69,76.5" fill="#00cc66"/>
+  <polygon points="91,75 89,73.5 89,76.5" fill="#00cc66"/>
+
+  <!-- 靈光飄散 -->
+  <path d="M72 30 Q68 22 72 16 Q76 22 72 30" fill="#00ff88" opacity="0.25" filter="url(#scgg)"/>
+  <path d="M60 28 Q57 21 61 16 Q64 21 60 28" fill="#00ff88" opacity="0.2" filter="url(#scgg)"/>
+  <circle cx="38" cy="28" r="1.5" fill="#00ff88" opacity="0.5" filter="url(#scsg)"/>
+  <circle cx="92" cy="35" r="1.2" fill="#00ff88" opacity="0.4" filter="url(#scgg)"/>
+  <circle cx="96" cy="50" r="0.8" fill="#00cc66" opacity="0.5"/>
+  <circle cx="8" cy="40" r="1" fill="#00ff88" opacity="0.4"/>
+
+  <text x="66" y="96" font-family="serif" font-size="7" font-weight="bold" fill="#00ff88" text-anchor="middle" letter-spacing="1" filter="url(#scgg)">SCATTER</text>
 </svg>

@@ -293,6 +293,18 @@ DragonWolf.Main = {
         if (isFreeContext && DragonWolf.Features.freeSpins.isActive()) {
             DragonWolf.UI.updateFreeSpinsHud();
             setTimeout(function() { DragonWolf.Main.onSpin(); }, 500);
+            return;
+        }
+
+        // AUTO 模式：非 Free Spins 情境下自動觸發下一把
+        if (!isFreeContext && DragonWolf.UI._autoMode) {
+            if (state.balance >= state.getBet()) {
+                setTimeout(function() { DragonWolf.Main.onSpin(); }, 300);
+            } else {
+                // 餘額不足，取消 AUTO
+                DragonWolf.UI._autoMode = false;
+                DragonWolf.UI.updateAutoButton();
+            }
         }
     },
 
@@ -302,6 +314,10 @@ DragonWolf.Main = {
         var state = DragonWolf.State;
         if (state.phase !== 'IDLE') return;
         if (state.inFreeSpins) return;
+
+        // 取消 AUTO 模式
+        DragonWolf.UI._autoMode = false;
+        DragonWolf.UI.updateAutoButton();
 
         state.syncToPlatform();
         try { DragonWolf.Audio.bgmStop(); } catch(e) {}
