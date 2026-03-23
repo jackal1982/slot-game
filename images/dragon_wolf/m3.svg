@@ -1,68 +1,126 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 白狼 M3: 雪白肌膚 / 刺蝟白髮 / 狼耳 / 冰藍銳目 / 獠牙 / 白毛皮領 -->
   <defs>
-    <radialGradient id="m3bg" cx="50%" cy="45%" r="50%">
-      <stop offset="0%" stop-color="#d0d8e8"/>
-      <stop offset="100%" stop-color="#8090a8"/>
+    <radialGradient id="m3bg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#2a3850"/><stop offset="100%" stop-color="#0e1824"/>
     </radialGradient>
-    <linearGradient id="m3face" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f8f4f0"/>
-      <stop offset="100%" stop-color="#e8e0d8"/>
+    <linearGradient id="m3ice" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40b0e0"/><stop offset="100%" stop-color="#1890c0"/>
     </linearGradient>
-    <linearGradient id="m3hair" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%" stop-color="#c8c0b8"/>
-      <stop offset="100%" stop-color="#ffffff"/>
+    <radialGradient id="m3skin" cx="45%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#f8f4f0"/><stop offset="70%" stop-color="#e8e4e0"/><stop offset="100%" stop-color="#d0ccc8"/>
+    </radialGradient>
+    <radialGradient id="m3iceEye" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#aaeeff"/><stop offset="40%" stop-color="#40aadd"/><stop offset="100%" stop-color="#0055aa"/>
+    </radialGradient>
+    <radialGradient id="m3fur" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="60%" stop-color="#e8e8ee"/><stop offset="100%" stop-color="#b8c0cc"/>
+    </radialGradient>
+    <linearGradient id="m3hair" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#d0d0d8"/><stop offset="100%" stop-color="#ffffff"/>
     </linearGradient>
-    <linearGradient id="m3fur" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f0ece8"/>
-      <stop offset="100%" stop-color="#c8c0b8"/>
-    </linearGradient>
-    <filter id="m3glow">
-      <feGaussianBlur stdDeviation="1.2" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <filter id="m3ig" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#40d0ff" flood-opacity="0.5" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="m3gw" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
-  <circle cx="50" cy="50" r="48" fill="url(#m3bg)" stroke="#e0e8f0" stroke-width="2"/>
-  <!-- Fur collar/shoulders -->
-  <path d="M20,88 Q25,70 32,65 Q38,62 44,60 L50,59 L56,60 Q62,62 68,65 Q75,70 80,88" fill="url(#m3fur)"/>
-  <!-- Fur texture lines -->
-  <path d="M28,75 Q30,72 32,70" stroke="#a8a098" stroke-width="0.5" fill="none"/>
-  <path d="M34,72 Q36,69 38,67" stroke="#a8a098" stroke-width="0.5" fill="none"/>
-  <path d="M72,75 Q70,72 68,70" stroke="#a8a098" stroke-width="0.5" fill="none"/>
-  <path d="M66,72 Q64,69 62,67" stroke="#a8a098" stroke-width="0.5" fill="none"/>
-  <!-- Neck -->
-  <rect x="44" y="56" width="12" height="7" rx="3" fill="#e8ddd0"/>
-  <!-- Face -->
-  <ellipse cx="50" cy="42" rx="17" ry="20" fill="url(#m3face)"/>
-  <!-- Wolf ears -->
-  <path d="M32,25 L28,8 L38,22Z" fill="url(#m3hair)" stroke="#c0b8b0" stroke-width="0.5"/>
-  <path d="M34,20 L30,12 L37,22Z" fill="#ffcccc" opacity="0.4"/>
-  <path d="M68,25 L72,8 L62,22Z" fill="url(#m3hair)" stroke="#c0b8b0" stroke-width="0.5"/>
-  <path d="M66,20 L70,12 L63,22Z" fill="#ffcccc" opacity="0.4"/>
-  <!-- Spiky punk hair -->
-  <path d="M35,26 Q38,18 42,14 Q45,10 48,6 Q49,12 50,18 Q51,12 52,6 Q55,10 58,14 Q62,18 65,26 Q60,22 55,20 Q50,19 45,20 Q40,22 35,26Z" fill="url(#m3hair)"/>
-  <!-- Hair spikes highlight -->
-  <path d="M44,14 L46,8 L47,16" fill="white" opacity="0.4"/>
-  <path d="M52,12 L54,5 L55,14" fill="white" opacity="0.4"/>
-  <!-- Eyes - ice blue, fierce -->
-  <ellipse cx="42" cy="40" rx="5" ry="3.5" fill="white" stroke="#8090a8" stroke-width="0.5"/>
-  <circle cx="43" cy="40" r="2.2" fill="#00BFFF"/>
-  <ellipse cx="43" cy="40" rx="1" ry="2" fill="#0080FF"/>
-  <circle cx="42.5" cy="39.5" r="0.6" fill="white"/>
-  <ellipse cx="58" cy="40" rx="5" ry="3.5" fill="white" stroke="#8090a8" stroke-width="0.5"/>
-  <circle cx="57" cy="40" r="2.2" fill="#00BFFF"/>
-  <ellipse cx="57" cy="40" rx="1" ry="2" fill="#0080FF"/>
-  <circle cx="57.5" cy="39.5" r="0.6" fill="white"/>
-  <!-- Eyebrows - fierce -->
-  <path d="M35,35 Q39,33 46,36" stroke="#a0988e" stroke-width="1.2" fill="none"/>
-  <path d="M54,36 Q61,33 65,35" stroke="#a0988e" stroke-width="1.2" fill="none"/>
-  <!-- Nose -->
-  <path d="M49,43 L50,48 L51,47" stroke="#b8a898" stroke-width="0.5" fill="none"/>
-  <!-- Mouth with fangs -->
-  <path d="M42,52 Q46,55 50,54 Q54,55 58,52" stroke="#a08080" stroke-width="0.8" fill="none"/>
-  <!-- Fangs -->
-  <path d="M44,53 L43,56 L45,54" fill="white" stroke="#ccc" stroke-width="0.3"/>
-  <path d="M56,53 L57,56 L55,54" fill="white" stroke="#ccc" stroke-width="0.3"/>
-  <!-- Scar on cheek -->
-  <path d="M62,44 L66,48 M63,46 L67,44" stroke="#cc8888" stroke-width="0.5" opacity="0.6"/>
-  <text x="50" y="96" text-anchor="middle" font-size="8" font-weight="bold" fill="#5070a0" font-family="serif">白狼</text>
+
+  <circle cx="50" cy="50" r="49" fill="url(#m3bg)"/>
+  <circle cx="50" cy="50" r="48.5" fill="none" stroke="url(#m3ice)" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#80d8ff" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- 白毛皮領+身體 -->
+  <path d="M5 100 Q12 76 26 68 Q38 62 50 62 L50 100Z" fill="url(#m3fur)"/>
+  <path d="M95 100 Q88 76 74 68 Q62 62 50 62 L50 100Z" fill="url(#m3fur)"/>
+  <path d="M14 90 Q20 82 28 75" fill="none" stroke="#c0c8d4" stroke-width="1" opacity="0.6"/>
+  <path d="M10 80 Q16 72 24 68" fill="none" stroke="#c0c8d4" stroke-width="1" opacity="0.5"/>
+  <path d="M86 90 Q80 82 72 75" fill="none" stroke="#c0c8d4" stroke-width="1" opacity="0.6"/>
+  <path d="M90 80 Q84 72 76 68" fill="none" stroke="#c0c8d4" stroke-width="1" opacity="0.5"/>
+  <!-- 毛皮領口蓬鬆 -->
+  <path d="M26 68 Q32 72 38 70 Q44 74 50 74 Q56 74 62 70 Q68 72 74 68 Q66 76 50 78 Q34 76 26 68Z" fill="#f0f0f8" opacity="0.85"/>
+  <path d="M30 71 Q28 74 30 75" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M36 73 Q35 76 37 77" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M70 71 Q72 74 70 75" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M64 73 Q65 76 63 77" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M36 68 L50 74 L64 68" fill="none" stroke="#a0aabb" stroke-width="0.8"/>
+
+  <!-- 頸部 -->
+  <path d="M44 57 Q44 65 50 66 Q56 65 56 57" fill="#e8e4e0"/>
+
+  <!-- 臉 -->
+  <ellipse cx="50" cy="40" rx="21" ry="23" fill="url(#m3skin)"/>
+  <ellipse cx="37" cy="47" rx="6" ry="3.5" fill="#ffb0a0" opacity="0.12"/>
+  <ellipse cx="63" cy="47" rx="6" ry="3.5" fill="#ffb0a0" opacity="0.12"/>
+
+  <!-- 狼耳（左） -->
+  <path d="M33 20 Q26 8 30 4 Q34 8 36 15 Q38 20 35 22Z" fill="#e8e4e0"/>
+  <path d="M33.5 20 Q27.5 9.5 30.5 5.5 Q33 9 34.5 15 Q36 19.5 34 21Z" fill="#f0a8b8" opacity="0.7"/>
+  <!-- 狼耳（右） -->
+  <path d="M67 20 Q74 8 70 4 Q66 8 64 15 Q62 20 65 22Z" fill="#e8e4e0"/>
+  <path d="M66.5 20 Q72.5 9.5 69.5 5.5 Q67 9 65.5 15 Q64 19.5 66 21Z" fill="#f0a8b8" opacity="0.7"/>
+
+  <!-- 刺蝟白髮 -->
+  <path d="M29 22 Q50 11 71 22 Q67 15 50 12 Q33 15 29 22Z" fill="#f0f0f8"/>
+  <path d="M34 18 Q32 8 36 4 Q38 8 38 16Z" fill="#e8e8f0"/>
+  <path d="M42 15 Q41 5 45 2 Q47 6 46 14Z" fill="#e8e8f0"/>
+  <path d="M50 14 Q50 3 54 1 Q55 5 54 13Z" fill="#f0f0f8"/>
+  <path d="M58 15 Q59 5 63 4 Q63 8 62 14Z" fill="#e8e8f0"/>
+  <path d="M66 18 Q68 8 64 4 Q62 8 62 16Z" fill="#e8e8f0"/>
+  <!-- 側面垂髮 -->
+  <path d="M30 22 Q23 30 21 48" stroke="#e0e0e8" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M31 20 Q24 28 23 42" stroke="#d8d8e0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M70 22 Q77 30 79 48" stroke="#e0e0e8" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M69 20 Q76 28 77 42" stroke="#d8d8e0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M36 13 Q50 8 64 13" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- 人耳 -->
+  <ellipse cx="29" cy="43" rx="3" ry="4.5" fill="#e8e4e0"/>
+  <ellipse cx="29" cy="43" rx="2" ry="3" fill="#f0b0c0" opacity="0.4"/>
+  <ellipse cx="71" cy="43" rx="3" ry="4.5" fill="#e8e4e0"/>
+
+  <!-- 左眼（冰藍銳目，縫隙瞳孔） -->
+  <ellipse cx="41" cy="39" rx="5.5" ry="4" fill="#0a2a40"/>
+  <ellipse cx="41" cy="39" rx="4.5" ry="3" fill="url(#m3iceEye)" filter="url(#m3ig)"/>
+  <circle cx="41" cy="39" r="2.5" fill="#003060"/>
+  <ellipse cx="41" cy="39" rx="1" ry="2.5" fill="#001830"/>
+  <circle cx="42.5" cy="37.5" r="1" fill="white" opacity="0.9"/>
+  <path d="M35.5 36 Q41 33.5 46.5 36" fill="none" stroke="#b0b8c0" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M36 32.5 Q41 30 46 32" fill="none" stroke="#b0a8a0" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- 右眼（冰藍銳目） -->
+  <ellipse cx="59" cy="39" rx="5.5" ry="4" fill="#0a2a40"/>
+  <ellipse cx="59" cy="39" rx="4.5" ry="3" fill="url(#m3iceEye)" filter="url(#m3ig)"/>
+  <circle cx="59" cy="39" r="2.5" fill="#003060"/>
+  <ellipse cx="59" cy="39" rx="1" ry="2.5" fill="#001830"/>
+  <circle cx="60.5" cy="37.5" r="1" fill="white" opacity="0.9"/>
+  <path d="M53.5 36 Q59 33.5 64.5 36" fill="none" stroke="#b0b8c0" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M54 32 Q59 30 64 32.5" fill="none" stroke="#b0a8a0" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- 鼻 -->
+  <path d="M48 46 Q50 49 52 46" fill="none" stroke="#c0a8a0" stroke-width="0.9" stroke-linecap="round"/>
+
+  <!-- 嘴+獠牙 -->
+  <path d="M43 54 Q50 57 57 54" fill="none" stroke="#d09090" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M51.5 56 L53 60 L54 58" fill="white" stroke="#c0b0b0" stroke-width="0.5"/>
+  <path d="M43.5 54.5 Q42 56 43 57" fill="none" stroke="#d09090" stroke-width="0.8"/>
+
+  <!-- 臉頰傷疤 -->
+  <path d="M62 44 L65 48" stroke="#cc8888" stroke-width="0.8" opacity="0.5" stroke-linecap="round"/>
+  <path d="M63 43 L66 47" stroke="#cc8888" stroke-width="0.5" opacity="0.35" stroke-linecap="round"/>
+
+  <!-- 額部狼紋 -->
+  <path d="M47 27 L50 24 L53 27" fill="none" stroke="#80d8ff" stroke-width="0.8" stroke-linecap="round" opacity="0.5" filter="url(#m3gw)"/>
+
+  <!-- 冰晶裝飾 -->
+  <path d="M15 40 L17 36 L19 40 L17 44Z" fill="#80d8ff" opacity="0.4" filter="url(#m3gw)"/>
+  <path d="M83 35 L85 31 L87 35 L85 39Z" fill="#80d8ff" opacity="0.35" filter="url(#m3gw)"/>
+  <circle cx="12" cy="30" r="1" fill="#80d8ff" opacity="0.4"/>
+  <circle cx="88" cy="28" r="0.8" fill="#80d8ff" opacity="0.3"/>
+  <circle cx="85" cy="68" r="1.2" fill="#40d8ff" opacity="0.35"/>
 </svg>
