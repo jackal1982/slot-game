@@ -6,6 +6,8 @@ var DragonWolf = window.DragonWolf || {};
 
 DragonWolf.UI = {
 
+    _autoMode: false,  // AUTO 自動旋轉模式
+
     init: function() {
         this._bindButtons();
         this.updateAll();
@@ -92,6 +94,14 @@ DragonWolf.UI = {
             });
         }
 
+        // AUTO
+        var autoBtn = document.getElementById('dw-btn-auto');
+        if (autoBtn) {
+            autoBtn.addEventListener('click', function() {
+                self.toggleAuto();
+            });
+        }
+
         // PAYTABLE
         var paytableBtn = document.getElementById('dw-btn-paytable');
         if (paytableBtn) {
@@ -119,6 +129,7 @@ DragonWolf.UI = {
         // 點擊 reel area = spin / slam stop / skip wins
         var lastReelActionTime = 0;
         var REEL_COOLDOWN = 500;
+        var _slamStopFired = false;  // 防止 SPINNING 期間多次觸發 slamStop
         var reelArea = document.getElementById('dw-reel-area');
         if (reelArea) {
             reelArea.addEventListener('click', function(e) {
@@ -128,8 +139,11 @@ DragonWolf.UI = {
                 if (state.phase === 'IDLE') {
                     if (now - lastReelActionTime < REEL_COOLDOWN) return;
                     lastReelActionTime = now;
+                    _slamStopFired = false;  // 新一局重置
                     DragonWolf.Main.onSpin();
                 } else if (state.phase === 'SPINNING') {
+                    if (_slamStopFired) return;  // 已觸發過，忽略後續點擊
+                    _slamStopFired = true;
                     lastReelActionTime = now;
                     DragonWolf.Main.onSlamStop();
                 } else if (state.phase === 'SHOWING_WINS') {
@@ -192,13 +206,36 @@ DragonWolf.UI = {
             btn.textContent = 'SKIP';
         } else if (state.phase === 'IDLE') {
             var inFS = state.inFreeSpins;
-            btn.disabled    = !inFS && (state.balance < state.getBet());
+            var noBalance = !inFS && (state.balance < state.getBet());
+            btn.disabled    = noBalance;
             btn.textContent = inFS ? 'FREE SPIN' : 'SPIN';
+            // 餘額不足時自動取消 AUTO 模式
+            if (noBalance && this._autoMode) {
+                this._autoMode = false;
+                this.updateAutoButton();
+            }
         } else {
             // EVALUATING / FEATURE_PENDING / FREE_SPINS_INTRO / RANDOM_WILDS
             btn.disabled    = true;
             btn.textContent = 'SPIN';
         }
+    },
+
+    toggleAuto: function() {
+        var state = DragonWolf.State;
+        this._autoMode = !this._autoMode;
+        this.updateAutoButton();
+        // 若目前在 IDLE 且不在 Free Spins 中，立即開始
+        if (this._autoMode && state.phase === 'IDLE' && !state.inFreeSpins) {
+            DragonWolf.Main.onSpin();
+        }
+    },
+
+    updateAutoButton: function() {
+        var btn = document.getElementById('dw-btn-auto');
+        if (!btn) return;
+        btn.classList.toggle('active', this._autoMode);
+        btn.textContent = this._autoMode ? 'STOP' : 'AUTO';
     },
 
     updateFreeSpinsHud: function() {
