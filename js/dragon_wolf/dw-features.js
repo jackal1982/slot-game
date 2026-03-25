@@ -57,24 +57,37 @@ DragonWolf.Features = {
          */
         apply: function(grid) {
             var r = Math.random();
-            var count;
-            if      (r < 0.60) { count = 2  + Math.floor(Math.random() * 3); }  // 2~4 (60%)
-            else if (r < 0.90) { count = 5  + Math.floor(Math.random() * 4); }  // 5~8 (30%)
-            else if (r < 0.98) { count = 9  + Math.floor(Math.random() * 4); }  // 9~12 (8%)
-            else               { count = 13 + Math.floor(Math.random() * 4); }  // 13~16 (2%)
+            var targetCount;
+            if      (r < 0.60) { targetCount = 2  + Math.floor(Math.random() * 3); }  // 2~4 (60%)
+            else if (r < 0.90) { targetCount = 5  + Math.floor(Math.random() * 4); }  // 5~8 (30%)
+            else if (r < 0.98) { targetCount = 9  + Math.floor(Math.random() * 4); }  // 9~12 (8%)
+            else               { targetCount = 13 + Math.floor(Math.random() * 4); }  // 13~16 (2%)
 
-            // 收集可用位置（軸 2~5 = col 1~4，排除已有 WD）
+            // 計算已有 WD + M1 的總數（M1 也算入上限）
+            var existingCount = 0;
+            for (var col = 1; col < 5; col++) {
+                for (var row = 0; row < 4; row++) {
+                    if (grid[col][row] === 'WD' || grid[col][row] === 'M1') {
+                        existingCount++;
+                    }
+                }
+            }
+
+            // 還可放置的數量 = 目標數 - 已有 WD+M1 數
+            var toPlace = Math.max(0, targetCount - existingCount);
+
+            // 收集可用位置（軸 2~5 = col 1~4，排除已有 WD 和 M1）
             var available = [];
             for (var col = 1; col < 5; col++) {
                 for (var row = 0; row < 4; row++) {
-                    if (grid[col][row] !== 'WD') {
+                    if (grid[col][row] !== 'WD' && grid[col][row] !== 'M1') {
                         available.push({ reel: col, row: row });
                     }
                 }
             }
 
-            // Fisher-Yates shuffle，取前 count 個
-            var placed = Math.min(count, available.length);
+            // Fisher-Yates shuffle，取前 toPlace 個
+            var placed = Math.min(toPlace, available.length);
             for (var i = 0; i < placed; i++) {
                 var j = i + Math.floor(Math.random() * (available.length - i));
                 var tmp   = available[i];
