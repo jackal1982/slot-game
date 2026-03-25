@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280">
+  <!-- 黑白郎君 氣功姿勢：全身像，左手前伸發氣，右手後拉蓄力，馬步站姿 -->
+  <defs>
+    <linearGradient id="q-gld" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe566"/>
+      <stop offset="50%" stop-color="#ffd700"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+    <radialGradient id="q-cgld" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff0a0"/>
+      <stop offset="100%" stop-color="#c8a000"/>
+    </radialGradient>
+    <linearGradient id="q-wsk" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff5ee"/>
+      <stop offset="100%" stop-color="#e8c8b8"/>
+    </linearGradient>
+    <linearGradient id="q-bsk" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a1818"/>
+      <stop offset="100%" stop-color="#150808"/>
+    </linearGradient>
+    <radialGradient id="q-gem" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#ff8888"/>
+      <stop offset="60%" stop-color="#cc0000"/>
+      <stop offset="100%" stop-color="#660000"/>
+    </radialGradient>
+    <radialGradient id="q-qi-orb" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="25%" stop-color="#ddaaff" stop-opacity="0.95"/>
+      <stop offset="65%" stop-color="#8833cc" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#4400aa" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="q-wr" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eaeef6"/>
+      <stop offset="100%" stop-color="#c4c8d4"/>
+    </linearGradient>
+    <linearGradient id="q-br" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1828"/>
+      <stop offset="100%" stop-color="#0a0810"/>
+    </linearGradient>
+    <filter id="q-red" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#cc0000" flood-opacity="0.5" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="q-gold" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feFlood flood-color="#ffd700" flood-opacity="0.4" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="q-qi" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feFlood flood-color="#9933ff" flood-opacity="0.8" result="c"/>
+      <feComposite in="c" in2="blur" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="q-sun" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- ===== 右手臂（黑袍，向後蓄力） ===== -->
+  <path d="M72 103 Q55 107 42 120 Q34 130 29 140"
+        stroke="#1e1828" stroke-width="15" fill="none" stroke-linecap="round"/>
+  <path d="M72 103 Q55 107 42 120 Q34 130 29 140"
+        stroke="#2a2038" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M55 110 Q44 120 37 132"
+        stroke="#d4af37" stroke-width="0.9" fill="none" stroke-linecap="round" opacity="0.55"/>
+  <!-- 握拳 -->
+  <ellipse cx="28" cy="143" rx="8" ry="6.5" fill="#281010" stroke="#d4af37" stroke-width="0.8"/>
+  <ellipse cx="28" cy="143" rx="5.5" ry="4.5" fill="#3a1818"/>
+  <line x1="23" y1="140" x2="23" y2="145" stroke="#4a2020" stroke-width="0.6"/>
+  <line x1="27" y1="139" x2="27" y2="144" stroke="#4a2020" stroke-width="0.6"/>
+  <line x1="31" y1="140" x2="31" y2="145" stroke="#4a2020" stroke-width="0.6"/>
+  <!-- 蓄力光效 -->
+  <circle cx="28" cy="143" r="9" fill="none" stroke="#cc3300" stroke-width="1" opacity="0.4"/>
+  <circle cx="28" cy="143" r="12" fill="none" stroke="#cc3300" stroke-width="0.6" opacity="0.2"/>
+
+  <!-- ===== 軀幹（白袍左／黑袍右，以 x=78 為界） ===== -->
+  <!-- 白袍左側 -->
+  <path d="M78 95 Q62 99 53 116 Q44 136 42 166 Q40 190 37 218 Q50 232 68 242 Q74 246 78 248 L78 95Z"
+        fill="url(#q-wr)"/>
+  <!-- 黑袍右側 -->
+  <path d="M78 95 Q94 99 104 116 Q113 136 115 166 Q117 190 120 218 Q107 232 88 242 Q82 246 78 248 L78 95Z"
+        fill="url(#q-br)"/>
+  <!-- 金色中線 -->
+  <line x1="78" y1="93" x2="78" y2="248" stroke="#d4af37" stroke-width="1.8"/>
+  <!-- 白袍邊緣金線 -->
+  <path d="M78 95 Q62 99 53 116 Q44 136 42 166"
+        fill="none" stroke="#d4af37" stroke-width="1.2" opacity="0.6"/>
+  <!-- 腰帶 -->
+  <path d="M46 156 Q78 165 110 156" fill="none" stroke="#d4af37" stroke-width="4"/>
+  <path d="M46 156 Q78 165 110 156" fill="none" stroke="#fff0a0" stroke-width="1.8" opacity="0.5"/>
+  <!-- 袍紋細節 -->
+  <path d="M54 122 Q56 144 53 158" fill="none" stroke="#c0c4d0" stroke-width="0.7" opacity="0.35"/>
+  <path d="M101 122 Q99 144 102 158" fill="none" stroke="#3a3848" stroke-width="0.7" opacity="0.35"/>
+  <!-- 胸口暗紋裝飾 -->
+  <path d="M68 110 Q78 107 88 110 Q83 116 78 117 Q73 116 68 110Z"
+        fill="none" stroke="#d4af37" stroke-width="0.7" opacity="0.5"/>
+
+  <!-- ===== 左手臂（白袍，前伸發氣） ===== -->
+  <!-- 上臂 -->
+  <path d="M84 99 Q106 97 128 104 Q148 110 164 114"
+        stroke="#eaeef6" stroke-width="15" fill="none" stroke-linecap="round"/>
+  <path d="M84 99 Q106 97 128 104 Q148 110 164 114"
+        stroke="#d8dce8" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M108 99 Q132 106 155 112"
+        stroke="#d4af37" stroke-width="0.9" fill="none" stroke-linecap="round" opacity="0.55"/>
+  <!-- 前臂 -->
+  <path d="M164 114 Q173 113 182 112"
+        stroke="#ddc0b0" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+  <!-- ===== 氣功掌心 ===== -->
+  <!-- 外層氣場暈圈 -->
+  <circle cx="185" cy="112" r="32" fill="url(#q-qi-orb)" opacity="0.3"/>
+  <circle cx="185" cy="112" r="22" fill="url(#q-qi-orb)" opacity="0.5"/>
+  <!-- 氣功波環 -->
+  <ellipse cx="185" cy="112" rx="24" ry="11" fill="none" stroke="#9933ff" stroke-width="1.8" opacity="0.75"/>
+  <ellipse cx="185" cy="112" rx="30" ry="14" fill="none" stroke="#7722cc" stroke-width="1.2" opacity="0.55"/>
+  <ellipse cx="185" cy="112" rx="37" ry="18" fill="none" stroke="#5511aa" stroke-width="0.8" opacity="0.35"/>
+  <!-- 掌背 -->
+  <ellipse cx="185" cy="112" rx="6.5" ry="7.5" fill="#ddc0b0"/>
+  <ellipse cx="185" cy="112" rx="4.5" ry="5.5" fill="#c8a890"/>
+  <!-- 勞宮穴氣點 -->
+  <circle cx="185" cy="112" r="4.5" fill="white" opacity="1" filter="url(#q-qi)"/>
+  <circle cx="185" cy="112" r="3" fill="#cc88ff"/>
+  <circle cx="185" cy="112" r="1.5" fill="white"/>
+  <!-- 氣光粒子 -->
+  <circle cx="193" cy="102" r="2.2" fill="#ffffff" opacity="0.92"/>
+  <circle cx="196" cy="118" r="1.6" fill="#ddaaff" opacity="0.8"/>
+  <circle cx="177" cy="105" r="1.6" fill="#ffffff" opacity="0.75"/>
+  <circle cx="197" cy="108" r="2.8" fill="#aa66ff" opacity="0.7"/>
+  <circle cx="191" cy="123" r="1.3" fill="#ffccff" opacity="0.65"/>
+  <circle cx="174" cy="118" r="1.2" fill="#cc88ff" opacity="0.55"/>
+
+  <!-- ===== 頸部 ===== -->
+  <path d="M73 82 Q73 91 78 93 Q83 91 83 82 Q81 87 78 87 Q75 87 73 82Z" fill="#ddc0b0"/>
+
+  <!-- ===== 下盤（馬步寬站，白袍腳右、黑袍腳左） ===== -->
+  <!-- 黑袍右腿（向後方） -->
+  <path d="M68 244 Q56 252 45 262 Q36 269 30 276"
+        stroke="#1e1828" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M68 244 Q56 252 45 262 Q36 269 30 276"
+        stroke="#2a2038" stroke-width="17" fill="none" stroke-linecap="round" opacity="0.75"/>
+  <!-- 右足 -->
+  <path d="M28 276 Q23 278 21 279 Q19 281 26 281 Q35 281 41 278"
+        stroke="#1e1828" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  <!-- 白袍左腿（前踏） -->
+  <path d="M88 244 Q101 252 114 262 Q124 269 132 276"
+        stroke="#eaeef6" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M88 244 Q101 252 114 262 Q124 269 132 276"
+        stroke="#d8dce8" stroke-width="17" fill="none" stroke-linecap="round" opacity="0.75"/>
+  <!-- 左足 -->
+  <path d="M132 276 Q136 278 140 279 Q144 280 142 281 Q136 282 128 279"
+        stroke="#d0d4e0" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  <!-- 袍邊金線 -->
+  <path d="M68 244 Q56 252 45 262 Q36 269 30 276"
+        stroke="#d4af37" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.45"/>
+  <path d="M88 244 Q101 252 114 262 Q124 269 132 276"
+        stroke="#d4af37" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- ===== 頭部（以 x=78, y=50 為中心） ===== -->
+
+  <!-- 髮絲後層 -->
+  <path d="M56 32 Q47 44 45 59 Q44 70 47 78" stroke="#0a0505" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  <path d="M57 30 Q49 41 48 55" stroke="#1a0a0a" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <path d="M100 32 Q109 44 111 59 Q112 70 109 78" stroke="#0a0505" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  <path d="M99 30 Q107 41 108 55" stroke="#1a0a0a" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+
+  <!-- 臉底 -->
+  <ellipse cx="78" cy="51" rx="25" ry="28" fill="#ddc0b0"/>
+  <!-- 白臉左側 -->
+  <path d="M78 23 Q53 24 53 51 Q53 70 78 79 Z" fill="url(#q-wsk)"/>
+  <!-- 黑臉右側 -->
+  <path d="M78 23 Q103 24 103 51 Q103 70 78 79 Z" fill="url(#q-bsk)"/>
+  <!-- 黑白金線分界 -->
+  <line x1="78" y1="23" x2="78" y2="79" stroke="#d4af37" stroke-width="1.6"/>
+
+  <!-- 耳 -->
+  <ellipse cx="53" cy="53" rx="3.5" ry="4.5" fill="#ddc0b0"/>
+  <ellipse cx="53" cy="53" rx="2" ry="3" fill="#c8a090" opacity="0.5"/>
+  <ellipse cx="103" cy="53" rx="3.5" ry="4.5" fill="#280e0e"/>
+
+  <!-- 左眼（白側，深紫瞳） -->
+  <ellipse cx="68" cy="49" rx="6" ry="5.2" fill="#1a0a2e"/>
+  <ellipse cx="68" cy="49" rx="4.5" ry="3.8" fill="#2a1040"/>
+  <circle cx="68" cy="49" r="3" fill="#0a0a1e"/>
+  <circle cx="69.5" cy="47.2" r="1.3" fill="white" opacity="0.88"/>
+  <circle cx="66.8" cy="50.2" r="0.6" fill="white" opacity="0.4"/>
+  <!-- 左眉（挑眉威嚴） -->
+  <path d="M62 44.5 Q68 41 74 44" fill="none" stroke="#1a0a0a" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M62 53 Q68 55 74 53" fill="none" stroke="#1a0a0a" stroke-width="0.9" stroke-linecap="round"/>
+  <!-- 左眉毛 -->
+  <path d="M62 42 Q68 38.5 74 41" fill="none" stroke="#1a0a0a" stroke-width="2.8" stroke-linecap="round"/>
+
+  <!-- 右眼（黑側，紅光） -->
+  <ellipse cx="88" cy="49" rx="6" ry="5.2" fill="#3a0000" filter="url(#q-red)"/>
+  <ellipse cx="88" cy="49" rx="4.5" ry="3.8" fill="#8b0000"/>
+  <circle cx="88" cy="49" r="3" fill="#4a0000"/>
+  <circle cx="89.5" cy="47.2" r="1.3" fill="#ff8888" opacity="0.92"/>
+  <!-- 右眉（皺眉蓄力） -->
+  <path d="M82 44.5 Q88 41 94 44" fill="none" stroke="#4a0000" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M82 53 Q88 55 94 53" fill="none" stroke="#4a0000" stroke-width="0.9" stroke-linecap="round"/>
+  <!-- 右眉毛 -->
+  <path d="M82 42 Q88 38.5 94 41" fill="none" stroke="#3a0000" stroke-width="2.8" stroke-linecap="round"/>
+
+  <!-- 鼻 -->
+  <path d="M76 58 Q78 62 80 58" fill="none" stroke="#a08070" stroke-width="1.1" stroke-linecap="round"/>
+
+  <!-- 嘴（冷笑發氣，微咧） -->
+  <path d="M69 68 Q74 72 78 71" fill="none" stroke="#9b3030" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M78 71 Q83 71.5 88 68" fill="none" stroke="#5a1818" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M71 70 Q78 73.5 85 70" fill="none" stroke="#c07060" stroke-width="0.7" opacity="0.4"/>
+
+  <!-- 髮絲前層 -->
+  <path d="M56 32 Q48 43 47 57" stroke="#1a0a0a" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <path d="M100 32 Q108 43 109 57" stroke="#1a0a0a" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <!-- 頂髮填色 -->
+  <path d="M57 30 Q78 20 99 30 Q93 24 78 22 Q63 24 57 30Z" fill="#0a0505"/>
+
+  <!-- 冠帶 -->
+  <path d="M57 30 Q78 22 99 30 Q95 26 78 24 Q61 26 57 30Z"
+        fill="url(#q-cgld)" filter="url(#q-gold)"/>
+  <!-- 冠尖三枝 -->
+  <polygon points="78,9 75,23 81,23" fill="url(#q-gld)" filter="url(#q-gold)"/>
+  <polygon points="78,9 75.5,19 80.5,19" fill="url(#q-cgld)"/>
+  <polygon points="63,13 61,23 67,23" fill="url(#q-gld)"/>
+  <polygon points="93,13 89,23 95,23" fill="url(#q-gld)"/>
+
+  <!-- 日飾（左冠） -->
+  <circle cx="64" cy="18" r="5.5" fill="#ffdd00" filter="url(#q-sun)"/>
+  <circle cx="64" cy="18" r="3.8" fill="#ffaa00"/>
+  <circle cx="64" cy="18" r="2" fill="#ff8800"/>
+  <line x1="64" y1="11.5" x2="64" y2="9.5" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>
+  <line x1="64" y1="24.5" x2="64" y2="26.5" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>
+  <line x1="57.5" y1="18" x2="55.5" y2="18" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>
+  <line x1="70.5" y1="18" x2="72.5" y2="18" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>
+  <line x1="59.8" y1="14.3" x2="58.3" y2="12.8" stroke="#ffdd00" stroke-width="1" stroke-linecap="round"/>
+  <line x1="68.2" y1="21.7" x2="69.7" y2="23.2" stroke="#ffdd00" stroke-width="1" stroke-linecap="round"/>
+  <line x1="59.8" y1="21.7" x2="58.3" y2="23.2" stroke="#ffdd00" stroke-width="1" stroke-linecap="round"/>
+  <line x1="68.2" y1="14.3" x2="69.7" y2="12.8" stroke="#ffdd00" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- 月飾（右冠） -->
+  <path d="M95 25 Q100 18 95 11 Q91 11 89 15 Q87 18 89 22 Q91 25.5 95 25Z"
+        fill="#e0e8ff" filter="url(#q-sun)"/>
+  <circle cx="92" cy="18" r="0.7" fill="#c0c8ff" opacity="0.6"/>
+
+  <!-- 中央紅寶石 -->
+  <circle cx="78" cy="16" r="4.8" fill="#880000" filter="url(#q-red)"/>
+  <circle cx="78" cy="16" r="3.8" fill="url(#q-gem)"/>
+  <ellipse cx="77" cy="14.5" rx="1.4" ry="1" fill="white" opacity="0.62" transform="rotate(-20,77,14.5)"/>
+
+  <!-- 額印 -->
+  <path d="M75.5 37 L78 34 L80.5 37 L78 35.5Z" fill="#ffd700" opacity="0.72"/>
+
+  <!-- 流蘇 -->
+  <line x1="60" y1="30" x2="57" y2="41" stroke="#d4af37" stroke-width="0.9"/>
+  <circle cx="57" cy="41" r="1.6" fill="#d4af37"/>
+  <line x1="57" y1="42.6" x2="57" y2="47" stroke="#d4af37" stroke-width="0.7"/>
+  <line x1="96" y1="30" x2="99" y2="41" stroke="#d4af37" stroke-width="0.9"/>
+  <circle cx="99" cy="41" r="1.6" fill="#d4af37"/>
+  <line x1="99" y1="42.6" x2="99" y2="47" stroke="#d4af37" stroke-width="0.7"/>
+
+  <!-- 環境氣粒子 -->
+  <circle cx="150" cy="83" r="2.2" fill="#cc88ff" opacity="0.5"/>
+  <circle cx="163" cy="93" r="1.6" fill="#ffffff" opacity="0.42"/>
+  <circle cx="157" cy="132" r="2.2" fill="#aa44ff" opacity="0.4"/>
+  <circle cx="172" cy="148" r="1.6" fill="#cc88ff" opacity="0.45"/>
+  <circle cx="142" cy="76" r="1.3" fill="#ffd700" opacity="0.3"/>
+  <circle cx="26" cy="88" r="1.6" fill="#ffd700" opacity="0.25"/>
+  <circle cx="18" cy="112" r="1.1" fill="#ffd700" opacity="0.2"/>
+  <circle cx="165" cy="68" r="1.4" fill="#ffffff" opacity="0.35"/>
+  <circle cx="180" cy="90" r="1" fill="#ddaaff" opacity="0.5"/>
+</svg>
