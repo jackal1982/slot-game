@@ -16,6 +16,7 @@ DragonWolf.Audio = {
     _bgmMode:        'base',  // 'base' | 'free'
     _bgmBpm:         96,
     _bgmRunning:     false,
+    _barIndex:       0,
 
     init: function() {
         // 重用 Fortune Slots 的 AudioContext（如果存在）
@@ -60,6 +61,7 @@ DragonWolf.Audio = {
 
         this._bgmMode    = newMode;
         this._bgmRunning = true;
+        this._barIndex   = 0;
         this._bgmNextBarTime = this.ctx.currentTime + 0.05;
         this._scheduleBgm();
     },
@@ -73,6 +75,7 @@ DragonWolf.Audio = {
         if (!this._bgmRunning) return;
         if (this._bgmMode === mode) return;
         this._bgmMode        = mode;
+        this._barIndex       = 0;
         this._bgmNextBarTime = this.ctx.currentTime + 0.05; // 立即切換
     },
 
@@ -90,12 +93,13 @@ DragonWolf.Audio = {
         var self = this;
         var now  = this.ctx.currentTime;
 
-        // 提前 0.3s 排程下一個小節
+        // 提前 0.3s 排程下一個小節（4 小節循環）
         while (this._bgmNextBarTime < now + 0.3) {
             this._scheduleBar(this._bgmNextBarTime, this._bgmMode);
-            var bpm     = this._bgmMode === 'base' ? 96 : 126;
+            var bpm     = this._bgmMode === 'base' ? 96 : 120;
             var barLen  = (60 / bpm) * 4; // 4拍一小節
             this._bgmNextBarTime += barLen;
+            this._barIndex = (this._barIndex + 1) % 4;
         }
 
         var delay = Math.max(50, (this._bgmNextBarTime - now - 0.2) * 1000);
@@ -112,77 +116,219 @@ DragonWolf.Audio = {
     _scheduleBar: function(startTime, mode) {
         if (!this.ctx) return;
         if (mode === 'base') {
-            this._scheduleBaseBar(startTime);
+            this._scheduleBaseBar(startTime, this._barIndex);
         } else {
-            this._scheduleFreeBar(startTime);
+            this._scheduleFreeBar(startTime, this._barIndex);
         }
     },
 
-    // D大調五聲音階：D(293.66) E(329.63) F#(369.99) A(440) B(493.88) D5(587.33)
-    _scheduleBaseBar: function(t0) {
-        var bpm    = 96;
-        var beat   = 60 / bpm;
-        var bar    = beat * 4;
+    /**
+     * Base Game BGM — 4 小節循環（96 BPM × 4 bar = 10 秒）
+     * D 五聲音階（D-E-F#-A-B），武俠/東方大氣風格
+     * 4 個和聲中心：Bar0=D開5度, Bar1=A開5度, Bar2=F#開5度, Bar3=Bm解決回D
+     *
+     * 音符頻率參考（D 五聲音階）：
+     *   D2=73.42  F#2=92.50  A2=110.00  B2=123.47
+     *   D3=146.83 E3=164.81  F#3=185.00 A3=220.00 B3=246.94
+     *   D4=293.66 E4=329.63  F#4=369.99 A4=440.00 B4=493.88
+     *   D5=587.33 E5=659.26  F#5=739.99
+     */
+    _scheduleBaseBar: function(t0, barIdx) {
+        var bpm  = 96;
+        var beat = 60 / bpm;      // 0.625 s
+        var bar  = beat * 4;      // 2.5 s
+        var s16  = beat / 4;      // 0.15625 s（十六分音符）
+        var idx  = barIdx % 4;
 
-        // Chord progression: D - A - Bm - G (each 1 bar in 4-bar loop)
-        // We pick a chord per call based on bar index
-        // Use 和聲 pad
-        var padFreqs = [293.66, 369.99, 440, 587.33]; // D maj chord (D F# A D5)
-        this._playPad(t0, bar * 0.9, padFreqs, 0.08);
+        // ── Pad（開放5度，東方感） ──────────────────────────
+        var padChords = [
+            [146.83, 220.00, 293.66, 440.00],    // D3-A3-D4-A4 (D 開5度)
+            [110.00, 164.81, 220.00, 329.63],    // A2-E3-A3-E4 (A 開5度，明亮)
+            [185.00, 277.18, 369.99, 554.37],    // F#3-C#4-F#4-C#5 (F# 開5度，張力)
+            [185.00, 246.94, 369.99, 493.88],    // F#3-B3-F#4-B4 (Bm 開5度，引回D)
+        ];
+        this._playPad(t0, bar * 0.92, padChords[idx], 0.060);
 
-        // Bass line：D 根音
-        this._playNote(t0,          0.05, 0.45, 146.83, 'triangle', 0.18); // D2
-        this._playNote(t0 + beat,   0.05, 0.3,  220.00, 'triangle', 0.12); // A2
-        this._playNote(t0 + beat*2, 0.05, 0.3,  146.83, 'triangle', 0.18);
-        this._playNote(t0 + beat*3, 0.05, 0.2,  174.61, 'triangle', 0.12); // F3
-
-        // Arpeggio 琵琶風：五聲音階快速撥奏
-        var pentatonic = [293.66, 329.63, 369.99, 440, 493.88, 587.33, 659.26, 880];
-        var arpPat     = [0, 2, 4, 5, 4, 2, 0, 1, 2, 4, 5, 7, 5, 4, 2, 0];
-        for (var i = 0; i < arpPat.length; i++) {
-            var arpTime = t0 + i * (beat / 4);
-            var freq    = pentatonic[arpPat[i] % pentatonic.length];
-            this._playNote(arpTime, 0.01, beat * 0.22, freq, 'sine', 0.07);
+        // ── Bass（三角波，根音行走） ─────────────────────────
+        // 各小節：[D, A, F#, B→解決至D] 根音 + 四拍行走
+        var bassLines = [
+            [[73.42, beat*0.72], [110.00, beat*0.50], [73.42, beat*0.72], [92.50, beat*0.50]],
+            [[110.00, beat*0.72],[164.81, beat*0.50],[110.00, beat*0.72], [82.41, beat*0.50]],
+            [[92.50, beat*0.72], [138.59, beat*0.50], [92.50, beat*0.72],[110.00, beat*0.50]],
+            [[123.47,beat*0.70], [110.00, beat*0.65], [92.50, beat*0.60],[73.42, beat*0.80]],
+        ];
+        var bl = bassLines[idx];
+        for (var b = 0; b < 4; b++) {
+            this._playNote(t0 + b * beat, 0.04, bl[b][1], bl[b][0], 'triangle', 0.22);
         }
 
-        // 打擊節奏
-        this._playDrum(t0,          0.12, 120, 0.18); // 強拍
-        this._playDrum(t0 + beat,   0.08, 200, 0.10);
-        this._playDrum(t0 + beat*2, 0.12, 120, 0.18);
-        this._playDrum(t0 + beat*3, 0.08, 200, 0.10);
+        // ── 琵琶撥奏（16 個十六分音符，D 五聲音階） ─────────
+        var arpPatterns = [
+            // Bar 0 (D)：上行後在中音區迴轉
+            [293.66,329.63,369.99,440.00, 493.88,440.00,369.99,329.63,
+             293.66,246.94,293.66,369.99, 440.00,369.99,293.66,220.00],
+            // Bar 1 (A)：以 A 為中心，向上延伸
+            [220.00,246.94,293.66,329.63, 369.99,440.00,493.88,440.00,
+             369.99,329.63,369.99,440.00, 493.88,440.00,369.99,293.66],
+            // Bar 2 (F#)：攀上高音區（高潮前）
+            [369.99,440.00,493.88,587.33, 659.26,587.33,493.88,440.00,
+             493.88,587.33,659.26,739.99, 659.26,587.33,493.88,440.00],
+            // Bar 3 (解決)：下行回到 D，銜接循環
+            [440.00,369.99,329.63,293.66, 246.94,220.00,185.00,164.81,
+             185.00,220.00,246.94,293.66, 369.99,293.66,246.94,220.00],
+        ];
+        var arp = arpPatterns[idx];
+        for (var i = 0; i < 16; i++) {
+            this._playNote(t0 + i * s16, 0.01, s16 * 0.75, arp[i], 'sine', 0.062);
+        }
+
+        // ── 二胡旋律（四個四分音符，悠揚歌唱） ──────────────
+        // 旋律弧線：D4上升→A浮遊→B4高潮→D4解決，完美首尾相接
+        var melodies = [
+            [293.66, 369.99, 440.00, 369.99],  // Bar 0: D4-F#4-A4-F#4
+            [440.00, 493.88, 440.00, 329.63],  // Bar 1: A4-B4-A4-E4
+            [493.88, 587.33, 659.26, 587.33],  // Bar 2: B4-D5-E5-D5 (高潮!)
+            [493.88, 440.00, 369.99, 293.66],  // Bar 3: B4-A4-F#4-D4 (優雅降回)
+        ];
+        var mel = melodies[idx];
+        for (var j = 0; j < 4; j++) {
+            this._playMelodyNote(t0 + j * beat, beat * 0.88, mel[j], 0.13);
+        }
+
+        // ── 古風鼓（強-弱-強-弱，後兩小節加切分） ───────────
+        this._playDrum(t0,           0.10, 90,  0.22);
+        this._playDrum(t0 + beat,    0.07, 180, 0.12);
+        this._playDrum(t0 + beat*2,  0.10, 90,  0.22);
+        this._playDrum(t0 + beat*3,  0.07, 180, 0.12);
+        if (idx >= 1) {
+            this._playDrum(t0 + beat*0.5, 0.05, 260, 0.07);
+            this._playDrum(t0 + beat*2.5, 0.05, 260, 0.07);
+        }
     },
 
-    // A小調：A(220) C(261.63) D(293.66) E(329.63) G(392) A5(440) C5(523.25)
-    _scheduleFreeBar: function(t0) {
-        var bpm  = 126;
-        var beat = 60 / bpm;
-        var bar  = beat * 4;
+    /**
+     * Free Game BGM — 4 小節循環（120 BPM × 4 bar = 8 秒）
+     * A 小調五聲音階（A-C-D-E-G），緊張刺激戰鬥風格
+     * 4 個和聲中心：Bar0=Am, Bar1=Dm, Bar2=Em(最緊張), Bar3=Gm→Am
+     *
+     * 音符頻率參考（A 小調五聲音階）：
+     *   A2=110.00  C3=130.81  D3=146.83  E3=164.81  G3=196.00
+     *   A3=220.00  C4=261.63  D4=293.66  E4=329.63  G4=392.00
+     *   A4=440.00  C5=523.25  D5=587.33  E5=659.26  G5=784.00  A5=880.00
+     */
+    _scheduleFreeBar: function(t0, barIdx) {
+        var bpm  = 120;
+        var beat = 60 / bpm;     // 0.5 s
+        var bar  = beat * 4;     // 2.0 s
+        var s16  = beat / 4;     // 0.125 s（十六分音符）
+        var s8   = beat / 2;     // 0.25 s（八分音符）
+        var idx  = barIdx % 4;
 
-        // 暗黑 pad：Am 和弦
-        var padFreqs = [220, 261.63, 329.63, 440];
-        this._playPad(t0, bar * 0.9, padFreqs, 0.06);
+        // ── Pad（開放5度，暗沉緊繃） ────────────────────────
+        var padChords = [
+            [110.00, 164.81, 220.00, 329.63],   // Am: A2-E3-A3-E4
+            [146.83, 220.00, 293.66, 440.00],   // Dm: D3-A3-D4-A4
+            [164.81, 246.94, 329.63, 493.88],   // Em: E3-B3-E4-B4 (最大張力)
+            [196.00, 293.66, 392.00, 261.63],   // Gm: G3-D4-G4-C5 (引回Am)
+        ];
+        this._playPad(t0, bar * 0.90, padChords[idx], 0.055);
 
-        // Bass：A 根音，八度跳躍
-        this._playNote(t0,              0.04, 0.3,  110.00, 'sawtooth', 0.14); // A1
-        this._playNote(t0 + beat * 0.5, 0.04, 0.2,  220.00, 'sawtooth', 0.08); // A2 八度跳
-        this._playNote(t0 + beat,       0.04, 0.3,  110.00, 'sawtooth', 0.14);
-        this._playNote(t0 + beat * 1.5, 0.04, 0.15, 123.47, 'sawtooth', 0.10); // B1
-        this._playNote(t0 + beat*2,     0.04, 0.3,  110.00, 'sawtooth', 0.14);
-        this._playNote(t0 + beat*3,     0.04, 0.3,  98.00,  'sawtooth', 0.12);  // G1
-
-        // 懸疑旋律：A小調音階快速下行
-        var minorScale = [440, 392, 349.23, 329.63, 293.66, 261.63, 220, 196];
-        var melPat     = [0, 2, 3, 4, 3, 2, 0, 1, 3, 5, 7, 5, 3, 1, 0, 2];
-        for (var i = 0; i < melPat.length; i++) {
-            var mTime = t0 + i * (beat / 4);
-            var mFreq = minorScale[melPat[i] % minorScale.length];
-            this._playNote(mTime, 0.01, beat * 0.18, mFreq, 'square', 0.04);
-        }
-
-        // 緊湊打擊
+        // ── Bass（鋸齒波，推進式八分音符） ─────────────────
+        var bassLines = [
+            // Am：根音+八度跳+色彩音
+            [110.00, 220.00, 110.00, 110.00, 146.83, 110.00, 220.00, 110.00],
+            // Dm：走動低音
+            [146.83, 146.83, 110.00, 146.83, 146.83, 196.00, 220.00, 146.83],
+            // Em：保持音+張力
+            [164.81, 164.81, 246.94, 164.81, 164.81, 164.81, 146.83, 164.81],
+            // Gm→Am：轉場低音
+            [196.00, 196.00, 146.83, 196.00, 110.00, 110.00, 164.81, 110.00],
+        ];
+        var bl2 = bassLines[idx];
         for (var b = 0; b < 8; b++) {
-            this._playDrum(t0 + b * (beat / 2), 0.06, b % 2 === 0 ? 100 : 180, b % 2 === 0 ? 0.20 : 0.12);
+            this._playNote(t0 + b * s8, 0.02, s8 * 0.75, bl2[b], 'sawtooth', 0.16);
         }
+
+        // ── 古箏快速走句（16 個十六分音符，A 小調五聲音階） ─
+        var runPatterns = [
+            // Bar 0 (Am)：上行後迴轉
+            [220.00,261.63,293.66,329.63, 392.00,440.00,392.00,329.63,
+             293.66,329.63,392.00,440.00, 523.25,440.00,392.00,329.63],
+            // Bar 1 (Dm)：強調 D，向上攀升
+            [293.66,329.63,392.00,440.00, 523.25,587.33,523.25,440.00,
+             392.00,440.00,523.25,587.33, 659.26,587.33,523.25,440.00],
+            // Bar 2 (Em)：最高音區，最刺激
+            [440.00,523.25,587.33,659.26, 784.00,659.26,587.33,523.25,
+             587.33,659.26,784.00,880.00, 784.00,659.26,587.33,523.25],
+            // Bar 3 (Gm→Am)：下行，衝回循環
+            [392.00,329.63,293.66,261.63, 220.00,261.63,293.66,329.63,
+             261.63,220.00,196.00,220.00, 261.63,293.66,261.63,220.00],
+        ];
+        var run = runPatterns[idx];
+        for (var i = 0; i < 16; i++) {
+            this._playNote(t0 + i * s16, 0.01, s16 * 0.65, run[i], 'sine', 0.055);
+        }
+
+        // ── 戰鬥鼓（16分音符網格：踢鼓+軍鼓+踩鈸） ────────
+        for (var k = 0; k < 16; k++) {
+            var pTime = t0 + k * s16;
+            if (k % 4 === 0) {
+                this._playDrum(pTime, 0.10, 70, 0.26);     // 踢鼓（強拍）
+            } else if (k % 4 === 2) {
+                this._playDrum(pTime, 0.06, 190, 0.18);    // 軍鼓（弱拍）
+            } else {
+                this._playHihat(pTime, 0.04, 0.07);        // 踩鈸（off-beat）
+            }
+        }
+        // Bar 2 最緊張，加入額外重音
+        if (idx === 2) {
+            this._playDrum(t0 + beat*1.5, 0.07, 130, 0.15);
+            this._playDrum(t0 + beat*3.5, 0.07, 130, 0.15);
+        }
+    },
+
+    /** 旋律音（二胡/笛子風，緩慢起音，長持續） */
+    _playMelodyNote: function(startTime, duration, freq, gainVal) {
+        if (!this.ctx || !freq) return;
+        var osc  = this.ctx.createOscillator();
+        var gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(gainVal, startTime + 0.08);
+        gain.gain.setValueAtTime(gainVal, startTime + duration * 0.78);
+        gain.gain.linearRampToValueAtTime(0, startTime + duration);
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        osc.start(startTime);
+        osc.stop(startTime + duration + 0.05);
+        this._bgmNodes.push(osc);
+    },
+
+    /** 踩鈸（高通噪音，短促清脆） */
+    _playHihat: function(startTime, duration, gainVal) {
+        if (!this.ctx) return;
+        var sr  = this.ctx.sampleRate;
+        var len = Math.round(sr * Math.min(duration, 0.05));
+        var buf  = this.ctx.createBuffer(1, len, sr);
+        var data = buf.getChannelData(0);
+        for (var i = 0; i < len; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
+        }
+        var src  = this.ctx.createBufferSource();
+        var filt = this.ctx.createBiquadFilter();
+        var gain = this.ctx.createGain();
+        src.buffer          = buf;
+        filt.type           = 'highpass';
+        filt.frequency.value = 8000;
+        gain.gain.setValueAtTime(gainVal, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        src.connect(filt);
+        filt.connect(gain);
+        gain.connect(this.masterGain);
+        src.start(startTime);
+        src.stop(startTime + duration + 0.01);
+        this._bgmNodes.push(src);
     },
 
     /** Pad 和弦音（多音同時） */
