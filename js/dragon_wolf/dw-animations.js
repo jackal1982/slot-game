@@ -111,11 +111,15 @@ DragonWolf.Animations = {
     playQigong: function(grid, onComplete) {
         var self = this;
 
-        // 顯示氣功特效
+        // 顯示氣功特效（double-rAF：先移除 display:none，再下一幀才加 opacity，確保 CSS transition 能執行）
         var qigongEl = document.getElementById('dw-qigong-overlay');
         if (qigongEl) {
             qigongEl.classList.remove('hidden');
-            qigongEl.classList.add('dw-qigong-active');
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    qigongEl.classList.add('dw-qigong-active');
+                });
+            });
         }
 
         // 音效：笑聲
