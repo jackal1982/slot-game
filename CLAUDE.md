@@ -192,6 +192,7 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - PR #25: 修復黑白龍狼傳 UI/UX 問題（滾輪區 click 驅動遊戲、SPIN 按鈕置中、TOTAL BET 顯示、Paytable 移除 xways 改為實際贏分、SPINNING 時顯示 STOP + SHOWING_WINS 時顯示 SKIP、滾輪停止動畫改 transitionend + double-rAF、Free Spins 500ms 延遲自動開始、轉場動畫修正黑龍白狼融合序列、文字與賠率修正）+ 更新角色 SVG
 - PR #26: 修復遊戲體驗問題（連點滾輪區 500ms cooldown + SPINNING 鎖定防抖動、滾輪 translateY 方向修正改為向下滾、BET_MULTIPLIERS 改為連續 [1,2,3,4,5,6,7,8,9,10]、新增 AUTO 自動連續 Spin 功能、M1 出現率提升 + FREE_PAY 降低）
 - PR #27: Free Game 觸發率提高至 ~1/57（Base Game SC 增加至軸1=7、軸2=8、軸3=8 + FREE_PAY 降低，RTP 96.09%）+ Slam Stop 修復（_reelStopped[] 檢查，已停止滾輪不再回彈）
+- PR #28: 提升 Free Game M1 觸發率（軸1 M1 10→21，A4 38→27，10次FS觸發機率 65.6%→90.8%）+ 修復氣功動畫 CSS transition（double-rAF 解決 display:none 同幀批次問題）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
@@ -259,11 +260,14 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - **dw-reels.js**：動畫 extra 符號使用 `_lastStops` 確保每次 spin 啟動畫面與上次結果一致；`_reelStopped[]` 陣列防止已停止軸再次回彈
 - **dw-main.js `onSpin`**：立即更新 `State.grid`，防止 M1 特色（Free Spins 等）污染 grid 狀態
 - **dw-payways.js**：1024-Ways 計算方式：統計每軸相符符號數，乘積即為 way 數，再乘賠率
-- **Free Spins M1 數量（最新）**：軸1=10、軸2=9、軸3=9、軸4=8、軸5=8
+- **Free Spins M1 數量（最新）**：軸1=21、軸2=9、軸3=9、軸4=8、軸5=8（PR #28：軸1 M1 10→21，A4 38→27）
 - **Free Game 賠率（最新）**：M1: 3連=0.12, 4連=0.34, 5連=0.66；M4: 3連=0.06, 4連=0.12, 5連=0.24
+- **M1 氣功觸發率（PR #28）**：per-spin 10.1% → 21.3%；10次FS至少觸發1次機率 65.6% → 90.8%
+- **氣功動畫修復（PR #28）**：`playQigong()` 改用 double-rAF，解決 `display:none → opacity:1` 同幀批次導致 CSS transition 被跳過的問題
 
 ### RTP 驗證
-- 驗證腳本：`rtp_verify_dragon_wolf_final.js`（Node.js，獨立執行）
+- 驗證腳本：`rtp_verify_dragon_wolf_final.js`（Node.js，獨立執行）⚠️ 腳本 payrates 已與 dw-config.js 不同步，需更新後才可信
 - 指令：`node rtp_verify_dragon_wolf_final.js`
 - 目標：95.5%~96.5%
 - 實測（PR #27）：Total 96.09%（Base ~57.6% + Free ~38.5%）
+- PR #28 後 RTP 預估：M1 觸發率倍增（×2.1），Free Game 貢獻增加，實際 RTP 需重新驗證
