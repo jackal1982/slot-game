@@ -111,7 +111,8 @@ DragonWolf.Animations = {
     playQigong: function(grid, onComplete) {
         var self = this;
 
-        // 顯示氣功特效（double-rAF：先移除 display:none，再下一幀才加 opacity，確保 CSS transition 能執行）
+        // 顯示氣功 overlay，觸發 CSS 動畫序列（角色入場 → 蓄力 → 發射）
+        // double-rAF：先移除 display:none，再下一幀才加 active，確保 CSS animation 能正確觸發
         var qigongEl = document.getElementById('dw-qigong-overlay');
         if (qigongEl) {
             qigongEl.classList.remove('hidden');
@@ -122,23 +123,32 @@ DragonWolf.Animations = {
             });
         }
 
-        // 音效：笑聲
-        try { DragonWolf.Audio.play('laugh'); } catch(e) {}
-
-        // 0.5s 後開始放置 Wild
+        // 蓄力聲（0.5s 進場完成後）
         setTimeout(function() {
-            var result = DragonWolf.Features.randomWilds.apply(grid);
-
-            // 逐格放置動畫：每個 Wild 間隔 150ms
-            self._placeWildsSequentially(result.positions, 0, function() {
-                // 隱藏氣功特效
-                if (qigongEl) {
-                    qigongEl.classList.remove('dw-qigong-active');
-                    qigongEl.classList.add('hidden');
-                }
-                if (onComplete) onComplete(result);
-            });
+            try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 500);
+
+        // 發射時機（1.2s）：放置隨機百搭，同步觸發 CSS 光束 + 波環動畫
+        setTimeout(function() {
+            try { DragonWolf.Audio.play('palm_hit'); } catch(e) {}
+
+            var result = DragonWolf.Features.randomWilds.apply(grid);
+            var fireTime = Date.now();
+
+            // 逐格放置 Wild（每格 150ms）
+            self._placeWildsSequentially(result.positions, 0, function() {
+                // 確保至少等到角色淡出完成後（發射後 1.8s）再隱藏 overlay
+                var elapsed  = Date.now() - fireTime;
+                var waitMore = Math.max(0, 1800 - elapsed);
+                setTimeout(function() {
+                    if (qigongEl) {
+                        qigongEl.classList.remove('dw-qigong-active');
+                        qigongEl.classList.add('hidden');
+                    }
+                    if (onComplete) onComplete(result);
+                }, waitMore);
+            });
+        }, 1200);
     },
 
     _placeWildsSequentially: function(positions, index, onComplete) {

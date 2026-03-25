@@ -580,14 +580,148 @@
 #dw-qigong-overlay {
     position:    absolute;
     inset:       0;
-    background:  radial-gradient(ellipse, rgba(155,89,182,0.3) 0%, transparent 70%);
+    background:  radial-gradient(ellipse at 50% 50%, rgba(120,40,200,0.18) 0%, transparent 70%);
     pointer-events: none;
     z-index:     20;
     opacity:     0;
-    transition:  opacity 0.3s;
+    transition:  opacity 0.25s;
+    overflow:    hidden;
 }
 #dw-qigong-overlay.dw-qigong-active { opacity: 1; }
 #dw-qigong-overlay.hidden { display: none; }
+
+/* 角色圖片 */
+#dw-qigong-m1 {
+    position:   absolute;
+    left:       0;
+    top:        50%;
+    width:      54%;
+    max-width:  230px;
+    height:     auto;
+    transform:  translateY(-58%) translateX(-130%);
+    filter:     drop-shadow(0 0 10px rgba(160,60,255,0.45));
+    opacity:    0;
+    pointer-events: none;
+}
+
+/* 氣功光束 */
+#dw-qigong-beam {
+    position:     absolute;
+    left:         46%;
+    top:          50%;
+    height:       10px;
+    width:        0;
+    background:   linear-gradient(to right,
+                    #ffffff 0%,
+                    #dd88ff 15%,
+                    #9933ff 55%,
+                    rgba(60,0,160,0) 100%);
+    transform:    translateY(-50%);
+    border-radius: 5px;
+    z-index:      21;
+    opacity:      0;
+    pointer-events: none;
+    box-shadow:   0 0 18px rgba(160,60,255,0.9),
+                  0 0 36px rgba(130,40,220,0.45);
+}
+
+/* 氣功波環 1 */
+#dw-qigong-wave {
+    position:     absolute;
+    left:         46%;
+    top:          50%;
+    width:        0;
+    height:       0;
+    border-radius: 50%;
+    border:       3px solid rgba(160,60,255,0.9);
+    transform:    translate(-50%, -50%);
+    z-index:      21;
+    opacity:      0;
+    pointer-events: none;
+    box-shadow:   0 0 12px rgba(160,60,255,0.5);
+}
+
+/* 氣功波環 2（延遲出現） */
+#dw-qigong-wave2 {
+    position:     absolute;
+    left:         46%;
+    top:          50%;
+    width:        0;
+    height:       0;
+    border-radius: 50%;
+    border:       2px solid rgba(200,120,255,0.75);
+    transform:    translate(-50%, -50%);
+    z-index:      21;
+    opacity:      0;
+    pointer-events: none;
+}
+
+/* ── 氣功動畫（active 狀態觸發） ──── */
+
+/* 角色：入場 → 蓄力 → 淡出 */
+#dw-qigong-overlay.dw-qigong-active #dw-qigong-m1 {
+    animation:
+        dw-qg-enter    0.50s 0.00s ease-out                         forwards,
+        dw-qg-charge   0.70s 0.50s ease-in-out                      forwards,
+        dw-qg-fire-jolt 0.15s 1.20s cubic-bezier(0.1,0.8,0.3,1)    forwards,
+        dw-qg-fadeout  0.55s 2.10s ease-in                          forwards;
+}
+
+/* 光束：發射後擴散消失 */
+#dw-qigong-overlay.dw-qigong-active #dw-qigong-beam {
+    animation: dw-qg-beam 0.65s 1.20s ease-out forwards;
+}
+
+/* 第一道波環 */
+#dw-qigong-overlay.dw-qigong-active #dw-qigong-wave {
+    animation: dw-qg-wave 0.85s 1.20s ease-out forwards;
+}
+
+/* 第二道波環（稍延遲） */
+#dw-qigong-overlay.dw-qigong-active #dw-qigong-wave2 {
+    animation: dw-qg-wave 0.85s 1.50s ease-out forwards;
+}
+
+/* 入場：從左側飛入 + 輕微 overshoot */
+@keyframes dw-qg-enter {
+    0%   { opacity: 0;   transform: translateY(-58%) translateX(-130%); }
+    65%  { opacity: 1;   transform: translateY(-58%) translateX(4%); }
+    100% { opacity: 1;   transform: translateY(-58%) translateX(0%); }
+}
+
+/* 蓄力：光暈逐漸增強 */
+@keyframes dw-qg-charge {
+    0%   { filter: drop-shadow(0 0 10px rgba(160,60,255,0.45)); }
+    35%  { filter: drop-shadow(0 0 18px rgba(190,90,255,0.65)); }
+    70%  { filter: drop-shadow(0 0 26px rgba(220,140,255,0.82)) brightness(1.08); }
+    100% { filter: drop-shadow(0 0 34px rgba(255,220,255,0.95)) brightness(1.18); }
+}
+
+/* 發射瞬間：角色向後震退 */
+@keyframes dw-qg-fire-jolt {
+    0%   { transform: translateY(-58%) translateX(0%)  scale(1.00); }
+    40%  { transform: translateY(-58%) translateX(-4%) scale(0.97); }
+    100% { transform: translateY(-58%) translateX(-2%) scale(0.99); }
+}
+
+/* 淡出：退場 */
+@keyframes dw-qg-fadeout {
+    0%   { opacity: 1; transform: translateY(-58%) translateX(-2%) scale(0.99); }
+    100% { opacity: 0; transform: translateY(-58%) translateX(-12%) scale(0.94); }
+}
+
+/* 光束：從掌心位置向右延伸後消散 */
+@keyframes dw-qg-beam {
+    0%   { width: 0;   opacity: 1;   left: 46%; }
+    55%  { width: 57%; opacity: 0.95; }
+    100% { width: 62%; opacity: 0;   }
+}
+
+/* 波環：從掌心擴散後消失 */
+@keyframes dw-qg-wave {
+    0%   { width: 0px;   height: 0px;   opacity: 0.92; border-width: 3px; }
+    100% { width: 220px; height: 220px; opacity: 0;    border-width: 1px; }
+}
 
 /* ── Retrigger Overlay ───────────────────────────────────── */
 #dw-retrigger-overlay {
