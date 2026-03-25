@@ -42,12 +42,14 @@ DragonWolf.Main = {
     cleanup: function() {
         DragonWolf.State.phase = 'IDLE';
         DragonWolf.State.inFreeSpins = false;
+        DragonWolf.Features.freeSpins.end();
         clearTimeout(this._showWinsTimer);
         try { DragonWolf.Audio.bgmStop(); } catch(e) {}
         DragonWolf.Reels.clearHighlights();
         DragonWolf.Animations.stopWinCycle();
         DragonWolf.State.syncToPlatform();
-        this._initialized = false;
+        // 注意：不重設 _initialized，避免重新進入時重複綁定 button 事件監聽器
+        // router.js 的 else branch 已處理重入時的狀態同步
     },
 
     // ── Spin 主流程 ───────────────────────────────────────
