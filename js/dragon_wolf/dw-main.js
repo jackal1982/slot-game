@@ -55,6 +55,7 @@ DragonWolf.Main = {
     onSpin: function() {
         var state = DragonWolf.State;
         if (state.phase !== 'IDLE') return;
+        DragonWolf.UI.resetSlamStop();  // 確保 AUTO/Free Spins 自動發局時急停旗標正確重置
 
         var isFree = state.inFreeSpins;
 

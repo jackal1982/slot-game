@@ -7,6 +7,7 @@ var DragonWolf = window.DragonWolf || {};
 DragonWolf.UI = {
 
     _autoMode: false,  // AUTO 自動旋轉模式
+    _slamStopFired: false,  // 防止 SPINNING 期間多次觸發 slamStop（模組層級，供 onSpin 重置）
 
     init: function() {
         this._bindButtons();
@@ -129,7 +130,6 @@ DragonWolf.UI = {
         // 點擊 reel area = spin / slam stop / skip wins
         var lastReelActionTime = 0;
         var REEL_COOLDOWN = 500;
-        var _slamStopFired = false;  // 防止 SPINNING 期間多次觸發 slamStop
         var reelArea = document.getElementById('dw-reel-area');
         if (reelArea) {
             reelArea.addEventListener('click', function(e) {
@@ -139,11 +139,10 @@ DragonWolf.UI = {
                 if (state.phase === 'IDLE') {
                     if (now - lastReelActionTime < REEL_COOLDOWN) return;
                     lastReelActionTime = now;
-                    _slamStopFired = false;  // 新一局重置
                     DragonWolf.Main.onSpin();
                 } else if (state.phase === 'SPINNING') {
-                    if (_slamStopFired) return;  // 已觸發過，忽略後續點擊
-                    _slamStopFired = true;
+                    if (self._slamStopFired) return;  // 已觸發過，忽略後續點擊
+                    self._slamStopFired = true;
                     lastReelActionTime = now;
                     DragonWolf.Main.onSlamStop();
                 } else if (state.phase === 'SHOWING_WINS') {
@@ -153,6 +152,11 @@ DragonWolf.UI = {
                 }
             });
         }
+    },
+
+    // 重置急停旗標（由 onSpin 呼叫，確保 AUTO/Free Spins 自動發局時旗標正確重置）
+    resetSlamStop: function() {
+        this._slamStopFired = false;
     },
 
     // ── HUD 更新 ──────────────────────────────────────────
