@@ -6,11 +6,15 @@ var DragonWolf = window.DragonWolf || {};
 
 DragonWolf.UI = {
 
-    _autoMode: false,  // AUTO 自動旋轉模式
+    _autoMode: false,       // AUTO 自動旋轉模式
     _slamStopFired: false,  // 防止 SPINNING 期間多次觸發 slamStop（模組層級，供 onSpin 重置）
+    _buttonsBound: false,   // 防止重複綁定事件監聽器
 
     init: function() {
-        this._bindButtons();
+        if (!this._buttonsBound) {
+            this._bindButtons();
+            this._buttonsBound = true;
+        }
         this.updateAll();
     },
 
