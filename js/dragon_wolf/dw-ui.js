@@ -6,10 +6,15 @@ var DragonWolf = window.DragonWolf || {};
 
 DragonWolf.UI = {
 
-    _autoMode: false,  // AUTO 自動旋轉模式
+    _autoMode: false,       // AUTO 自動旋轉模式
+    _slamStopFired: false,  // 防止 SPINNING 期間多次觸發 slamStop（模組層級，供 onSpin 重置）
+    _buttonsBound: false,   // 防止重複綁定事件監聽器
 
     init: function() {
-        this._bindButtons();
+        if (!this._buttonsBound) {
+            this._bindButtons();
+            this._buttonsBound = true;
+        }
         this.updateAll();
     },
 
@@ -150,7 +155,6 @@ DragonWolf.UI = {
         var _spinStartTime     = 0;       // spin 開始的時間戳
         var REEL_COOLDOWN      = 500;
         var MIN_SPIN_TIME      = 800;     // 最低旋轉時間，防止急拍急停
-        var _slamStopFired = false;  // 防止 SPINNING 期間多次觸發 slamStop
         var reelArea = document.getElementById('dw-reel-area');
         if (reelArea) {
             reelArea.addEventListener('click', function(e) {
@@ -161,12 +165,11 @@ DragonWolf.UI = {
                     if (now - lastReelActionTime < REEL_COOLDOWN) return;
                     lastReelActionTime = now;
                     _spinStartTime     = now;  // 記錄 spin 開始時間
-                    _slamStopFired = false;  // 新一局重置
                     DragonWolf.Main.onSpin();
                 } else if (state.phase === 'SPINNING') {
-                    if (_slamStopFired) return;  // 已觸發過，忽略後續點擊
+                    if (self._slamStopFired) return;  // 已觸發過，忽略後續點擊
                     if (now - _spinStartTime < MIN_SPIN_TIME) return;  // 最低旋轉時間保護
-                    _slamStopFired = true;
+                    self._slamStopFired = true;
                     lastReelActionTime = now;
                     DragonWolf.Main.onSlamStop();
                 } else if (state.phase === 'SHOWING_WINS') {
@@ -176,6 +179,11 @@ DragonWolf.UI = {
                 }
             });
         }
+    },
+
+    // 重置急停旗標（由 onSpin 呼叫，確保 AUTO/Free Spins 自動發局時旗標正確重置）
+    resetSlamStop: function() {
+        this._slamStopFired = false;
     },
 
     // ── HUD 更新 ──────────────────────────────────────────

@@ -15,6 +15,8 @@ SlotGame.Router = {
         // If user left mid-game last session, reset to lobby
         if (SlotGame.Platform.getCurrentGame() !== null) {
             SlotGame.Platform.returnToLobby();
+            window.location.hash = '#' + this.ROUTES.LOBBY;  // 同步修正 URL，讓 hashchange 導向大廳
+            return;
         }
 
         // Initial route
