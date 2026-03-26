@@ -19,7 +19,7 @@ SlotGame.Lobby = {
             subtitle: 'Legend of Dragon &amp; Wolf',
             description: '5軸4行 1024-Ways，M1黑白郎君隨機百搭特色，Free Game高爆發',
             rtp: '96.0%',
-            icon: 'images/dragon_wolf/dw-icon.svg'
+            icon: 'images/dragon_wolf/dw-icon.png'
         }
     ],
 

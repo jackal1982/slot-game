@@ -18,6 +18,15 @@ DragonWolf.Main = {
     // ── 初始化 ────────────────────────────────────────────
 
     init: function() {
+        // 預載符號圖片（PNG 比 SVG 大，避免首次顯示閃爍）
+        var imgs = DragonWolf.Config.SYMBOL_IMGS;
+        for (var key in imgs) {
+            if (imgs.hasOwnProperty(key)) {
+                var preload = new Image();
+                preload.src = imgs[key];
+            }
+        }
+
         DragonWolf.State.init();
         DragonWolf.Audio.init();
         DragonWolf.RNG.init();

@@ -14,16 +14,16 @@ DragonWolf.Config = {
 
     // 符號圖檔路徑
     SYMBOL_IMGS: {
-        SC: 'images/dragon_wolf/sc.svg',
-        WD: 'images/dragon_wolf/wd.svg',
-        M1: 'images/dragon_wolf/m1.svg',
-        M2: 'images/dragon_wolf/m2.svg',
-        M3: 'images/dragon_wolf/m3.svg',
-        M4: 'images/dragon_wolf/m4.svg',
-        A1: 'images/dragon_wolf/a1.svg',
-        A2: 'images/dragon_wolf/a2.svg',
-        A3: 'images/dragon_wolf/a3.svg',
-        A4: 'images/dragon_wolf/a4.svg'
+        SC: 'images/dragon_wolf/sc.png',
+        WD: 'images/dragon_wolf/wd.png',
+        M1: 'images/dragon_wolf/m1.png',
+        M2: 'images/dragon_wolf/m2.png',
+        M3: 'images/dragon_wolf/m3.png',
+        M4: 'images/dragon_wolf/m4.png',
+        A1: 'images/dragon_wolf/a1.png',
+        A2: 'images/dragon_wolf/a2.png',
+        A3: 'images/dragon_wolf/a3.png',
+        A4: 'images/dragon_wolf/a4.png'
     },
 
     SYMBOL_NAMES: {

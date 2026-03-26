@@ -179,8 +179,8 @@
     box-sizing:      border-box;
 }
 .dw-symbol img {
-    width:        82%;
-    height:       82%;
+    width:        96%;
+    height:       96%;
     object-fit:   contain;
     display:      block;
     pointer-events: none;

@@ -19,13 +19,16 @@ DragonWolf.UI = {
         var self = this;
 
         // SPIN / STOP / SKIP
+        var _btnSpinStartTime = 0;
         var spinBtn = document.getElementById('dw-btn-spin');
         if (spinBtn) {
             spinBtn.addEventListener('click', function() {
                 var phase = DragonWolf.State.phase;
                 if (phase === 'IDLE') {
+                    _btnSpinStartTime = Date.now();
                     DragonWolf.Main.onSpin();
                 } else if (phase === 'SPINNING') {
+                    if (Date.now() - _btnSpinStartTime < 800) return;  // 最低旋轉時間保護
                     DragonWolf.Main.onSlamStop();
                 } else if (phase === 'SHOWING_WINS') {
                     var isFree = DragonWolf.State.inFreeSpins;
@@ -35,11 +38,19 @@ DragonWolf.UI = {
             });
         }
 
+        // MAX BET / BET -/+ 共用 debounce
+        var _lastBetClickTime = 0;
+        var BET_DEBOUNCE = 150;  // 150ms 防止快速連點值亂跳
+
         // MAX BET
         var maxBetBtn = document.getElementById('dw-btn-max-bet');
         if (maxBetBtn) {
-            maxBetBtn.addEventListener('click', function() {
+            maxBetBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
                 if (DragonWolf.State.phase !== 'IDLE') return;
+                var now = Date.now();
+                if (now - _lastBetClickTime < BET_DEBOUNCE) return;
+                _lastBetClickTime = now;
                 DragonWolf.State.setMaxBet();
                 self.updateBet();
             });
@@ -48,8 +59,12 @@ DragonWolf.UI = {
         // BET -
         var betDown = document.getElementById('dw-btn-bet-down');
         if (betDown) {
-            betDown.addEventListener('click', function() {
+            betDown.addEventListener('click', function(e) {
+                e.stopPropagation();
                 if (DragonWolf.State.phase !== 'IDLE') return;
+                var now = Date.now();
+                if (now - _lastBetClickTime < BET_DEBOUNCE) return;
+                _lastBetClickTime = now;
                 DragonWolf.State.decreaseBet();
                 self.updateBet();
             });
@@ -58,8 +73,12 @@ DragonWolf.UI = {
         // BET +
         var betUp = document.getElementById('dw-btn-bet-up');
         if (betUp) {
-            betUp.addEventListener('click', function() {
+            betUp.addEventListener('click', function(e) {
+                e.stopPropagation();
                 if (DragonWolf.State.phase !== 'IDLE') return;
+                var now = Date.now();
+                if (now - _lastBetClickTime < BET_DEBOUNCE) return;
+                _lastBetClickTime = now;
                 DragonWolf.State.increaseBet();
                 self.updateBet();
             });
@@ -128,7 +147,9 @@ DragonWolf.UI = {
 
         // 點擊 reel area = spin / slam stop / skip wins
         var lastReelActionTime = 0;
-        var REEL_COOLDOWN = 500;
+        var _spinStartTime     = 0;       // spin 開始的時間戳
+        var REEL_COOLDOWN      = 500;
+        var MIN_SPIN_TIME      = 800;     // 最低旋轉時間，防止急拍急停
         var _slamStopFired = false;  // 防止 SPINNING 期間多次觸發 slamStop
         var reelArea = document.getElementById('dw-reel-area');
         if (reelArea) {
@@ -139,10 +160,12 @@ DragonWolf.UI = {
                 if (state.phase === 'IDLE') {
                     if (now - lastReelActionTime < REEL_COOLDOWN) return;
                     lastReelActionTime = now;
+                    _spinStartTime     = now;  // 記錄 spin 開始時間
                     _slamStopFired = false;  // 新一局重置
                     DragonWolf.Main.onSpin();
                 } else if (state.phase === 'SPINNING') {
                     if (_slamStopFired) return;  // 已觸發過，忽略後續點擊
+                    if (now - _spinStartTime < MIN_SPIN_TIME) return;  // 最低旋轉時間保護
                     _slamStopFired = true;
                     lastReelActionTime = now;
                     DragonWolf.Main.onSlamStop();
