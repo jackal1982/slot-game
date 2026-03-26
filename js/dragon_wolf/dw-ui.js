@@ -9,6 +9,7 @@ DragonWolf.UI = {
     _autoMode: false,       // AUTO 自動旋轉模式
     _slamStopFired: false,  // 防止 SPINNING 期間多次觸發 slamStop（模組層級，供 onSpin 重置）
     _buttonsBound: false,   // 防止重複綁定事件監聽器
+    _spinStartTime: 0,      // 每次 spin 開始的時間戳（統一管理，防止急停）
 
     init: function() {
         if (!this._buttonsBound) {
@@ -24,16 +25,17 @@ DragonWolf.UI = {
         var self = this;
 
         // SPIN / STOP / SKIP
-        var _btnSpinStartTime = 0;
+        var MIN_SPIN_TIME = 800;  // 最低旋轉時間，防止急拍急停
         var spinBtn = document.getElementById('dw-btn-spin');
         if (spinBtn) {
             spinBtn.addEventListener('click', function() {
                 var phase = DragonWolf.State.phase;
                 if (phase === 'IDLE') {
-                    _btnSpinStartTime = Date.now();
                     DragonWolf.Main.onSpin();
                 } else if (phase === 'SPINNING') {
-                    if (Date.now() - _btnSpinStartTime < 800) return;  // 最低旋轉時間保護
+                    if (self._slamStopFired) return;
+                    if (Date.now() - self._spinStartTime < MIN_SPIN_TIME) return;
+                    self._slamStopFired = true;
                     DragonWolf.Main.onSlamStop();
                 } else if (phase === 'SHOWING_WINS') {
                     var isFree = DragonWolf.State.inFreeSpins;
@@ -45,7 +47,7 @@ DragonWolf.UI = {
 
         // MAX BET / BET -/+ 共用 debounce
         var _lastBetClickTime = 0;
-        var BET_DEBOUNCE = 150;  // 150ms 防止快速連點值亂跳
+        var BET_DEBOUNCE = 250;  // 250ms 防止快速連點值亂跳
 
         // MAX BET
         var maxBetBtn = document.getElementById('dw-btn-max-bet');
@@ -152,9 +154,7 @@ DragonWolf.UI = {
 
         // 點擊 reel area = spin / slam stop / skip wins
         var lastReelActionTime = 0;
-        var _spinStartTime     = 0;       // spin 開始的時間戳
         var REEL_COOLDOWN      = 500;
-        var MIN_SPIN_TIME      = 800;     // 最低旋轉時間，防止急拍急停
         var reelArea = document.getElementById('dw-reel-area');
         if (reelArea) {
             reelArea.addEventListener('click', function(e) {
@@ -164,11 +164,10 @@ DragonWolf.UI = {
                 if (state.phase === 'IDLE') {
                     if (now - lastReelActionTime < REEL_COOLDOWN) return;
                     lastReelActionTime = now;
-                    _spinStartTime     = now;  // 記錄 spin 開始時間
                     DragonWolf.Main.onSpin();
                 } else if (state.phase === 'SPINNING') {
                     if (self._slamStopFired) return;  // 已觸發過，忽略後續點擊
-                    if (now - _spinStartTime < MIN_SPIN_TIME) return;  // 最低旋轉時間保護
+                    if (now - self._spinStartTime < MIN_SPIN_TIME) return;  // 統一使用模組層級時間戳
                     self._slamStopFired = true;
                     lastReelActionTime = now;
                     DragonWolf.Main.onSlamStop();
@@ -181,9 +180,10 @@ DragonWolf.UI = {
         }
     },
 
-    // 重置急停旗標（由 onSpin 呼叫，確保 AUTO/Free Spins 自動發局時旗標正確重置）
+    // 重置急停旗標並記錄 spin 開始時間（由 onSpin 呼叫）
     resetSlamStop: function() {
         this._slamStopFired = false;
+        this._spinStartTime = Date.now();
     },
 
     // ── HUD 更新 ──────────────────────────────────────────
@@ -240,11 +240,6 @@ DragonWolf.UI = {
             var noBalance = !inFS && (state.balance < state.getBet());
             btn.disabled    = noBalance;
             btn.textContent = inFS ? 'FREE SPIN' : 'SPIN';
-            // 餘額不足時自動取消 AUTO 模式
-            if (noBalance && this._autoMode) {
-                this._autoMode = false;
-                this.updateAutoButton();
-            }
         } else {
             // EVALUATING / FEATURE_PENDING / FREE_SPINS_INTRO / RANDOM_WILDS
             btn.disabled    = true;
@@ -256,9 +251,15 @@ DragonWolf.UI = {
         var state = DragonWolf.State;
         this._autoMode = !this._autoMode;
         this.updateAutoButton();
-        // 若目前在 IDLE 且不在 Free Spins 中，立即開始
+        // 若開啟 AUTO 且目前在 IDLE 且不在 Free Spins 中，立即開始
         if (this._autoMode && state.phase === 'IDLE' && !state.inFreeSpins) {
-            DragonWolf.Main.onSpin();
+            if (state.balance >= state.getBet()) {
+                DragonWolf.Main.onSpin();
+            } else {
+                this._autoMode = false;
+                this.updateAutoButton();
+                DragonWolf.UI.showMessage('餘額不足！', 2000);
+            }
         }
     },
 
