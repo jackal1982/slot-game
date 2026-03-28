@@ -191,29 +191,37 @@
     user-select:  none;
 }
 
-/* 暗淡（非中獎） */
+/* 暗淡（非中獎）— 加強版：飽和度+亮度降低 + ::after 深色遮罩 */
 .dw-symbol.dw-dimmed {
-    filter:    brightness(0.3) saturate(0.3);
-    transform: scale(0.95);
+    filter:    saturate(0.12) brightness(0.6);
+    transform: scale(0.91);
+}
+/* 深色遮罩覆蓋非中獎格，與中獎格製造強烈明暗對比 */
+.dw-symbol.dw-dimmed::after {
+    content:       '';
+    position:      absolute;
+    inset:         0;
+    background:    rgba(12, 6, 2, 0.55);
+    border-radius: 8px;
+    pointer-events: none;
 }
 
-/* 中獎高亮 */
+/* 中獎高亮 — 換用高對比朱紅色，並疊加邊框描邊 */
 .dw-symbol.dw-winning {
-    filter:    brightness(1.2) saturate(1.3);
-    transform: scale(1.06);
-    animation: dw-win-pulse 0.7s ease-in-out infinite alternate;
+    animation: dw-win-pulse 0.65s ease-in-out infinite alternate;
+    z-index:   5;
 }
 
-/* Scatter 紫金色脈衝 */
+/* Scatter 紫色脈衝 — 加強亮度與邊框 */
 .dw-symbol.dw-scatter-pulse {
     animation: dw-scatter-pulse 0.6s ease-in-out infinite alternate;
-    filter:    brightness(1.3);
+    z-index:   5;
 }
 
-/* M1 紅金色脈衝 */
+/* M1 紅金色脈衝 — 加強亮度與邊框 */
 .dw-symbol.dw-m1-pulse {
     animation: dw-m1-pulse 0.6s ease-in-out infinite alternate;
-    filter:    brightness(1.4);
+    z-index:   5;
 }
 
 /* 剛放置的 Wild */
@@ -846,17 +854,52 @@
 }
 
 /* ── Keyframe Animations ─────────────────────────────────── */
+/* dw-win-pulse — 暗紫高對比色（宣紙米色背景上明顯），加描邊 */
 @keyframes dw-win-pulse {
-    from { filter: brightness(1.2) saturate(1.3) drop-shadow(0 0 6px var(--dw-win-purple)); transform: scale(1.06); }
-    to   { filter: brightness(1.5) saturate(1.6) drop-shadow(0 0 18px var(--dw-win-purple-hi)); transform: scale(1.12); }
+    from {
+        filter:       brightness(1.05) saturate(1.3) drop-shadow(0 0 6px rgba(139,47,201,0.95));
+        transform:    scale(1.08);
+        box-shadow:   inset 0 0 10px rgba(139,47,201,0.35), 0 0 0 2px rgba(139,47,201,0.85);
+        background:   rgba(100,20,160,0.09);
+        border-radius: 10px;
+    }
+    to {
+        filter:       brightness(1.28) saturate(1.75) drop-shadow(0 0 14px var(--dw-win-purple)) drop-shadow(0 0 22px rgba(139,47,201,0.55));
+        transform:    scale(1.15);
+        box-shadow:   inset 0 0 18px rgba(176,80,232,0.30), 0 0 0 3px var(--dw-win-purple);
+        background:   rgba(139,47,201,0.15);
+        border-radius: 10px;
+    }
 }
+/* dw-scatter-pulse — 強化紫色光暈 + 描邊 */
 @keyframes dw-scatter-pulse {
-    from { filter: brightness(1.2) drop-shadow(0 0 6px #5C0A8C); transform: scale(1.04); }
-    to   { filter: brightness(1.5) drop-shadow(0 0 20px #9B2FD6); transform: scale(1.1); }
+    from {
+        filter:       brightness(1.15) drop-shadow(0 0 8px rgba(92,10,140,0.95));
+        transform:    scale(1.05);
+        box-shadow:   0 0 0 2px rgba(92,10,140,0.80);
+        border-radius: 10px;
+    }
+    to {
+        filter:       brightness(1.4) drop-shadow(0 0 18px #7B2FBE) drop-shadow(0 0 28px rgba(139,47,201,0.55));
+        transform:    scale(1.12);
+        box-shadow:   0 0 0 3px var(--dw-win-purple);
+        border-radius: 10px;
+    }
 }
+/* dw-m1-pulse — 強化暗紫光暈 + 描邊 */
 @keyframes dw-m1-pulse {
-    from { filter: brightness(1.2) drop-shadow(0 0 8px var(--dw-win-purple)); transform: scale(1.04); }
-    to   { filter: brightness(1.5) drop-shadow(0 0 22px var(--dw-win-purple-hi)); transform: scale(1.12); }
+    from {
+        filter:       brightness(1.15) drop-shadow(0 0 8px rgba(139,47,201,0.95));
+        transform:    scale(1.05);
+        box-shadow:   0 0 0 2px rgba(139,47,201,0.80);
+        border-radius: 10px;
+    }
+    to {
+        filter:       brightness(1.4) drop-shadow(0 0 16px var(--dw-win-purple)) drop-shadow(0 0 26px rgba(176,80,232,0.6));
+        transform:    scale(1.14);
+        box-shadow:   0 0 0 3px var(--dw-win-purple-hi);
+        border-radius: 10px;
+    }
 }
 @keyframes dw-wild-appear {
     0%   { transform: scale(0) rotate(-15deg); opacity: 0; filter: brightness(2); }
