@@ -25,7 +25,7 @@ DragonWolf.UI = {
         var self = this;
 
         // SPIN / STOP / SKIP
-        var MIN_SPIN_TIME = 800;  // 最低旋轉時間，防止急拍急停
+        var MIN_SPIN_TIME = 150;  // 最低旋轉時間，防止急拍急停
         var spinBtn = document.getElementById('dw-btn-spin');
         if (spinBtn) {
             spinBtn.addEventListener('click', function() {

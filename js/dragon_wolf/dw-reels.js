@@ -246,7 +246,7 @@ DragonWolf.Reels = {
         var cfg     = DragonWolf.Config;
         var strip   = this.strips[reelIndex];
         var symSize = this.symbolSize;
-        var delay   = reelIndex * 80;
+        var delay   = reelIndex * 50;
 
         setTimeout(function() {
             if (gen !== self._spinGeneration) return;
