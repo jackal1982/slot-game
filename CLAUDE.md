@@ -161,6 +161,9 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 24. **滾輪往上滾（方向錯誤）**：translateY 方向計算錯誤 → 修正為向下滾動
 25. **Bet 倍數跳動不連續**：BET_MULTIPLIERS 含非連續值 → 改為 [1,2,3,4,5,6,7,8,9,10] 連續整數
 26. **Slam Stop 已停止滾輪回彈**：slam stop 時已停止的滾輪仍觸發 bounce 動畫 → 加入 `_reelStopped[]` 陣列檢查，已停止者跳過 bounce
+27. **黑白龍狼傳 RTP 超過 100%（PR #42）**：原 BASE_PAY/FREE_PAY 與舊驗證腳本使用不同數值（差距 3~12×），實際 RTP 達 105.23% → 重新設計全套賠率，以 1000 萬局 Monte Carlo 驗證，實測 96.04%
+28. **Free Game M1 爆分（PR #42）**：Free Reel1 M1 密度 19.1% × randomWilds 高端機率（8%/2% 可加 9~16 WD）× 1024-Ways 乘數，偶發 675× bet 極端大爆炸 → 壓縮高端機率至 3%/1%、降低 Free Reel2~5 的 WD/M1 數量、新增 generateGrid M1≤2/視窗限制
+29. **A 符號同視窗堆疊（PR #42）**：A4 密度最高達 37%，同視窗可出現 3~4 個，造成 Ways 意外堆疊 → generateGrid 新增所有模式 A 符號≤2/視窗限制
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
@@ -192,6 +195,7 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - PR #25: 修復黑白龍狼傳 UI/UX 問題（滾輪區 click 驅動遊戲、SPIN 按鈕置中、TOTAL BET 顯示、Paytable 移除 xways 改為實際贏分、SPINNING 時顯示 STOP + SHOWING_WINS 時顯示 SKIP、滾輪停止動畫改 transitionend + double-rAF、Free Spins 500ms 延遲自動開始、轉場動畫修正黑龍白狼融合序列、文字與賠率修正）+ 更新角色 SVG
 - PR #26: 修復遊戲體驗問題（連點滾輪區 500ms cooldown + SPINNING 鎖定防抖動、滾輪 translateY 方向修正改為向下滾、BET_MULTIPLIERS 改為連續 [1,2,3,4,5,6,7,8,9,10]、新增 AUTO 自動連續 Spin 功能、M1 出現率提升 + FREE_PAY 降低）
 - PR #27: Free Game 觸發率提高至 ~1/57（Base Game SC 增加至軸1=7、軸2=8、軸3=8 + FREE_PAY 降低，RTP 96.09%）+ Slam Stop 修復（_reelStopped[] 檢查，已停止滾輪不再回彈）
+- PR #42: 黑白龍狼傳 RTP 重新校準至 96%（Base 60% + Free 36%）+ Free Reel 優化 + generateGrid 視窗限制 + 新版符號圖片
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
@@ -226,28 +230,36 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 ### 遊戲規格
 - **軸數/列數**：5 軸 4 列（20 格）
 - **賠付方式**：1024-Ways（不用固定線，計算相鄰軸上的符號數量組合）
-- **RTP 目標**：96%（實測 96.09%，Base ~57.6% + Free ~38.5%）
+- **RTP 目標**：96%（實測 96.04%，Base ~60.3% + Free ~35.7%）
 - **匹配規則**：由左至右連續匹配，Wild 可替代任何非 Scatter 符號
 - **隨機機制**：Reel Strip-based，每軸固定序列，隨機選取停止位置
 - **BET_MULTIPLIERS**：[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 連續整數
 - **AUTO 功能**：自動連續 Spin，餘額不足自動取消
 
-### Symbol 賠率表（黑白龍狼傳）
-| Symbol  | 說明 | 1連 | 2連 | 3連 | 4連 | 5連 |
-|---------|------|-----|-----|-----|-----|-----|
-| Wild    | 萬用  | —   | —   | 30  | 80  | 200 |
-| Scatter | 散落  | —   | —   | —   | —   | —   |
-| Dragon  | 龍（最高）| — | — | 20 | 60 | 150 |
-| Wolf    | 狼   | —   | —   | 15  | 40  | 100 |
-| Tiger   | 虎   | —   | —   | 10  | 30  | 80  |
-| Phoenix | 鳳凰  | —   | —   | 8   | 20  | 60  |
-| Koi     | 錦鯉  | —   | —   | 5   | 12  | 40  |
-| Turtle  | 龜   | —   | —   | 4   | 10  | 30  |
-| Coin    | 銅錢  | —   | —   | 3   | 8   | 20  |
-| Sword   | 劍   | —   | —   | 2   | 5   | 15  |
-| Jade    | 玉   | —   | —   | 2   | 5   | 15  |
+### Symbol 賠率表（黑白龍狼傳 — PR #42 定版）
 
-- Scatter 觸發 Free Spins（3顆=10次、4顆=15次、5顆=20次，2x 倍率，可重觸發）；觸發率 ~1.75%（約 1/57），Base Game SC 數量：軸1=7、軸2=8、軸3=8
+**Base Game（per-way 倍率 × bet）**
+| Symbol | 說明 | 3連 | 4連 | 5連 |
+|--------|------|-----|-----|-----|
+| M2 | 黑龍 | 0.16 | 0.32 | 0.70 |
+| M3 | 白狼 | 0.10 | 0.29 | 0.60 |
+| M4 | 憶無心 | 0.10 | 0.13 | 0.35 |
+| A1 | A | 0.06 | 0.06 | 0.16 |
+| A2 | K | 0.06 | 0.06 | 0.13 |
+| A3 | Q | 0.06 | 0.06 | 0.13 |
+| A4 | J | 0.05 | 0.05 | 0.10 |
+
+**Free Game（per-way 倍率 × bet）**
+| Symbol | 說明 | 3連 | 4連 | 5連 |
+|--------|------|-----|-----|-----|
+| M1 | 黑白郎君 | 0.07 | 0.20 | 0.35 |
+| M4 | 憶無心 | 0.03 | 0.07 | 0.13 |
+| A1 | A | 0.01 | 0.03 | 0.07 |
+| A2 | K | 0.01 | 0.03 | 0.04 |
+| A3 | Q | 0.01 | 0.03 | 0.04 |
+| A4 | J | 0.01 | 0.01 | 0.03 |
+
+- Scatter 觸發 Free Spins（固定 10 次，可重觸發 +10 次，上限 50 次）；觸發率 ~2.56%（約 1/39），Base Game SC 數量：軸1=7、軸2=8、軸3=8
 - 1024-Ways 賠付：每軸各有幾個相符符號就乘幾（如軸1×2×1×3×2=12 種 way）
 
 ### 命名空間與模組
@@ -255,15 +267,17 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - **模組前綴**：所有模組使用 `DW` 前綴（DWConfig、DWState、DWRNG 等）
 
 ### 關鍵實作細節
-- **dw-rng.js `generateGrid`**：SC/WD 每軸最多出現 1 個，透過最多 1000 次重試 + fallback 全掃描安全位置確保
+- **dw-rng.js `generateGrid`**：SC/WD 每軸最多 1 個；Free Game M1 同視窗最多 2 個；所有模式任一 A 符號同視窗最多 2 個（PR #42 新增）；均透過最多 1000 次重試 + fallback 全掃描確保
 - **dw-reels.js**：動畫 extra 符號使用 `_lastStops` 確保每次 spin 啟動畫面與上次結果一致；`_reelStopped[]` 陣列防止已停止軸再次回彈
 - **dw-main.js `onSpin`**：立即更新 `State.grid`，防止 M1 特色（Free Spins 等）污染 grid 狀態
 - **dw-payways.js**：1024-Ways 計算方式：統計每軸相符符號數，乘積即為 way 數，再乘賠率
-- **Free Spins M1 數量（最新）**：軸1=10、軸2=9、軸3=9、軸4=8、軸5=8
-- **Free Game 賠率（最新）**：M1: 3連=0.12, 4連=0.34, 5連=0.66；M4: 3連=0.06, 4連=0.12, 5連=0.24
+- **Free Spins M1 數量（最新）**：軸1=21、軸2=9、軸3=9、軸4=6、軸5=6
+- **Free Game WD 數量（最新）**：軸2=4、軸3=5、軸4=5、軸5=6（PR #42 調降）
+- **randomWilds 機率（最新）**：2~4個 60%、5~8個 36%、9~12個 3%、13~16個 1%（PR #42 調整）
 
 ### RTP 驗證
-- 驗證腳本：`rtp_verify_dragon_wolf_final.js`（Node.js，獨立執行）
-- 指令：`node rtp_verify_dragon_wolf_final.js`
-- 目標：95.5%~96.5%
-- 實測（PR #27）：Total 96.09%（Base ~57.6% + Free ~38.5%）
+- 驗證腳本：`dw-rtp-verify-v2.js`（Node.js，獨立執行，位於 worktree 根目錄）
+- 指令：`node dw-rtp-verify-v2.js`
+- 目標：95.5%~96.5%（Base 60% + Free 36%）
+- 實測（PR #42，1000 萬局）：Total **96.04%**（Base **60.31%** + Free **35.74%**）
+- 注意：舊版 `rtp_verify_dragon_wolf_final.js` 使用過時賠率，結果不可信
