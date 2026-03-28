@@ -163,11 +163,14 @@
 }
 
 .dw-reel-strip {
-    position:  absolute;
-    top:       0;
-    left:      0;
-    width:     100%;
-    will-change: transform;
+    position:        absolute;
+    top:             0;
+    left:            0;
+    width:           100%;
+    will-change:     transform;
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
 }
 
 /* ── 符號 ────────────────────────────────────────────────── */
