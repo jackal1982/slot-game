@@ -19,6 +19,9 @@
     --dw-btn-red:        linear-gradient(135deg, #8B0000, #E03030, #8B0000);
     --dw-shadow-gold:    rgba(255, 215, 0, 0.35);
     --dw-shadow-red:     rgba(224, 48, 48, 0.5);
+    --dw-win-purple:     #8B2FC9;              /* 中獎暗紫主色 */
+    --dw-win-purple-hi:  #B050E8;              /* 中獎暗紫高亮 */
+    --dw-shadow-purple:  rgba(139, 47, 201, 0.65); /* 紫色光暈 */
     --dw-symbol-size-desktop: 90px;
     --dw-symbol-size-tablet:  72px;
     --dw-symbol-size-mobile:  calc((100vw - 40px) / 5);
@@ -844,16 +847,16 @@
 
 /* ── Keyframe Animations ─────────────────────────────────── */
 @keyframes dw-win-pulse {
-    from { filter: brightness(1.2) saturate(1.3); transform: scale(1.06); }
-    to   { filter: brightness(1.5) saturate(1.6) drop-shadow(0 0 12px var(--dw-accent-gold)); transform: scale(1.12); }
+    from { filter: brightness(1.2) saturate(1.3) drop-shadow(0 0 6px var(--dw-win-purple)); transform: scale(1.06); }
+    to   { filter: brightness(1.5) saturate(1.6) drop-shadow(0 0 18px var(--dw-win-purple-hi)); transform: scale(1.12); }
 }
 @keyframes dw-scatter-pulse {
-    from { filter: brightness(1.2) drop-shadow(0 0 6px #9B59B6); transform: scale(1.04); }
-    to   { filter: brightness(1.5) drop-shadow(0 0 16px #E040FB); transform: scale(1.1); }
+    from { filter: brightness(1.2) drop-shadow(0 0 6px #5C0A8C); transform: scale(1.04); }
+    to   { filter: brightness(1.5) drop-shadow(0 0 20px #9B2FD6); transform: scale(1.1); }
 }
 @keyframes dw-m1-pulse {
-    from { filter: brightness(1.2) drop-shadow(0 0 8px var(--dw-accent-red)); transform: scale(1.04); }
-    to   { filter: brightness(1.5) drop-shadow(0 0 18px var(--dw-accent-gold)); transform: scale(1.12); }
+    from { filter: brightness(1.2) drop-shadow(0 0 8px var(--dw-win-purple)); transform: scale(1.04); }
+    to   { filter: brightness(1.5) drop-shadow(0 0 22px var(--dw-win-purple-hi)); transform: scale(1.12); }
 }
 @keyframes dw-wild-appear {
     0%   { transform: scale(0) rotate(-15deg); opacity: 0; filter: brightness(2); }
