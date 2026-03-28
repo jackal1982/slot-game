@@ -242,7 +242,7 @@ SlotGame.UI = {
             this.els.btnAutoSpin.textContent = 'AUTO';
         } else {
             state.autoSpinActive = true;
-            state.autoSpinCount = 100; // 100 auto spins
+            state.autoSpinCount = 0; // unlimited auto spins
             this.els.btnAutoSpin.classList.add('active');
             this.els.btnAutoSpin.textContent = 'STOP';
             // Trigger first spin if idle
