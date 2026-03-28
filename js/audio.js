@@ -79,10 +79,19 @@ SlotGame.Audio = {
         document.addEventListener('pointerdown', wakeAudio, { passive: true });
         document.addEventListener('touchstart', wakeAudio, { passive: true });
 
-        // Resume on tab visibility change
+        // Resume on tab visibility change — restore BGM when returning from background
+        var _bgmWasPlaying = false;
         document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && self.ctx && self.ctx.state === 'suspended') {
-                self.ctx.resume();
+            if (document.hidden) {
+                _bgmWasPlaying = self._bgmPlaying || false;
+                self.bgmStop();
+            } else {
+                if (self.ctx && self.ctx.state === 'suspended') {
+                    self.ctx.resume();
+                }
+                if (_bgmWasPlaying && SlotGame.State.musicEnabled) {
+                    self.bgmStart();
+                }
             }
         });
     },

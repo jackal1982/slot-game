@@ -38,6 +38,23 @@ DragonWolf.Audio = {
         this.soundGain = this.ctx.createGain();
         this.soundGain.gain.value = 1.0;
         this.soundGain.connect(this.masterGain);
+
+        // 切換 App 回來時恢復 BGM
+        var self = this;
+        var _bgmWasRunning = false;
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                _bgmWasRunning = self._bgmRunning || false;
+                self.bgmStop();
+            } else {
+                if (self.ctx && self.ctx.state === 'suspended') {
+                    self.ctx.resume();
+                }
+                if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
+                    self.bgmStart(self._bgmMode);
+                }
+            }
+        });
     },
 
     // ── 主音量控制 ────────────────────────────────────────
