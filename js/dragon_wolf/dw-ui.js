@@ -279,7 +279,7 @@ DragonWolf.UI = {
 
         if (!hud) return;
 
-        if (DragonWolf.State.inFreeSpins && fs.isActive()) {
+        if (DragonWolf.State.inFreeSpins) {
             hud.classList.remove('hidden');
             if (remaining) remaining.textContent = fs.getRemaining();
             if (total)     total.textContent     = fs.getTotal();

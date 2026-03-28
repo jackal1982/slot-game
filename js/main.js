@@ -299,9 +299,8 @@ SlotGame.Main = {
         }
 
         // Auto spin
-        if (state.autoSpinActive && state.autoSpinCount > 0) {
-            state.autoSpinCount--;
-            if (state.autoSpinCount <= 0) {
+        if (state.autoSpinActive) {
+            if (state.balance < state.totalBet) {
                 state.autoSpinActive = false;
                 SlotGame.UI.els.btnAutoSpin.classList.remove('active');
                 SlotGame.UI.els.btnAutoSpin.textContent = 'AUTO';
