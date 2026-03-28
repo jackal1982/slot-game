@@ -71,9 +71,9 @@ DragonWolf.Features = {
             var r = Math.random();
             var count;
             if      (r < 0.60) { count = 2  + Math.floor(Math.random() * 3); }  // 2~4 (60%)
-            else if (r < 0.90) { count = 5  + Math.floor(Math.random() * 4); }  // 5~8 (30%)
-            else if (r < 0.98) { count = 9  + Math.floor(Math.random() * 4); }  // 9~12 (8%)
-            else               { count = 13 + Math.floor(Math.random() * 4); }  // 13~16 (2%)
+            else if (r < 0.96) { count = 5  + Math.floor(Math.random() * 4); }  // 5~8 (36%)
+            else if (r < 0.99) { count = 9  + Math.floor(Math.random() * 4); }  // 9~12 (3%)
+            else               { count = 13 + Math.floor(Math.random() * 4); }  // 13~16 (1%)
             count = Math.max(2, Math.min(count, maxCount));
 
             // Step 3：收集可用位置（軸2~5 = col 1~4，排除已有 WD 或 M1）
