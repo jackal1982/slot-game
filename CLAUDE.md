@@ -164,6 +164,8 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 27. **黑白龍狼傳 RTP 超過 100%（PR #42）**：原 BASE_PAY/FREE_PAY 與舊驗證腳本使用不同數值（差距 3~12×），實際 RTP 達 105.23% → 重新設計全套賠率，以 1000 萬局 Monte Carlo 驗證，實測 96.04%
 28. **Free Game M1 爆分（PR #42）**：Free Reel1 M1 密度 19.1% × randomWilds 高端機率（8%/2% 可加 9~16 WD）× 1024-Ways 乘數，偶發 675× bet 極端大爆炸 → 壓縮高端機率至 3%/1%、降低 Free Reel2~5 的 WD/M1 數量、新增 generateGrid M1≤2/視窗限制
 29. **A 符號同視窗堆疊（PR #42）**：A4 密度最高達 37%，同視窗可出現 3~4 個，造成 Ways 意外堆疊 → generateGrid 新增所有模式 A 符號≤2/視窗限制
+30. **Fortune Slots Symbol 桌面版不置中（PR #44）**：`#reel-area` 的 `overflow: hidden` 與 `justify-content: center` 在部分瀏覽器有潛在衝突，reel grid 在寬容器中靠左 → 移除 `overflow: hidden`，`#reel-grid` 加 `margin: auto` 保底置中（驗證：left = right = 111px）
+31. **黑白龍狼傳 Symbol 靠左不置中（PR #44）**：`.dw-reel-strip` 為 block 容器，`.dw-symbol` 固定寬度（90/72px）小於 grid `1fr` 計算出的 viewport 寬（約 109px），預設靠左對齊 → `.dw-reel-strip` 加入 `display: flex; flex-direction: column; align-items: center`（驗證：left = right = 18px）
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
@@ -196,6 +198,7 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - PR #26: 修復遊戲體驗問題（連點滾輪區 500ms cooldown + SPINNING 鎖定防抖動、滾輪 translateY 方向修正改為向下滾、BET_MULTIPLIERS 改為連續 [1,2,3,4,5,6,7,8,9,10]、新增 AUTO 自動連續 Spin 功能、M1 出現率提升 + FREE_PAY 降低）
 - PR #27: Free Game 觸發率提高至 ~1/57（Base Game SC 增加至軸1=7、軸2=8、軸3=8 + FREE_PAY 降低，RTP 96.09%）+ Slam Stop 修復（_reelStopped[] 檢查，已停止滾輪不再回彈）
 - PR #42: 黑白龍狼傳 RTP 重新校準至 96%（Base 60% + Free 36%）+ Free Reel 優化 + generateGrid 視窗限制 + 新版符號圖片
+- PR #44: 修復兩款遊戲 Symbol 水平置中問題（Fortune Slots：移除 `#reel-area` overflow:hidden + `#reel-grid` 加 margin:auto；黑白龍狼傳：`.dw-reel-strip` 加 flex column + align-items:center 解決 symbol 寬度小於 viewport 1fr 寬度導致靠左的問題）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
