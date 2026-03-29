@@ -11,7 +11,8 @@ SlotGame.Lobby = {
             subtitle: '幸運老虎機',
             description: '5 軸 20 線經典老虎機，Wild、Scatter、Free Spins、Bonus Game、累積 Jackpot',
             rtp: '96.29%',
-            icon: 'images/slot-icon.svg'
+            icon: 'images/fortune_slots/slot-icon.svg',
+            viewPath: 'games/fortune_slots/view.html'
         },
         {
             id: 'dragon_wolf',
@@ -19,7 +20,8 @@ SlotGame.Lobby = {
             subtitle: 'Legend of Dragon &amp; Wolf',
             description: '5軸4行 1024-Ways，M1黑白郎君隨機百搭特色，Free Game高爆發',
             rtp: '96.0%',
-            icon: 'images/dragon_wolf/dw-icon.png'
+            icon: 'images/dragon_wolf/dw-icon.png',
+            viewPath: 'games/dragon_wolf/view.html'
         }
     ],
 

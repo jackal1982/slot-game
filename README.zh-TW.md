@@ -81,7 +81,9 @@
 slot-game/
 ├── index.html              # 單頁 HTML（大廳 + 遊戲兩個 view）
 ├── GAME_SPEC_TEMPLATE.md   # 新遊戲規格模板 v2.0
-├── rtp-verify.js           # Node.js 蒙地卡羅 RTP 驗證（500 萬次模擬）
+├── tools/
+│   ├── rtp-verify-fortune-slots.js  # Node.js 蒙地卡羅 RTP 驗證（Fortune Slots，500 萬次）
+│   └── rtp-verify-dragon-wolf.js    # Node.js 蒙地卡羅 RTP 驗證（黑白龍狼傳，1000 萬次）
 ├── css/
 │   ├── main.css            # 根變數、版面、覆蓋層
 │   ├── lobby.css           # 大廳樣式、遊戲卡片、view transition
@@ -142,8 +144,11 @@ npx serve .
 專案提供瀏覽器內與獨立 Node.js 兩種驗證方式：
 
 ```bash
-# 獨立 Node.js 驗證（500 萬次模擬）
-node rtp-verify.js
+# Fortune Slots RTP 驗證（500 萬次模擬）
+node tools/rtp-verify-fortune-slots.js
+
+# 黑白龍狼傳 RTP 驗證（1000 萬次模擬）
+node tools/rtp-verify-dragon-wolf.js
 ```
 
 ```javascript

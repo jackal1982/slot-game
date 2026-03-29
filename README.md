@@ -81,7 +81,9 @@ A fully-featured slot game platform with a lobby and 5-reel video slot machine, 
 slot-game/
 ├── index.html              # Single-page HTML (lobby + game views)
 ├── GAME_SPEC_TEMPLATE.md   # Game spec template v2.0 for new games
-├── rtp-verify.js           # Node.js Monte Carlo RTP verification (5M spins)
+├── tools/
+│   ├── rtp-verify-fortune-slots.js  # Node.js Monte Carlo RTP verification for Fortune Slots (5M spins)
+│   └── rtp-verify-dragon-wolf.js    # Node.js Monte Carlo RTP verification for Dragon Wolf (10M spins)
 ├── css/
 │   ├── main.css            # Root variables, layout, overlays
 │   ├── lobby.css           # Lobby styles, game cards, view transitions
@@ -142,8 +144,11 @@ npx serve .
 The project includes both in-browser and standalone RTP verification:
 
 ```bash
-# Standalone Node.js verification (5 million spins)
-node rtp-verify.js
+# Fortune Slots RTP verification (5 million spins)
+node tools/rtp-verify-fortune-slots.js
+
+# Dragon Wolf Legend RTP verification (10 million spins)
+node tools/rtp-verify-dragon-wolf.js
 ```
 
 ```javascript
