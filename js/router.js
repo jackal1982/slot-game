@@ -1,12 +1,14 @@
 /**
  * Router Module
  * SPA hash-based routing between lobby and game views.
+ * Game HTML views are fetched on first visit and injected into #game-views.
  */
 SlotGame.Router = {
     ROUTES: { LOBBY: 'lobby', GAME_SLOT: 'game/slot', GAME_DW: 'game/dragon_wolf' },
 
     _currentRoute: null,
     _isTransitioning: false,
+    _viewCache: {},  // tracks which game views have been injected
 
     init: function() {
         var self = this;
@@ -35,26 +37,72 @@ SlotGame.Router = {
         if (route === this._currentRoute) return;
 
         this._isTransitioning = true;
+        var self = this;
         var prevRoute = this._currentRoute;
         this._currentRoute = route;
 
+        var done = function() { self._isTransitioning = false; };
+
         if (route === this.ROUTES.LOBBY) {
             this._showLobby(prevRoute);
+            done();
         } else if (route === this.ROUTES.GAME_SLOT) {
-            this._showGame('slot');
+            this._showGame('slot', done);
         } else if (route === this.ROUTES.GAME_DW) {
-            this._showGame('dragon_wolf');
+            this._showGame('dragon_wolf', done);
+        }
+    },
+
+    // ── View Loading ─────────────────────────────────────
+
+    /**
+     * Look up a game descriptor from the lobby registry by internal type name.
+     * @param {string} gameType  'slot' | 'dragon_wolf'
+     */
+    _getDescriptor: function(gameType) {
+        var idMap = { 'slot': 'slot_game', 'dragon_wolf': 'dragon_wolf' };
+        var id = idMap[gameType];
+        var games = SlotGame.Lobby._games;
+        for (var i = 0; i < games.length; i++) {
+            if (games[i].id === id) return games[i];
+        }
+        return null;
+    },
+
+    /**
+     * Fetch a game's view HTML and inject it into #game-views (once only).
+     * Calls callback() when the view is ready (whether fetched or cached).
+     */
+    _loadGameView: function(gameType, viewPath, callback) {
+        if (this._viewCache[gameType]) {
+            callback();
+            return;
         }
 
-        this._isTransitioning = false;
+        var self = this;
+        fetch(viewPath)
+            .then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.text();
+            })
+            .then(function(html) {
+                var container = document.getElementById('game-views');
+                container.insertAdjacentHTML('beforeend', html);
+                self._viewCache[gameType] = true;
+                callback();
+            })
+            .catch(function(e) {
+                console.error('[Router] Failed to load game view:', viewPath, e);
+                // Proceed anyway — game container may already exist (fallback)
+                self._viewCache[gameType] = true;
+                callback();
+            });
     },
 
     // ── Transitions ──────────────────────────────────────
 
     _showLobby: function(prevRoute) {
         var lobby = document.getElementById('lobby-container');
-        var game  = document.getElementById('game-container');
-        var dwGame = document.getElementById('dw-game-container');
         var splash = document.getElementById('splash-screen');
 
         // Clean up game if coming from it
@@ -65,12 +113,12 @@ SlotGame.Router = {
         }
 
         if (splash) splash.style.display = 'none';
-        game.classList.add('view-hidden');
-        game.classList.remove('view-active');
-        if (dwGame) {
-            dwGame.classList.add('view-hidden');
-            dwGame.classList.remove('view-active');
-        }
+
+        var game = document.getElementById('game-container');
+        if (game) { game.classList.add('view-hidden'); game.classList.remove('view-active'); }
+
+        var dwGame = document.getElementById('dw-game-container');
+        if (dwGame) { dwGame.classList.add('view-hidden'); dwGame.classList.remove('view-active'); }
 
         lobby.classList.remove('view-hidden');
         // Trigger reflow then animate in
@@ -81,13 +129,29 @@ SlotGame.Router = {
         SlotGame.Lobby.updateBalance();
     },
 
-    _showGame: function(gameType) {
+    _showGame: function(gameType, done) {
+        var self = this;
+        var descriptor = this._getDescriptor(gameType);
         var lobby  = document.getElementById('lobby-container');
         var splash = document.getElementById('splash-screen');
 
         lobby.classList.add('view-hidden');
         lobby.classList.remove('view-active');
 
+        if (!descriptor || !descriptor.viewPath) {
+            // No dynamic loading configured — fall back to direct show
+            self._showGameView(gameType, splash);
+            done();
+            return;
+        }
+
+        this._loadGameView(gameType, descriptor.viewPath, function() {
+            self._showGameView(gameType, splash);
+            done();
+        });
+    },
+
+    _showGameView: function(gameType, splash) {
         if (gameType === 'slot') {
             this._showSlotGame(splash);
         } else if (gameType === 'dragon_wolf') {
