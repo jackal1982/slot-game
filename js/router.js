@@ -120,6 +120,11 @@ SlotGame.Router = {
         var dwGame = document.getElementById('dw-game-container');
         if (dwGame) { dwGame.classList.add('view-hidden'); dwGame.classList.remove('view-active'); }
 
+        // Explicitly hide #game-views so it doesn't consume flex space after game HTML has been injected
+        // (:empty pseudo-class no longer matches once child views are injected)
+        var gameViews = document.getElementById('game-views');
+        if (gameViews) gameViews.style.display = 'none';
+
         lobby.classList.remove('view-hidden');
         // Trigger reflow then animate in
         void lobby.offsetHeight;
@@ -137,6 +142,10 @@ SlotGame.Router = {
 
         lobby.classList.add('view-hidden');
         lobby.classList.remove('view-active');
+
+        // Restore #game-views visibility (may have been hidden by _showLobby)
+        var gameViews = document.getElementById('game-views');
+        if (gameViews) gameViews.style.display = '';
 
         if (!descriptor || !descriptor.viewPath) {
             // No dynamic loading configured — fall back to direct show
