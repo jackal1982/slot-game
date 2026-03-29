@@ -124,6 +124,11 @@ body {
     flex-direction: column;
 }
 
+/* Hide #game-views when empty so it doesn't consume flex space alongside #lobby-container */
+#game-views:empty {
+    display: none;
+}
+
 /* === Game Container === */
 #game-container {
     width: 100%;
