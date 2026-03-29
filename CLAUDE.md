@@ -115,7 +115,9 @@ css/
   dragon_wolf.css   # 黑白龍狼傳專用樣式（5×4 grid、深色主題）
 images/             # SVG 符號圖檔 + reel-bg-fortune.svg 背景 + slot-icon.svg
   dragon_wolf/      # 黑白龍狼傳 SVG：dragon, wolf, tiger, phoenix, koi, turtle, coin, sword, jade, scatter, wild（11 個）
-rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500 萬次）
+tools/
+  rtp-verify-fortune-slots.js  # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500 萬次）
+  rtp-verify-dragon-wolf.js    # 黑白龍狼傳 RTP 驗證腳本（Node.js，Monte Carlo 1000 萬次）
 ```
 
 ### JS 載入順序
@@ -125,7 +127,7 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 
 ## RTP 調整注意事項
 - 修改賠率時**不要同時改 Reel Strips**，兩者交互影響很大
-- 調整後務必跑 `node rtp-verify.js` 驗證（目標 95.5%~96.5%）
+- 調整後務必跑 `node tools/rtp-verify-fortune-slots.js` 驗證（目標 95.5%~96.5%）
 - Reel Strips 在 `config.js` 的 `REEL_STRIPS` 陣列，每軸長度不同（28~34）
 
 ## 開發慣例
@@ -279,8 +281,8 @@ rtp-verify.js       # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500
 - **randomWilds 機率（最新）**：2~4個 60%、5~8個 36%、9~12個 3%、13~16個 1%（PR #42 調整）
 
 ### RTP 驗證
-- 驗證腳本：`dw-rtp-verify-v2.js`（Node.js，獨立執行，位於 worktree 根目錄）
-- 指令：`node dw-rtp-verify-v2.js`
+- 驗證腳本：`tools/rtp-verify-dragon-wolf.js`（Node.js，獨立執行）
+- 指令：`node tools/rtp-verify-dragon-wolf.js`
 - 目標：95.5%~96.5%（Base 60% + Free 36%）
 - 實測（PR #42，1000 萬局）：Total **96.04%**（Base **60.31%** + Free **35.74%**）
 - 注意：舊版 `rtp_verify_dragon_wolf_final.js` 使用過時賠率，結果不可信

@@ -15,7 +15,7 @@
 1. **複製本文件**到新遊戲資料夾，命名為 `GAME_SPEC_{遊戲ID}.md`
 2. **填寫第一章至第七章**的空白欄位（遊戲基本資訊、符號、Reel Strip、賠付模式等）
 3. **選擇合適的遊戲機制**（參考附錄 D 速查表），填寫第六章特殊功能
-4. **執行 RTP 驗證**：`node rtp-verify.js`，確保 RTP 落在目標範圍
+4. **執行 RTP 驗證**：`node tools/rtp-verify-fortune-slots.js`，確保 RTP 落在目標範圍
 5. **調整配色系統**（第八章）並與 UI 團隊確認
 6. **逐項完成附錄 B 的 Checklist**
 7. **提交 Pull Request**進行 Review
@@ -522,9 +522,9 @@ generateGrid() {
 
 - **RNG 種子初始化**：使用 `Math.random()`（瀏覽器提供的加密安全隨機）
 - **RTP 驗證**：Monte Carlo 模擬 500 萬次 spin，統計總中獎 / 總下注，確保落在目標 ±0.5% 內
-- **驗證工具**：`rtp-verify.js`（Node.js）
+- **驗證工具**：`tools/rtp-verify-fortune-slots.js`（Node.js）
 - **驗證頻率**：每次修改符號賠率或 Reel Strip 後必須驗證
-- **驗證命令**：`node rtp-verify.js`
+- **驗證命令**：`node tools/rtp-verify-fortune-slots.js`
 
 ---
 
@@ -819,7 +819,7 @@ Volatility = sqrt(E[X²] - E[X]²)
 
 ### 7.5 RTP 驗證方法
 
-**工具**：`rtp-verify.js`（Node.js）
+**工具**：`tools/rtp-verify-fortune-slots.js`（Node.js）
 
 **流程**：
 1. 執行 500 萬次模擬 Spin
@@ -829,7 +829,7 @@ Volatility = sqrt(E[X²] - E[X]²)
 
 **命令**：
 ```bash
-node rtp-verify.js
+node tools/rtp-verify-fortune-slots.js
 ```
 
 **輸出範例**：

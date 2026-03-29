@@ -1,7 +1,7 @@
 /**
  * RTP Verification Script for Fortune Slots
  * Mirrors the actual game logic from paylines.js and rng.js
- * Run: node rtp-verify.js
+ * Run: node tools/rtp-verify-fortune-slots.js
  */
 
 const Config = {
