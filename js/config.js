@@ -17,14 +17,14 @@ SlotGame.Config = {
 
     // --- Symbol Definitions ---
     symbols: [
-        { id: 0, name: 'Wild',    img: 'images/wild.svg',    weight: 2,  pay: { 3: 40, 4: 100, 5: 300 } },
-        { id: 1, name: 'Scatter', img: 'images/scatter.svg',  weight: 3,  pay: null }, // Scatter pays via free spins
-        { id: 2, name: 'Crown',   img: 'images/crown.svg',    weight: 4,  pay: { 3: 25, 4: 70, 5: 200 } },
-        { id: 3, name: 'Bell',    img: 'images/bell.svg',     weight: 6,  pay: { 3: 15, 4: 50, 5: 125 } },
-        { id: 4, name: 'Seven',   img: 'images/seven.svg',    weight: 8,  pay: { 3: 12, 4: 35, 5: 100 } },
-        { id: 5, name: 'Cherry',  img: 'images/cherry.svg',   weight: 10, pay: { 3: 8,  4: 25, 5: 75 } },
-        { id: 6, name: 'Lemon',   img: 'images/lemon.svg',    weight: 14, pay: { 3: 5,  4: 15, 5: 50 } },
-        { id: 7, name: 'Grape',   img: 'images/grape.svg',    weight: 14, pay: { 3: 3,  4: 8,  5: 40 } },
+        { id: 0, name: 'Wild',    img: 'images/fortune_slots/wild.svg',    weight: 2,  pay: { 3: 40, 4: 100, 5: 300 } },
+        { id: 1, name: 'Scatter', img: 'images/fortune_slots/scatter.svg',  weight: 3,  pay: null }, // Scatter pays via free spins
+        { id: 2, name: 'Crown',   img: 'images/fortune_slots/crown.svg',    weight: 4,  pay: { 3: 25, 4: 70, 5: 200 } },
+        { id: 3, name: 'Bell',    img: 'images/fortune_slots/bell.svg',     weight: 6,  pay: { 3: 15, 4: 50, 5: 125 } },
+        { id: 4, name: 'Seven',   img: 'images/fortune_slots/seven.svg',    weight: 8,  pay: { 3: 12, 4: 35, 5: 100 } },
+        { id: 5, name: 'Cherry',  img: 'images/fortune_slots/cherry.svg',   weight: 10, pay: { 3: 8,  4: 25, 5: 75 } },
+        { id: 6, name: 'Lemon',   img: 'images/fortune_slots/lemon.svg',    weight: 14, pay: { 3: 5,  4: 15, 5: 50 } },
+        { id: 7, name: 'Grape',   img: 'images/fortune_slots/grape.svg',    weight: 14, pay: { 3: 3,  4: 8,  5: 40 } },
     ],
 
     // Total weight per reel position
