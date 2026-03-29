@@ -11,7 +11,7 @@ SlotGame.Lobby = {
             subtitle: '幸運老虎機',
             description: '5 軸 20 線經典老虎機，Wild、Scatter、Free Spins、Bonus Game、累積 Jackpot',
             rtp: '96.29%',
-            icon: 'images/slot-icon.svg'
+            icon: 'images/fortune_slots/slot-icon.svg'
         },
         {
             id: 'dragon_wolf',
