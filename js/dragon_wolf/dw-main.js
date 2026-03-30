@@ -279,14 +279,12 @@ DragonWolf.Main = {
         var totalWin = DragonWolf.Features.freeSpins.end();
         state.inFreeSpins = false;
 
-        // 切回 Base Game BGM
-        try { DragonWolf.Audio.bgmSetMode('base'); } catch(e) {}
-
         // 更新 HUD
         DragonWolf.UI.updateFreeSpinsHud();
 
-        // 播放 FS 總結
+        // 播放 FS 總結，玩家按「收取」後才切回 Base Game BGM
         DragonWolf.Animations.playFSSummary(totalWin, function() {
+            try { DragonWolf.Audio.bgmSetMode('base'); } catch(e) {}
             DragonWolf.Main._toIdle(false);
         });
     },

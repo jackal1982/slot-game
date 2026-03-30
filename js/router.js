@@ -130,6 +130,9 @@ SlotGame.Router = {
         void lobby.offsetHeight;
         lobby.classList.add('view-active');
 
+        // Reset scroll position on view switch (mobile fix)
+        window.scrollTo(0, 0);
+
         // Update lobby balance
         SlotGame.Lobby.updateBalance();
     },
@@ -146,6 +149,9 @@ SlotGame.Router = {
         // Restore #game-views visibility (may have been hidden by _showLobby)
         var gameViews = document.getElementById('game-views');
         if (gameViews) gameViews.style.display = '';
+
+        // Reset scroll position on view switch (mobile fix)
+        window.scrollTo(0, 0);
 
         if (!descriptor || !descriptor.viewPath) {
             // No dynamic loading configured — fall back to direct show
