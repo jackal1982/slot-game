@@ -98,7 +98,7 @@ js/
     dw-config.js    # 符號定義、賠率、Reel Strips（5×4）、1024-Ways
     dw-state.js     # 遊戲狀態管理
     dw-rng.js       # 隨機數生成（SC/WD 重試邏輯強化，1000次+全掃描 fallback）
-    dw-audio.js     # 音效系統（Web Audio API，獨立）
+    dw-audio.js     # 音效系統（Web Audio API，獨立）；BGM 使用 MP3 音檔（audio/dragon_wolf/）
     dw-payways.js   # 1024-Ways 賠付評估（不用固定線，用 adjacent-reel way）
     dw-features.js  # Free Spins 邏輯
     dw-reels.js     # 滾輪動畫（_lastStops 確保啟動連續性）
@@ -168,6 +168,7 @@ tools/
 29. **A 符號同視窗堆疊（PR #42）**：A4 密度最高達 37%，同視窗可出現 3~4 個，造成 Ways 意外堆疊 → generateGrid 新增所有模式 A 符號≤2/視窗限制
 30. **Fortune Slots Symbol 桌面版不置中（PR #44）**：`#reel-area` 的 `overflow: hidden` 與 `justify-content: center` 在部分瀏覽器有潛在衝突，reel grid 在寬容器中靠左 → 移除 `overflow: hidden`，`#reel-grid` 加 `margin: auto` 保底置中（驗證：left = right = 111px）
 31. **黑白龍狼傳 Symbol 靠左不置中（PR #44）**：`.dw-reel-strip` 為 block 容器，`.dw-symbol` 固定寬度（90/72px）小於 grid `1fr` 計算出的 viewport 寬（約 109px），預設靠左對齊 → `.dw-reel-strip` 加入 `display: flex; flex-direction: column; align-items: center`（驗證：left = right = 18px）
+32. **黑白龍狼傳 BGM 換為 MP3 音檔（PR #51）**：原程序化 BGM（Web Audio API 合成）換成 AI 生成的中國武俠風 MP3 音檔，Normal 穩重、Free Spins 激昂，0.15s crossfade 切換，無縫循環（loop=true）
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
@@ -201,6 +202,7 @@ tools/
 - PR #27: Free Game 觸發率提高至 ~1/57（Base Game SC 增加至軸1=7、軸2=8、軸3=8 + FREE_PAY 降低，RTP 96.09%）+ Slam Stop 修復（_reelStopped[] 檢查，已停止滾輪不再回彈）
 - PR #42: 黑白龍狼傳 RTP 重新校準至 96%（Base 60% + Free 36%）+ Free Reel 優化 + generateGrid 視窗限制 + 新版符號圖片
 - PR #44: 修復兩款遊戲 Symbol 水平置中問題（Fortune Slots：移除 `#reel-area` overflow:hidden + `#reel-grid` 加 margin:auto；黑白龍狼傳：`.dw-reel-strip` 加 flex column + align-items:center 解決 symbol 寬度小於 viewport 1fr 寬度導致靠左的問題）
+- PR #51: 黑白龍狼傳 BGM 換為 AI 生成 MP3（`audio/dragon_wolf/dw-bgm-normal.mp3` + `dw-bgm-free.mp3`），移除程序化合成引擎，改用 XHR 預載 + BufferSource loop + 0.15s crossfade 切換
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
