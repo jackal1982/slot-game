@@ -343,11 +343,12 @@ DragonWolf.UI = {
         var content = document.getElementById('dw-paytable-content');
         if (!content) return;
         var cfg = DragonWolf.Config;
+        var currentBet = DragonWolf.State.getBet();
         var html = '';
 
         html += '<div class="dw-pt-section">';
         html += '<h3 class="dw-pt-title">Base Game 賠率</h3>';
-        html += '<p class="dw-pt-note">1024 Ways｜最小押注(' + cfg.BASE_BET + '分)每路贏分</p>';
+        html += '<p class="dw-pt-note">1024 Ways｜當前押注(' + currentBet + '分)每路贏分</p>';
         html += '<table class="dw-pt-table">';
         html += '<tr><th>符號</th><th>3 連</th><th>4 連</th><th>5 連</th></tr>';
 
@@ -357,9 +358,9 @@ DragonWolf.UI = {
             var pay = cfg.BASE_PAY[sym];
             html += '<tr>';
             html += '<td><img class="dw-pt-icon" src="' + cfg.SYMBOL_IMGS[sym] + '" alt="' + sym + '"> ' + cfg.SYMBOL_NAMES[sym] + '</td>';
-            html += '<td>' + (pay[3] * cfg.BASE_BET).toFixed(0) + '</td>';
-            html += '<td>' + (pay[4] * cfg.BASE_BET).toFixed(0) + '</td>';
-            html += '<td>' + (pay[5] * cfg.BASE_BET).toFixed(0) + '</td>';
+            html += '<td>' + (pay[3] * currentBet).toFixed(0) + '</td>';
+            html += '<td>' + (pay[4] * currentBet).toFixed(0) + '</td>';
+            html += '<td>' + (pay[5] * currentBet).toFixed(0) + '</td>';
             html += '</tr>';
         }
         html += '</table>';
@@ -377,9 +378,9 @@ DragonWolf.UI = {
             var fpay = cfg.FREE_PAY[fsym];
             html += '<tr' + (fsym === 'M1' ? ' class="dw-pt-highlight"' : '') + '>';
             html += '<td><img class="dw-pt-icon" src="' + cfg.SYMBOL_IMGS[fsym] + '" alt="' + fsym + '"> ' + cfg.SYMBOL_NAMES[fsym] + '</td>';
-            html += '<td>' + (fpay[3] * cfg.BASE_BET).toFixed(0) + '</td>';
-            html += '<td>' + (fpay[4] * cfg.BASE_BET).toFixed(0) + '</td>';
-            html += '<td>' + (fpay[5] * cfg.BASE_BET).toFixed(0) + '</td>';
+            html += '<td>' + (fpay[3] * currentBet).toFixed(0) + '</td>';
+            html += '<td>' + (fpay[4] * currentBet).toFixed(0) + '</td>';
+            html += '<td>' + (fpay[5] * currentBet).toFixed(0) + '</td>';
             html += '</tr>';
         }
         html += '</table>';

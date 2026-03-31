@@ -465,10 +465,11 @@ SlotGame.UI = {
             paysEl.className = 'paytable-pays';
 
             if (sym.pay) {
+                var bet = SlotGame.State.betPerLine;
                 paysEl.innerHTML =
-                    '<span>x3: ' + sym.pay[3] + '</span>' +
-                    '<span>x4: ' + sym.pay[4] + '</span>' +
-                    '<span>x5: ' + sym.pay[5] + '</span>';
+                    '<span>x3: ' + (sym.pay[3] * bet) + '</span>' +
+                    '<span>x4: ' + (sym.pay[4] * bet) + '</span>' +
+                    '<span>x5: ' + (sym.pay[5] * bet) + '</span>';
             } else if (sym.id === SlotGame.Config.SCATTER_ID) {
                 var fs = SlotGame.Config.scatterFreeSpins;
                 paysEl.innerHTML =
@@ -567,6 +568,7 @@ SlotGame.UI = {
     },
 
     showPaytable: function() {
+        this.buildPaytable();
         this.els.paytableOverlay.classList.add('active');
     },
 
