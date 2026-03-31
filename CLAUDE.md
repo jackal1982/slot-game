@@ -151,7 +151,7 @@ tools/
 ## PR 歷史
 > 完整 PR 歷史與 Bug 修復記錄見 [CHANGELOG.md](CHANGELOG.md)
 >
-> 最新：PR #57（DW Free Game 結算時序修正 + 兩款遊戲 Paytable 動態 Bet）
+> 最新：PR #58（Fortune Slots Win Cycle 重構為 event-driven）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |

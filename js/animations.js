@@ -79,44 +79,71 @@ SlotGame.Animations = {
     },
 
     /**
-     * Cycle through winning paylines, showing one at a time.
+     * Cycle through winning paylines one at a time, then call onComplete.
      * @param {Array} winDetails - Array of win objects from Paylines.evaluate
+     * @param {Function} onComplete - Called after one full cycle completes
      */
-    showWinLines: function(winDetails) {
-        if (!winDetails || winDetails.length === 0) return;
+    showWinLines: function(winDetails, onComplete) {
+        if (!winDetails || winDetails.length === 0) {
+            if (onComplete) onComplete();
+            return;
+        }
 
         var self = this;
-        var index = 0;
+        this._winCycleWins = winDetails;
+        this._winCycleIndex = 0;
+        this._winCycleCallback = onComplete;
+        this._showNextWinLine();
+    },
+
+    _showNextWinLine: function() {
+        var self = this;
+        var wins = this._winCycleWins;
+        if (!wins || wins.length === 0) {
+            if (this._winCycleCallback) this._winCycleCallback();
+            return;
+        }
+
+        var idx = this._winCycleIndex;
+        var win = wins[idx];
         var colors = SlotGame.Config.paylineColors;
 
-        var cycle = function() {
-            if (SlotGame.State.phase !== 'SHOWING_WINS') return;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawPayline(win.paylineIndex, win.count, colors[win.paylineIndex % colors.length]);
 
-            self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height);
+        // Highlight symbols for this payline
+        SlotGame.Reels.clearWinHighlights();
+        SlotGame.Reels.highlightSymbols(win.positions);
 
-            var win = winDetails[index % winDetails.length];
-            self.drawPayline(win.paylineIndex, win.count, colors[win.paylineIndex % colors.length]);
+        // Update line win text
+        SlotGame.UI.showLineWin(win.payout, win.paylineIndex + 1);
 
-            // Highlight symbols for this payline
-            SlotGame.Reels.highlightSymbols(win.positions);
-
-            // Update line win text
-            SlotGame.UI.showLineWin(win.payout, win.paylineIndex + 1);
-
-            index++;
-            self.cycleTimer = setTimeout(cycle, SlotGame.Config.WIN_LINE_CYCLE_DELAY);
-        };
-        cycle();
+        this.cycleTimer = setTimeout(function() {
+            self._winCycleIndex++;
+            if (self._winCycleIndex < wins.length) {
+                self._showNextWinLine();
+            } else {
+                // One full cycle complete — restore total win, clear highlights, callback
+                SlotGame.UI.updateWin(SlotGame.State.totalWin);
+                SlotGame.Reels.clearWinHighlights();
+                if (self.ctx) {
+                    self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height);
+                }
+                if (self._winCycleCallback) self._winCycleCallback();
+            }
+        }, SlotGame.Config.WIN_LINE_CYCLE_DELAY);
     },
 
     /**
-     * Stop win line cycling.
+     * Stop win line cycling immediately.
      */
     stopWinLines: function() {
         if (this.cycleTimer) {
             clearTimeout(this.cycleTimer);
             this.cycleTimer = null;
         }
+        this._winCycleWins = null;
+        this._winCycleCallback = null;
         if (this.ctx) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
