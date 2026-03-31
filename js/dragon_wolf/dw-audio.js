@@ -18,6 +18,13 @@ DragonWolf.Audio = {
     _bgmRunning:     false,
     _bgmLoaded:      false,
 
+    /** buffer 載入完成後，若 bgmStart 已被呼叫但當時 buffer 不存在，補播 BGM */
+    _onBgmLoaded: function() {
+        if (this._bgmRunning && !this._bgmSource) {
+            this._playBgmTrack(this._bgmMode);
+        }
+    },
+
     init: function() {
         // 重用 Fortune Slots 的 AudioContext（如果存在）
         if (window.SlotGame && SlotGame.Audio && SlotGame.Audio.ctx) {
@@ -85,19 +92,19 @@ DragonWolf.Audio = {
                     self.ctx.decodeAudioData(xhr.response, function(buffer) {
                         self._bgmBuffers[key] = buffer;
                         loaded++;
-                        if (loaded >= total) self._bgmLoaded = true;
+                        if (loaded >= total) { self._bgmLoaded = true; self._onBgmLoaded(); }
                     }, function() {
                         loaded++;
-                        if (loaded >= total) self._bgmLoaded = true;
+                        if (loaded >= total) { self._bgmLoaded = true; self._onBgmLoaded(); }
                     });
                 } else {
                     loaded++;
-                    if (loaded >= total) self._bgmLoaded = true;
+                    if (loaded >= total) { self._bgmLoaded = true; self._onBgmLoaded(); }
                 }
             };
             xhr.onerror = function() {
                 loaded++;
-                if (loaded >= total) self._bgmLoaded = true;
+                if (loaded >= total) { self._bgmLoaded = true; self._onBgmLoaded(); }
             };
             xhr.send();
         }

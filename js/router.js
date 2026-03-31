@@ -195,6 +195,7 @@ SlotGame.Router = {
             game.classList.remove('view-hidden');
             void game.offsetHeight;
             game.classList.add('view-active');
+            window.scrollTo(0, 0);
 
             SlotGame.Main.init();
             SlotGame.Main._initialized = true;
@@ -206,6 +207,7 @@ SlotGame.Router = {
             game.classList.remove('view-hidden');
             void game.offsetHeight;
             game.classList.add('view-active');
+            window.scrollTo(0, 0);
 
             SlotGame.UI.updateAll();
             SlotGame.Reels.renderStaticGrid(SlotGame.RNG.generateGrid());
@@ -236,6 +238,7 @@ SlotGame.Router = {
             game.classList.remove('view-hidden');
             void game.offsetHeight;
             game.classList.add('view-active');
+            window.scrollTo(0, 0);
 
             DragonWolf.Main.init();
             DragonWolf.Main._initialized = true;
@@ -247,6 +250,7 @@ SlotGame.Router = {
             game.classList.remove('view-hidden');
             void game.offsetHeight;
             game.classList.add('view-active');
+            window.scrollTo(0, 0);
 
             DragonWolf.State.syncFromPlatform();
             DragonWolf.UI.updateAll();
