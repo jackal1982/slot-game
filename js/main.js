@@ -164,7 +164,6 @@ SlotGame.Main = {
             // Show win animations
             state.phase = 'SHOWING_WINS';
             SlotGame.UI.updateSpinButton();
-            SlotGame.Animations.showWinLines(result.wins);
 
             // Big win celebration
             if (totalWin >= state.totalBet * 20) {
@@ -174,13 +173,10 @@ SlotGame.Main = {
                 SlotGame.Audio.smallWin();
             }
 
-            // Auto-advance after showing wins
-            var showDuration = Math.max(2000, result.wins.length * SlotGame.Config.WIN_LINE_CYCLE_DELAY);
-            if (state.turboMode) showDuration = Math.min(showDuration, 1500);
-
-            this._showWinsTimer = setTimeout(function() {
+            // Event-driven win cycle: plays all lines once, then auto-advances
+            SlotGame.Animations.showWinLines(result.wins, function() {
                 SlotGame.Main.onWinsShown();
-            }, showDuration);
+            });
         } else {
             // No wins - go directly to post-spin logic
             this.onWinsShown();
