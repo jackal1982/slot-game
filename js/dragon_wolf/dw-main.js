@@ -182,17 +182,27 @@ DragonWolf.Main = {
             DragonWolf.UI.updateSpinButton();
             DragonWolf.UI.updateReturnButton();
 
-            // 高亮 Scatter，延遲 2 秒後開始 FS 轉場
-            DragonWolf.Reels.highlightScatters(result.scatterPositions);
-            try { DragonWolf.Audio.play('scatter'); } catch(e) {}
+            // 先播 win cycle 結算 Base Game 贏分，再播 Scatter 高亮 + 轉場動畫
+            var proceedToScatter = function() {
+                DragonWolf.Reels.highlightScatters(result.scatterPositions);
+                try { DragonWolf.Audio.play('scatter'); } catch(e) {}
 
-            setTimeout(function() {
-                DragonWolf.Main._startFreeSpins(
-                    DragonWolf.Config.SCATTER_FREE_SPINS,
-                    result,
-                    grid
-                );
-            }, 2000);
+                setTimeout(function() {
+                    DragonWolf.Main._startFreeSpins(
+                        DragonWolf.Config.SCATTER_FREE_SPINS
+                    );
+                }, 2000);
+            };
+
+            if (result.wins.length > 0) {
+                DragonWolf.Reels.highlightWins(result.wins);
+                DragonWolf.Animations.startWinCycle(result.wins, function() {
+                    DragonWolf.Reels.clearWinHighlights();
+                    proceedToScatter();
+                });
+            } else {
+                proceedToScatter();
+            }
             return;
         }
 
@@ -242,7 +252,7 @@ DragonWolf.Main = {
 
     // ── Free Spins 開始 ───────────────────────────────────
 
-    _startFreeSpins: function(count, evalResult, grid) {
+    _startFreeSpins: function(count) {
         var state = DragonWolf.State;
         state.phase = 'FREE_SPINS_INTRO';
 
@@ -259,16 +269,7 @@ DragonWolf.Main = {
             DragonWolf.UI.updateSpinButton();
             DragonWolf.UI.updateReturnButton();
 
-            // 顯示贏分（可能已有勝利）
-            if (evalResult && evalResult.wins.length > 0) {
-                state.phase = 'SHOWING_WINS';
-                DragonWolf.Reels.highlightWins(evalResult.wins);
-                DragonWolf.Animations.startWinCycle(evalResult.wins, function() {
-                    DragonWolf.Main._toIdle(true);
-                });
-            } else {
-                DragonWolf.Main._toIdle(true);
-            }
+            DragonWolf.Main._toIdle(true);
         });
     },
 

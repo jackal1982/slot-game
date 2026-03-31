@@ -31,6 +31,7 @@
 - PR #54: 修復再次進入遊戲 scrollTo 時機（移至 view-active 之後）+ 首次進入 BGM 不播放（_onBgmLoaded 補播機制）+ 手機版多餘垂直滾動空間（dvh 取代 vh + overflow:hidden）
 - PR #55: 更新黑白龍狼傳 M1（黑白郎君）符號圖片
 - PR #56: CLAUDE.md 瘦身（297→239 行，-42%）+ 新增 CHANGELOG.md（PR 歷史與 Bug 記錄分離）+ 移除過時文件（ARCHITECTURE.md、PAYLINE_VISUAL_DESIGN.md）
+- PR #57: 黑白龍狼傳 Free Game 進場前先結算 Base Game 贏分（dw-main.js 時序重構：有贏線時先播 win cycle 再 Scatter 高亮再轉場）+ 兩款遊戲 Paytable 賠分根據 Bet 倍數動態調整（dw-ui.js: cfg.BASE_BET→State.getBet()、ui.js: sym.pay×betPerLine + 每次開啟重建）
 
 ## 已修復 Bug 完整記錄
 1. **targetY 計算錯誤**：prepend current symbols 後 totalHeight 僅用 reelStrip.length → 轉軸提前 3 格停止
