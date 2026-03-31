@@ -171,6 +171,9 @@ tools/
 32. **黑白龍狼傳 BGM 換為 MP3 音檔（PR #51）**：原程序化 BGM（Web Audio API 合成）換成 AI 生成的中國武俠風 MP3 音檔，Normal 穩重、Free Spins 激昂，0.15s crossfade 切換，無縫循環（loop=true）
 33. **黑白龍狼傳 Free Game BGM 過早切換（PR #52）**：`_endFreeSpins()` 中 `bgmSetMode('base')` 在 `playFSSummary()` 之前呼叫，導致贏分 popup 顯示期間已切換為 Base BGM → 移至 `playFSSummary` 的 onComplete callback 第一行，確保玩家按「收取」後才切換
 34. **手機版進入遊戲未捲回頂部（PR #52）**：SPA view 切換只改 CSS class，不觸發瀏覽器原生捲動重置，導致從大廳往下捲後進遊戲頂部 UI 不可見 → `router.js` 的 `_showGame()` 與 `_showLobby()` 均加入 `window.scrollTo(0, 0)`
+35. **再次進入遊戲仍未捲回頂部（PR #54）**：PR #52 的 `scrollTo` 在 `_showGame()` 中執行，此時 game view 仍為 `view-hidden`，對隱藏元素呼叫 scrollTo 無效 → 改在 `_showDWGame()` 和 `_showSlotGame()` 中 `classList.add('view-active')` 之後才執行 scrollTo
+36. **首次進入黑白龍狼傳 BGM 不播放（PR #54）**：`dw-audio.js` 的 `_loadBgmFiles()` 為非同步 XHR，`dw-main.js` init 後立即呼叫 `bgmStart()` 時 buffer 尚未載入，`_playBgmTrack()` 因 buffer=null 直接 return → 新增 `_onBgmLoaded()` 回調，buffer 載入完成後檢查 `_bgmRunning && !_bgmSource` 補播
+37. **手機版黑白龍狼傳多餘垂直滾動空間（PR #54）**：`#dw-game-container` 的 `min-height: 100vh` 在手機上包含瀏覽器地址列高度（約多 200px），加上 `responsive.css` 允許 `overflow: auto` → `dragon_wolf.css` 加入 `min-height: 100dvh` 覆蓋，手機版 media query 加入 `height: 100dvh` + `overflow: hidden`
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
@@ -206,6 +209,7 @@ tools/
 - PR #44: 修復兩款遊戲 Symbol 水平置中問題（Fortune Slots：移除 `#reel-area` overflow:hidden + `#reel-grid` 加 margin:auto；黑白龍狼傳：`.dw-reel-strip` 加 flex column + align-items:center 解決 symbol 寬度小於 viewport 1fr 寬度導致靠左的問題）
 - PR #51: 黑白龍狼傳 BGM 換為 AI 生成 MP3（`audio/dragon_wolf/dw-bgm-normal.mp3` + `dw-bgm-free.mp3`），移除程序化合成引擎，改用 XHR 預載 + BufferSource loop + 0.15s crossfade 切換
 - PR #52: 修復黑白龍狼傳 Free Game BGM 過早切換（bgmSetMode 移至 playFSSummary onComplete callback）+ 手機版進入遊戲未捲回頂部（router.js _showGame/_showLobby 加入 window.scrollTo(0,0)）
+- PR #54: 修復再次進入遊戲 scrollTo 時機（移至 view-active 之後）+ 首次進入 BGM 不播放（_onBgmLoaded 補播機制）+ 手機版多餘垂直滾動空間（dvh 取代 vh + overflow:hidden）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
