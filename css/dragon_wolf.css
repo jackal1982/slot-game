@@ -534,17 +534,17 @@
 #dw-trans-dragon-wrap,
 #dw-trans-wolf-wrap {
     position:   absolute;
-    width:      220px;
-    height:     220px;
+    width:      330px;
+    height:     330px;
     top:        50%;
     z-index:    2;
 }
 #dw-trans-dragon-wrap {
-    left:       -260px;
+    left:       -390px;
     transform:  translateY(-50%);
 }
 #dw-trans-wolf-wrap {
-    right:      -260px;
+    right:      -390px;
     transform:  translateY(-50%) scaleX(-1);
 }
 #dw-trans-dragon,
@@ -632,8 +632,8 @@
     pointer-events: none;
 }
 #dw-trans-mw {
-    width:     240px;
-    height:    240px;
+    width:     360px;
+    height:    360px;
     filter:    drop-shadow(0 0 40px var(--dw-accent-gold));
     position:  relative;
     z-index:   1;
@@ -675,9 +675,11 @@
 /* Phase 1: 龍狼衝刺入場 (0~1s) */
 #dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap {
     animation: dw-dragon-rush 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    mix-blend-mode: screen;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap {
     animation: dw-wolf-rush 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    mix-blend-mode: screen;
 }
 
 /* Phase 1: 殘影跟隨 (交錯延遲) */
@@ -750,7 +752,7 @@
     left:           0;
     top:            50%;
     width:          54%;
-    max-width:      230px;
+    max-width:      345px;
     height:         auto;
     transform:      translateY(-58%) translateX(-130%);
     filter:         drop-shadow(0 0 10px rgba(160,60,255,0.45));
@@ -1186,20 +1188,22 @@
 
 /* 龍衝刺（左→中→縮小消失） */
 @keyframes dw-dragon-rush {
-    0%   { left: -260px; opacity: 1; transform: translateY(-50%) scale(1); }
-    50%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1.05); }
-    70%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1); }
-    85%  { left: calc(50% - 110px); opacity: 0.6; transform: translateY(-50%) scale(0.4); }
-    100% { left: calc(50% - 110px); opacity: 0; transform: translateY(-50%) scale(0); }
+    0%   { left: -390px; opacity: 1; transform: translateY(-50%) scale(1); }
+    45%  { left: calc(50% - 165px); opacity: 1; transform: translateY(-50%) scale(1.05); }
+    58%  { left: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scale(1); }
+    72%  { left: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scale(1); }
+    85%  { left: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scale(0.3); }
+    100% { left: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scale(0); }
 }
 
 /* 狼衝刺（右→中→縮小消失） */
 @keyframes dw-wolf-rush {
-    0%   { right: -260px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    50%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1.05); }
-    70%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    85%  { right: calc(50% - 110px); opacity: 0.6; transform: translateY(-50%) scaleX(-1) scale(0.4); }
-    100% { right: calc(50% - 110px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0); }
+    0%   { right: -390px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    45%  { right: calc(50% - 165px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1.05); }
+    58%  { right: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scaleX(-1) scale(1); }
+    72%  { right: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scaleX(-1) scale(1); }
+    85%  { right: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0.3); }
+    100% { right: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0); }
 }
 
 /* 殘影跟隨 */
@@ -1277,8 +1281,8 @@
     #dw-btn-spin { width: 78px; height: 78px; font-size: 1rem; }
     /* FS 轉場 RWD */
     #dw-trans-dragon-wrap,
-    #dw-trans-wolf-wrap { width: 180px; height: 180px; }
-    #dw-trans-mw { width: 200px; height: 200px; }
+    #dw-trans-wolf-wrap { width: 270px; height: 270px; }
+    #dw-trans-mw { width: 300px; height: 300px; }
     .dw-qg-palm { width: 42px; height: 42px; }
     .dw-qg-charge-ring { width: 140px; height: 140px; }
 }
@@ -1301,13 +1305,13 @@
     #dw-header h1 { font-size: 1rem; }
     /* FS 轉場 RWD */
     #dw-trans-dragon-wrap,
-    #dw-trans-wolf-wrap { width: 140px; height: 140px; }
-    #dw-trans-mw { width: 160px; height: 160px; }
+    #dw-trans-wolf-wrap { width: 210px; height: 210px; }
+    #dw-trans-mw { width: 240px; height: 240px; }
     #dw-trans-text p { font-size: 1.4rem; }
     #dw-trans-spin-count { font-size: 2.2rem; }
     .dw-qg-palm { width: 36px; height: 36px; }
     .dw-qg-charge-ring { width: 110px; height: 110px; }
-    #dw-qigong-m1 { max-width: 180px; }
+    #dw-qigong-m1 { max-width: 270px; }
 }
 @media (max-width: 360px) {
     .dw-symbol {
@@ -1318,6 +1322,6 @@
         height: calc(var(--dw-symbol-size-small) * 4);
     }
     #dw-trans-dragon-wrap,
-    #dw-trans-wolf-wrap { width: 110px; height: 110px; }
-    #dw-trans-mw { width: 130px; height: 130px; }
+    #dw-trans-wolf-wrap { width: 165px; height: 165px; }
+    #dw-trans-mw { width: 195px; height: 195px; }
 }
