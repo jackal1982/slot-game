@@ -94,5 +94,5 @@ DragonWolf.Config = {
     WIN_CYCLE_DELAY:     1500,
 
     // FS 轉場動畫時長（ms）
-    FS_TRANSITION_DURATION: 4000
+    FS_TRANSITION_DURATION: 5000
 };

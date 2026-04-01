@@ -52,12 +52,19 @@
         </div>
         <!-- 訊息顯示 -->
         <div id="dw-message-display"></div>
-        <!-- 氣功特效層 -->
+        <!-- 氣功特效層（降龍十八掌風格） -->
         <div id="dw-qigong-overlay" class="hidden">
-            <img id="dw-qigong-m1" src="images/dragon_wolf/m1_qigong.svg" alt="黑白郎君氣功">
-            <div id="dw-qigong-beam"></div>
-            <div id="dw-qigong-wave"></div>
-            <div id="dw-qigong-wave2"></div>
+            <img id="dw-qigong-m1" src="images/dragon_wolf/m1-qigong.png" alt="黑白郎君氣功">
+            <!-- 蓄力收縮環 ×3 -->
+            <div class="dw-qg-charge-ring"></div>
+            <div class="dw-qg-charge-ring"></div>
+            <div class="dw-qg-charge-ring"></div>
+            <!-- 掌印氣勁 ×5 -->
+            <div class="dw-qg-palm" id="dw-qg-palm-0"></div>
+            <div class="dw-qg-palm" id="dw-qg-palm-1"></div>
+            <div class="dw-qg-palm" id="dw-qg-palm-2"></div>
+            <div class="dw-qg-palm" id="dw-qg-palm-3"></div>
+            <div class="dw-qg-palm" id="dw-qg-palm-4"></div>
         </div>
     </div>
 
@@ -91,14 +98,41 @@
         <button id="dw-btn-music" class="dw-icon-btn">MUSIC: ON</button>
     </div>
 
-    <!-- FS 轉場動畫 -->
+    <!-- FS 轉場動畫（龍狼融合 → 水墨暈開 → 郎君綻放） -->
     <div id="dw-fs-transition" class="hidden">
-        <div id="dw-trans-fog-bg"></div>
-        <img id="dw-trans-dragon" src="images/dragon_wolf/m2.svg" alt="黑龍">
-        <img id="dw-trans-wolf"   src="images/dragon_wolf/m3.svg" alt="白狼">
-        <div id="dw-trans-mw-wrap">
-            <img id="dw-trans-mw" src="images/dragon_wolf/m1.svg" alt="黑白郎君">
+        <!-- 背景層：暗幕 + 水墨暈染 -->
+        <div id="dw-trans-dark-bg"></div>
+        <div id="dw-trans-ink-wash"></div>
+
+        <!-- 龍（含 3 個殘影） -->
+        <div id="dw-trans-dragon-wrap">
+            <div class="dw-trans-ghost"></div>
+            <div class="dw-trans-ghost"></div>
+            <div class="dw-trans-ghost"></div>
+            <img id="dw-trans-dragon" src="images/dragon_wolf/m2-transition.png" alt="黑龍">
         </div>
+
+        <!-- 狼（含 3 個殘影） -->
+        <div id="dw-trans-wolf-wrap">
+            <div class="dw-trans-ghost"></div>
+            <div class="dw-trans-ghost"></div>
+            <div class="dw-trans-ghost"></div>
+            <img id="dw-trans-wolf" src="images/dragon_wolf/m3-transition.png" alt="白狼">
+        </div>
+
+        <!-- 碰撞水墨爆發 -->
+        <div id="dw-trans-ink-burst"></div>
+
+        <!-- 速度線 -->
+        <div id="dw-trans-speed-lines"></div>
+
+        <!-- 黑白郎君 + 光暈 -->
+        <div id="dw-trans-mw-wrap">
+            <div id="dw-trans-mw-glow"></div>
+            <img id="dw-trans-mw" src="images/dragon_wolf/m1-transition.png" alt="黑白郎君">
+        </div>
+
+        <!-- 文字 -->
         <div id="dw-trans-text">
             <p>免費遊戲</p>
             <span id="dw-trans-spin-count">× 10</span>

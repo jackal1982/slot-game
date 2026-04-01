@@ -1,6 +1,6 @@
 /**
  * Dragon Wolf Animations Module
- * 勝利展示、FS 轉場動畫（4秒：黑龍白狼 → 黑白郎君）、隨機百搭放置動畫
+ * 勝利展示、FS 轉場動畫（5秒：龍狼融合 → 水墨暈開 → 郎君綻放）、隨機百搭放置動畫（降龍十八掌風格）
  */
 var DragonWolf = window.DragonWolf || {};
 
@@ -65,10 +65,10 @@ DragonWolf.Animations = {
         DragonWolf.Reels.clearWinHighlights();
     },
 
-    // ── FS 轉場動畫 ───────────────────────────────────────
+    // ── FS 轉場動畫（龍狼融合 → 水墨暈開 → 郎君綻放） ────
 
     /**
-     * 播放 Free Spins 進場轉場動畫（4秒：黑龍白狼靠近 → 霧氣 → 黑白郎君現身）
+     * 播放 Free Spins 進場轉場動畫（5秒：龍狼衝刺碰撞 → 水墨暈開 → 黑白郎君綻放 + 狂笑）
      * @param {number}   spinCount  - Free Spins 場次
      * @param {Function} onComplete - 動畫結束後呼叫
      */
@@ -82,18 +82,27 @@ DragonWolf.Animations = {
         var spinCountEl = document.getElementById('dw-trans-spin-count');
         if (spinCountEl) spinCountEl.textContent = '× ' + spinCount;
 
-        // 播放音效
-        try { DragonWolf.Audio.play('scatter'); } catch(e) {}
-        try { DragonWolf.Audio.play('laugh'); } catch(e) {}
+        // 將龍/狼圖片 src 複製到殘影 ghost div 的 background-image
+        this._setupGhosts(el);
 
+        // 入場音效
+        try { DragonWolf.Audio.play('scatter'); } catch(e) {}
+
+        // 先移除 hidden 讓元素進入 layout，再加 playing 觸發動畫
         el.classList.remove('hidden');
+        // 強制 reflow 後加動畫 class（比 rAF 更可靠）
+        void el.offsetWidth;
         el.classList.add('dw-trans-playing');
 
-        // 4 秒後結束
+        // 郎君綻放完成時播放狂笑（3s）
+        setTimeout(function() {
+            try { DragonWolf.Audio.play('laugh'); } catch(e) {}
+        }, 3000);
+
+        // 5 秒後結束
         setTimeout(function() {
             el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
-            // 短暫等待 CSS 結束動畫
             setTimeout(function() {
                 el.style.opacity = '';
                 if (onComplete) onComplete();
@@ -101,43 +110,63 @@ DragonWolf.Animations = {
         }, DragonWolf.Config.FS_TRANSITION_DURATION);
     },
 
-    // ── 氣功（隨機百搭放置）動畫 ─────────────────────────
+    /** 將龍/狼主圖 src 複製到殘影 ghost div 的 background-image */
+    _setupGhosts: function(el) {
+        var dragonImg = el.querySelector('#dw-trans-dragon');
+        var wolfImg   = el.querySelector('#dw-trans-wolf');
+        var dragonGhosts = el.querySelectorAll('#dw-trans-dragon-wrap .dw-trans-ghost');
+        var wolfGhosts   = el.querySelectorAll('#dw-trans-wolf-wrap .dw-trans-ghost');
+        if (dragonImg) {
+            for (var i = 0; i < dragonGhosts.length; i++) {
+                dragonGhosts[i].style.backgroundImage = 'url(' + dragonImg.src + ')';
+            }
+        }
+        if (wolfImg) {
+            for (var j = 0; j < wolfGhosts.length; j++) {
+                wolfGhosts[j].style.backgroundImage = 'url(' + wolfImg.src + ')';
+            }
+        }
+    },
+
+    // ── 氣功（降龍十八掌風格）動畫 ─────────────────────────
 
     /**
-     * 播放黑白郎君發氣功動畫，並逐格放置 Wild
+     * 播放黑白郎君發氣功動畫，並以隕石墜落方式放置 Wild
      * @param {string[][]} grid      - 直接修改的 grid
      * @param {Function}   onComplete - ({ positions, count }) 動畫結束後呼叫
      */
     playQigong: function(grid, onComplete) {
         var self = this;
+        var reelGrid = document.getElementById('dw-reel-grid');
 
-        // 顯示氣功 overlay，觸發 CSS 動畫序列（角色入場 → 蓄力 → 發射）
-        // double-rAF：先移除 display:none，再下一幀才加 active，確保 CSS animation 能正確觸發
+        // 顯示氣功 overlay，觸發 CSS 動畫序列
         var qigongEl = document.getElementById('dw-qigong-overlay');
         if (qigongEl) {
             qigongEl.classList.remove('hidden');
-            requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                    qigongEl.classList.add('dw-qigong-active');
-                });
-            });
+            void qigongEl.offsetWidth; // 強制 reflow
+            qigongEl.classList.add('dw-qigong-active');
         }
 
-        // 蓄力聲（0.5s 進場完成後）
+        // 蓄力階段（0.5s）：螢幕震動 + 笑聲
         setTimeout(function() {
+            if (reelGrid) reelGrid.classList.add('dw-screen-shake');
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 500);
 
-        // 發射時機（1.2s）：放置隨機百搭，同步觸發 CSS 光束 + 波環動畫
+        // 發射時機（1.5s）：停止震動 + 掌力音效 + 計算 Wild
+        var result;
         setTimeout(function() {
+            if (reelGrid) reelGrid.classList.remove('dw-screen-shake');
             try { DragonWolf.Audio.play('palm_hit'); } catch(e) {}
+            result = DragonWolf.Features.randomWilds.apply(grid);
+        }, 1500);
 
-            var result = DragonWolf.Features.randomWilds.apply(grid);
+        // 隕石墜落放置 Wild（2.2s 開始）
+        setTimeout(function() {
             var fireTime = Date.now();
 
-            // 逐格放置 Wild（每格 150ms）
-            self._placeWildsSequentially(result.positions, 0, function() {
-                // 確保至少等到角色淡出完成後（發射後 1.8s）再隱藏 overlay
+            self._placeWildsMeteor(result.positions, 0, function() {
+                // 確保等到角色淡出完成（發射後 1.8s）再隱藏 overlay
                 var elapsed  = Date.now() - fireTime;
                 var waitMore = Math.max(0, 1800 - elapsed);
                 setTimeout(function() {
@@ -148,24 +177,61 @@ DragonWolf.Animations = {
                     if (onComplete) onComplete(result);
                 }, waitMore);
             });
-        }, 1200);
+        }, 2200);
     },
 
-    _placeWildsSequentially: function(positions, index, onComplete) {
+    /**
+     * 隕石墜落方式逐格放置 Wild
+     * @param {Array}    positions  - [{reel, row}, ...] 位置陣列
+     * @param {number}   index      - 目前索引
+     * @param {Function} onComplete - 全部放置完後呼叫
+     */
+    _placeWildsMeteor: function(positions, index, onComplete) {
         var self = this;
         if (index >= positions.length) {
             if (onComplete) onComplete();
             return;
         }
         var pos = positions[index];
-        // 更新畫面
-        DragonWolf.Reels.updateCell(pos.reel, pos.row, 'WD');
-        // 掌力打牆音效
-        try { DragonWolf.Audio.play('palm_hit'); } catch(e) {}
+        var reelGrid = document.getElementById('dw-reel-grid');
 
+        // 更新符號圖片（updateCell 會加 dw-wild-placed）
+        DragonWolf.Reels.updateCell(pos.reel, pos.row, 'WD');
+
+        // 找到 DOM 元素，改用隕石動畫
+        var symbols = DragonWolf.Reels.strips[pos.reel].querySelectorAll('.dw-symbol');
+        var cell = symbols[pos.row];
+        if (cell) {
+            cell.classList.remove('dw-wild-placed');
+            cell.classList.add('dw-wild-meteor');
+        }
+
+        // 350ms 後：隕石著地 → 撞擊音效 + 衝擊波紋 + 強震
         setTimeout(function() {
-            self._placeWildsSequentially(positions, index + 1, onComplete);
-        }, 150);
+            if (cell) {
+                cell.classList.remove('dw-wild-meteor');
+                cell.classList.add('dw-wild-impact');
+            }
+            // 著地撞擊音效（比飛行中更震撼）
+            try { DragonWolf.Audio.play('meteor_impact'); } catch(e) {}
+            // 著地強震（120ms）
+            if (reelGrid) {
+                reelGrid.classList.add('dw-screen-shake');
+                setTimeout(function() {
+                    reelGrid.classList.remove('dw-screen-shake');
+                }, 120);
+            }
+        }, 350);
+
+        // 間隔 300ms 遞迴下一個位置（稍慢，每顆隕石更有存在感）
+        setTimeout(function() {
+            self._placeWildsMeteor(positions, index + 1, onComplete);
+        }, 300);
+    },
+
+    /** 向後相容別名 */
+    _placeWildsSequentially: function(positions, index, onComplete) {
+        this._placeWildsMeteor(positions, index, onComplete);
     },
 
     // ── Retrigger 動畫 ────────────────────────────────────

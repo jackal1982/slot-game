@@ -494,208 +494,425 @@
     transform: scale(1.04);
 }
 
-/* ── FS 轉場動畫 ─────────────────────────────────────────── */
+/* ── FS 轉場動畫（龍狼融合 → 水墨暈開 → 郎君綻放） ─────── */
 #dw-fs-transition {
-    position:    fixed;
-    top:         0;
-    left:        0;
-    width:       100%;
-    height:      100%;
-    z-index:     300;
-    overflow:    hidden;
-    pointer-events: none;
-    display:     flex;
-    align-items: center;
+    position:        fixed;
+    top:             0;
+    left:            0;
+    width:           100%;
+    height:          100%;
+    z-index:         300;
+    overflow:        hidden;
+    pointer-events:  none;
+    display:         flex;
+    align-items:     center;
     justify-content: center;
 }
 #dw-fs-transition.hidden { display: none; }
 
-#dw-trans-fog-bg {
+/* 背景層 1：暗幕 */
+#dw-trans-dark-bg {
     position:   absolute;
     inset:      0;
-    background: radial-gradient(ellipse, rgba(80,20,120,0.9) 0%, rgba(0,0,0,0.95) 70%);
+    background: rgba(5, 2, 15, 0.95);
     opacity:    0;
 }
-#dw-trans-dragon {
+/* 背景層 2：水墨暈染（疊在暗幕上方） */
+#dw-trans-ink-wash {
+    position:   absolute;
+    inset:      0;
+    background: radial-gradient(ellipse at 50% 48%,
+                    rgba(40, 25, 60, 0.95) 0%,
+                    rgba(20, 12, 35, 0.9) 30%,
+                    rgba(8, 4, 18, 0.95) 60%,
+                    rgba(2, 1, 8, 0.98) 100%);
+    opacity:    0;
+    z-index:    1;
+}
+
+/* 龍狼 wrapper（含殘影 + 主圖） */
+#dw-trans-dragon-wrap,
+#dw-trans-wolf-wrap {
     position:   absolute;
     width:      220px;
     height:     220px;
-    object-fit: contain;
-    left:       -240px;
     top:        50%;
+    z-index:    2;
+}
+#dw-trans-dragon-wrap {
+    left:       -260px;
     transform:  translateY(-50%);
-    filter:     drop-shadow(0 0 20px #6A0DAD);
 }
-#dw-trans-wolf {
-    position:   absolute;
-    width:      220px;
-    height:     220px;
-    object-fit: contain;
-    right:      -240px;
-    top:        50%;
+#dw-trans-wolf-wrap {
+    right:      -260px;
     transform:  translateY(-50%) scaleX(-1);
-    filter:     drop-shadow(0 0 20px #E03030);
 }
+#dw-trans-dragon,
+#dw-trans-wolf {
+    width:      100%;
+    height:     100%;
+    object-fit: contain;
+    position:   relative;
+    z-index:    2;
+}
+#dw-trans-dragon { filter: drop-shadow(0 0 25px rgba(20, 8, 60, 0.9)); }
+#dw-trans-wolf   { filter: drop-shadow(0 0 25px rgba(180, 40, 40, 0.7)); }
+
+/* 殘影 */
+.dw-trans-ghost {
+    position:       absolute;
+    inset:          0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity:        0;
+    pointer-events: none;
+}
+.dw-trans-ghost:nth-child(1) { filter: blur(3px); }
+.dw-trans-ghost:nth-child(2) { filter: blur(6px); }
+.dw-trans-ghost:nth-child(3) { filter: blur(10px); }
+
+/* 水墨爆發圓 */
+#dw-trans-ink-burst {
+    position:      absolute;
+    top:           50%;
+    left:          50%;
+    width:         0;
+    height:        0;
+    border-radius: 50%;
+    transform:     translate(-50%, -50%);
+    background:    radial-gradient(circle,
+                       rgba(30, 15, 50, 0.98) 0%,
+                       rgba(15, 8, 30, 0.95) 40%,
+                       rgba(5, 2, 15, 0.9) 70%,
+                       transparent 100%);
+    z-index:       3;
+    opacity:       0;
+    pointer-events: none;
+}
+
+/* 速度線 */
+#dw-trans-speed-lines {
+    position:   absolute;
+    inset:      0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 8px,
+        rgba(200, 180, 255, 0.08) 8px,
+        rgba(200, 180, 255, 0.08) 9px
+    );
+    opacity:    0;
+    z-index:    2;
+    pointer-events: none;
+}
+
+/* 黑白郎君 + 光暈 */
 #dw-trans-mw-wrap {
     position:    absolute;
     top:         50%;
     left:        50%;
-    transform:   translate(-50%, -50%) scale(0);
+    transform:   translate(-50%, -55%) scale(0);
     z-index:     5;
     text-align:  center;
 }
-#dw-trans-mw {
-    width:  180px;
-    height: 180px;
-    filter: drop-shadow(0 0 30px var(--dw-accent-gold));
+#dw-trans-mw-glow {
+    position:      absolute;
+    top:           50%;
+    left:          50%;
+    width:         60px;
+    height:        60px;
+    border-radius: 50%;
+    transform:     translate(-50%, -50%);
+    background:    radial-gradient(circle,
+                       rgba(220, 180, 100, 0.6) 0%,
+                       rgba(180, 140, 60, 0.3) 40%,
+                       transparent 70%);
+    opacity:       0;
+    pointer-events: none;
 }
+#dw-trans-mw {
+    width:     240px;
+    height:    240px;
+    filter:    drop-shadow(0 0 40px var(--dw-accent-gold));
+    position:  relative;
+    z-index:   1;
+}
+
+/* 文字 */
 #dw-trans-text {
     position:   absolute;
-    bottom:     25%;
+    bottom:     22%;
     left:       50%;
     transform:  translateX(-50%) translateY(30px);
     text-align: center;
     opacity:    0;
-    z-index:    5;
+    z-index:    6;
 }
 #dw-trans-text p {
-    font-size:   1.6rem;
+    font-size:   1.8rem;
     font-weight: 900;
     color:       var(--dw-accent-gold);
-    text-shadow: 0 0 20px var(--dw-shadow-gold);
+    text-shadow: 0 0 20px var(--dw-shadow-gold),
+                 0 0 40px rgba(220, 180, 100, 0.3);
     margin:      0;
 }
 #dw-trans-spin-count {
-    font-size:   2.5rem;
+    font-size:   3rem;
     font-weight: 900;
     color:       #fff;
-    text-shadow: 0 0 20px var(--dw-shadow-gold);
+    text-shadow: 0 0 20px var(--dw-shadow-gold),
+                 0 0 40px rgba(220, 180, 100, 0.4);
 }
 
-/* 轉場動畫 keyframes */
-#dw-fs-transition.dw-trans-playing #dw-trans-fog-bg {
-    animation: dw-fog-in 0.6s ease-out forwards;
+/* ── FS 轉場動畫觸發（.dw-trans-playing） ──── */
+
+/* Phase 1: 暗幕淡入 (0~0.4s) */
+#dw-fs-transition.dw-trans-playing #dw-trans-dark-bg {
+    animation: dw-dark-bg-in 0.4s ease-out forwards;
 }
-#dw-fs-transition.dw-trans-playing #dw-trans-dragon {
-    animation: dw-dragon-enter 1s ease-out forwards;
+
+/* Phase 1: 龍狼衝刺入場 (0~1s) */
+#dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap {
+    animation: dw-dragon-rush 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
-#dw-fs-transition.dw-trans-playing #dw-trans-wolf {
-    animation: dw-wolf-enter 1s ease-out forwards;
+#dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap {
+    animation: dw-wolf-rush 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
+
+/* Phase 1: 殘影跟隨 (交錯延遲) */
+#dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap .dw-trans-ghost:nth-child(1) {
+    animation: dw-ghost-trail 0.9s 0.04s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap .dw-trans-ghost:nth-child(2) {
+    animation: dw-ghost-trail 0.85s 0.08s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap .dw-trans-ghost:nth-child(3) {
+    animation: dw-ghost-trail 0.8s 0.12s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap .dw-trans-ghost:nth-child(1) {
+    animation: dw-ghost-trail 0.9s 0.04s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap .dw-trans-ghost:nth-child(2) {
+    animation: dw-ghost-trail 0.85s 0.08s ease-out forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap .dw-trans-ghost:nth-child(3) {
+    animation: dw-ghost-trail 0.8s 0.12s ease-out forwards;
+}
+
+/* Phase 1: 速度線閃現 (0~0.8s) */
+#dw-fs-transition.dw-trans-playing #dw-trans-speed-lines {
+    animation: dw-speed-flash 0.8s ease-out forwards;
+}
+
+/* Phase 2: 水墨爆發 (1~1.8s) */
+#dw-fs-transition.dw-trans-playing #dw-trans-ink-burst {
+    animation: dw-ink-expand 0.8s 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+#dw-fs-transition.dw-trans-playing #dw-trans-ink-wash {
+    animation: dw-ink-wash-in 0.8s 1s ease-out forwards;
+}
+
+/* Phase 3: 郎君綻放 (1.8~3s) */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-wrap {
-    animation: dw-mw-appear 0.8s 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: dw-lord-bloom 1.2s 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-#dw-fs-transition.dw-trans-playing #dw-trans-text {
-    animation: dw-text-appear 0.5s 2.5s ease-out forwards;
-}
-#dw-fs-transition.dw-trans-playing {
-    animation: dw-overlay-fadeout 0.5s 3.5s ease-in forwards;
+#dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
+    animation: dw-glow-expand 1.2s 1.8s ease-out forwards;
 }
 
-/* ── 氣功 Overlay ────────────────────────────────────────── */
+/* Phase 4: 文字出現 (3~3.5s) */
+#dw-fs-transition.dw-trans-playing #dw-trans-text {
+    animation: dw-text-appear 0.5s 3s ease-out forwards;
+}
+
+/* Phase 5: 整體淡出 (4.2~5s) */
+#dw-fs-transition.dw-trans-playing {
+    animation: dw-overlay-fadeout 0.8s 4.2s ease-in forwards;
+}
+
+/* ── 氣功 Overlay（降龍十八掌風格）──────────────────────── */
 #dw-qigong-overlay {
-    position:    absolute;
-    inset:       0;
-    background:  radial-gradient(ellipse at 50% 50%, rgba(120,40,200,0.18) 0%, transparent 70%);
+    position:       absolute;
+    inset:          0;
     pointer-events: none;
-    z-index:     20;
-    opacity:     0;
-    transition:  opacity 0.25s;
-    overflow:    hidden;
+    z-index:        20;
+    opacity:        0;
+    transition:     opacity 0.25s;
+    overflow:       hidden;
 }
 #dw-qigong-overlay.dw-qigong-active { opacity: 1; }
 #dw-qigong-overlay.hidden { display: none; }
 
 /* 角色圖片 */
 #dw-qigong-m1 {
-    position:   absolute;
-    left:       0;
-    top:        50%;
-    width:      54%;
-    max-width:  230px;
-    height:     auto;
-    transform:  translateY(-58%) translateX(-130%);
-    filter:     drop-shadow(0 0 10px rgba(160,60,255,0.45));
-    opacity:    0;
+    position:       absolute;
+    left:           0;
+    top:            50%;
+    width:          54%;
+    max-width:      230px;
+    height:         auto;
+    transform:      translateY(-58%) translateX(-130%);
+    filter:         drop-shadow(0 0 10px rgba(160,60,255,0.45));
+    opacity:        0;
     pointer-events: none;
 }
 
-/* 氣功光束 */
-#dw-qigong-beam {
-    position:     absolute;
-    left:         46%;
-    top:          50%;
-    height:       10px;
-    width:        0;
-    background:   linear-gradient(to right,
-                    #ffffff 0%,
-                    #dd88ff 15%,
-                    #9933ff 55%,
-                    rgba(60,0,160,0) 100%);
-    transform:    translateY(-50%);
-    border-radius: 5px;
-    z-index:      21;
-    opacity:      0;
+/* 蓄力收縮環 */
+.dw-qg-charge-ring {
+    position:       absolute;
+    left:           28%;
+    top:            38%;
+    width:          180px;
+    height:         180px;
+    border-radius:  50%;
+    border:         2px dashed rgba(220, 180, 100, 0.7);
+    transform:      translate(-50%, -50%) scale(1);
+    opacity:        0;
     pointer-events: none;
-    box-shadow:   0 0 18px rgba(160,60,255,0.9),
-                  0 0 36px rgba(130,40,220,0.45);
+    box-shadow:     0 0 15px rgba(220, 180, 100, 0.3),
+                    inset 0 0 15px rgba(220, 180, 100, 0.15);
 }
 
-/* 氣功波環 1 */
-#dw-qigong-wave {
-    position:     absolute;
-    left:         46%;
-    top:          50%;
-    width:        0;
-    height:       0;
-    border-radius: 50%;
-    border:       3px solid rgba(160,60,255,0.9);
-    transform:    translate(-50%, -50%);
-    z-index:      21;
-    opacity:      0;
+/* 能量彈氣勁 */
+.dw-qg-palm {
+    position:       absolute;
+    left:           30%;
+    top:            45%;
+    width:          40px;
+    height:         40px;
+    border-radius:  50%;
+    background:     radial-gradient(circle at 35% 35%,
+                        #fff 0%,
+                        rgba(255, 240, 180, 0.95) 15%,
+                        rgba(255, 200, 80, 0.9) 35%,
+                        rgba(220, 140, 30, 0.7) 60%,
+                        transparent 100%);
+    transform:      translate(-50%, -50%) scale(0);
+    opacity:        0;
     pointer-events: none;
-    box-shadow:   0 0 12px rgba(160,60,255,0.5);
+    box-shadow:     0 0 12px rgba(255, 220, 100, 0.95),
+                    0 0 25px rgba(255, 180, 50, 0.7),
+                    0 0 50px rgba(220, 140, 30, 0.4);
+}
+/* 能量彈尾焰 */
+.dw-qg-palm::before {
+    content:        '';
+    position:       absolute;
+    top:            15%;
+    left:           -60%;
+    width:          80%;
+    height:         70%;
+    background:     linear-gradient(to right,
+                        transparent 0%,
+                        rgba(255, 200, 80, 0.3) 30%,
+                        rgba(255, 180, 50, 0.5) 60%,
+                        rgba(255, 220, 100, 0.3) 100%);
+    border-radius:  50% 0 0 50%;
+    filter:         blur(4px);
 }
 
-/* 氣功波環 2（延遲出現） */
-#dw-qigong-wave2 {
-    position:     absolute;
-    left:         46%;
-    top:          50%;
-    width:        0;
-    height:       0;
-    border-radius: 50%;
-    border:       2px solid rgba(200,120,255,0.75);
-    transform:    translate(-50%, -50%);
-    z-index:      21;
-    opacity:      0;
-    pointer-events: none;
+/* 螢幕震動（套用在 reel grid 上） */
+#dw-reel-grid.dw-screen-shake {
+    animation: dw-shake 0.06s infinite alternate;
 }
 
-/* ── 氣功動畫（active 狀態觸發） ──── */
+/* 隕石從右上角斜砸 Wild */
+.dw-symbol.dw-wild-meteor {
+    animation: dw-meteor-drop 0.35s cubic-bezier(0.6, 0, 1, 0.6) forwards !important;
+    z-index: 10;
+    overflow: visible;
+}
+/* 火焰尾跡（右上方向） */
+.dw-symbol.dw-wild-meteor::after {
+    content:        '';
+    position:       absolute;
+    top:            -90%;
+    right:          -40%;
+    width:          80%;
+    height:         120%;
+    background:     linear-gradient(to bottom left,
+                        transparent 0%,
+                        rgba(255, 200, 60, 0.5) 15%,
+                        rgba(255, 140, 30, 0.8) 35%,
+                        rgba(255, 80, 10, 0.6) 60%,
+                        rgba(200, 40, 0, 0.3) 80%,
+                        transparent 100%);
+    filter:         blur(5px);
+    border-radius:  40%;
+    pointer-events: none;
+    transform:      rotate(-40deg);
+    animation:      dw-fire-trail 0.35s ease-out forwards;
+}
+/* 衝擊白光閃 */
+.dw-symbol.dw-wild-meteor::before {
+    content:        '';
+    position:       absolute;
+    inset:          -30%;
+    border-radius:  50%;
+    background:     radial-gradient(circle, rgba(255,255,255,0.7) 0%, transparent 70%);
+    opacity:        0;
+    pointer-events: none;
+    animation:      dw-impact-flash 0.35s 0.25s ease-out forwards;
+}
 
-/* 角色：入場 → 蓄力 → 淡出 */
+/* 著地衝擊波紋（更大更強） */
+.dw-symbol.dw-wild-impact {
+    animation: dw-impact-ripple 0.45s ease-out forwards !important;
+    overflow: visible;
+}
+/* 衝擊環 */
+.dw-symbol.dw-wild-impact::after {
+    content:        '';
+    position:       absolute;
+    top:            50%;
+    left:           50%;
+    width:          0;
+    height:         0;
+    border-radius:  50%;
+    border:         2px solid rgba(255, 180, 60, 0.8);
+    transform:      translate(-50%, -50%);
+    pointer-events: none;
+    animation:      dw-shockwave-ring 0.4s ease-out forwards;
+}
+
+/* ── 氣功動畫觸發（.dw-qigong-active） ──── */
+
+/* 角色：入場 → 蓄力 → 發射後震 → 淡出 */
 #dw-qigong-overlay.dw-qigong-active #dw-qigong-m1 {
     animation:
-        dw-qg-enter    0.50s 0.00s ease-out                         forwards,
-        dw-qg-charge   0.70s 0.50s ease-in-out                      forwards,
-        dw-qg-fire-jolt 0.15s 1.20s cubic-bezier(0.1,0.8,0.3,1)    forwards,
-        dw-qg-fadeout  0.55s 2.10s ease-in                          forwards;
+        dw-qg-enter     0.50s 0.00s ease-out                         forwards,
+        dw-qg-charge-v2 1.00s 0.50s ease-in-out                      forwards,
+        dw-qg-fire-jolt 0.15s 1.50s cubic-bezier(0.1,0.8,0.3,1)     forwards,
+        dw-qg-fadeout   0.50s 2.80s ease-in                          forwards;
 }
 
-/* 光束：發射後擴散消失 */
-#dw-qigong-overlay.dw-qigong-active #dw-qigong-beam {
-    animation: dw-qg-beam 0.65s 1.20s ease-out forwards;
+/* 蓄力收縮環：三環交錯收縮 */
+#dw-qigong-overlay.dw-qigong-active .dw-qg-charge-ring:nth-child(2) {
+    animation: dw-ring-converge 0.9s 0.5s ease-in forwards;
+}
+#dw-qigong-overlay.dw-qigong-active .dw-qg-charge-ring:nth-child(3) {
+    animation: dw-ring-converge 0.8s 0.7s ease-in forwards;
+}
+#dw-qigong-overlay.dw-qigong-active .dw-qg-charge-ring:nth-child(4) {
+    animation: dw-ring-converge 0.7s 0.9s ease-in forwards;
 }
 
-/* 第一道波環 */
-#dw-qigong-overlay.dw-qigong-active #dw-qigong-wave {
-    animation: dw-qg-wave 0.85s 1.20s ease-out forwards;
+/* 掌印氣勁：依序飛出 */
+#dw-qigong-overlay.dw-qigong-active #dw-qg-palm-0 {
+    animation: dw-palm-fire 0.5s 1.50s cubic-bezier(0.2, 0, 0.6, 1) forwards;
 }
-
-/* 第二道波環（稍延遲） */
-#dw-qigong-overlay.dw-qigong-active #dw-qigong-wave2 {
-    animation: dw-qg-wave 0.85s 1.50s ease-out forwards;
+#dw-qigong-overlay.dw-qigong-active #dw-qg-palm-1 {
+    animation: dw-palm-fire 0.5s 1.60s cubic-bezier(0.2, 0, 0.6, 1) forwards;
+}
+#dw-qigong-overlay.dw-qigong-active #dw-qg-palm-2 {
+    animation: dw-palm-fire 0.5s 1.70s cubic-bezier(0.2, 0, 0.6, 1) forwards;
+}
+#dw-qigong-overlay.dw-qigong-active #dw-qg-palm-3 {
+    animation: dw-palm-fire 0.5s 1.80s cubic-bezier(0.2, 0, 0.6, 1) forwards;
+}
+#dw-qigong-overlay.dw-qigong-active #dw-qg-palm-4 {
+    animation: dw-palm-fire 0.5s 1.90s cubic-bezier(0.2, 0, 0.6, 1) forwards;
 }
 
 /* 入場：從左側飛入 + 輕微 overshoot */
@@ -705,38 +922,87 @@
     100% { opacity: 1;   transform: translateY(-58%) translateX(0%); }
 }
 
-/* 蓄力：光暈逐漸增強 */
-@keyframes dw-qg-charge {
-    0%   { filter: drop-shadow(0 0 10px rgba(160,60,255,0.45)); }
-    35%  { filter: drop-shadow(0 0 18px rgba(190,90,255,0.65)); }
-    70%  { filter: drop-shadow(0 0 26px rgba(220,140,255,0.82)) brightness(1.08); }
-    100% { filter: drop-shadow(0 0 34px rgba(255,220,255,0.95)) brightness(1.18); }
+/* 蓄力 v2：更強烈的光暈+亮度+縮放 */
+@keyframes dw-qg-charge-v2 {
+    0%   { filter: drop-shadow(0 0 10px rgba(220,180,100,0.4)); transform: translateY(-58%) translateX(0%) scale(1); }
+    25%  { filter: drop-shadow(0 0 20px rgba(220,180,100,0.6)) brightness(1.05); transform: translateY(-58%) translateX(0%) scale(1.02); }
+    50%  { filter: drop-shadow(0 0 30px rgba(255,220,130,0.8)) brightness(1.12); transform: translateY(-58%) translateX(0%) scale(1.04); }
+    75%  { filter: drop-shadow(0 0 40px rgba(255,240,160,0.9)) brightness(1.2); transform: translateY(-58%) translateX(-1%) scale(1.06); }
+    100% { filter: drop-shadow(0 0 50px rgba(255,255,200,1.0)) brightness(1.3); transform: translateY(-58%) translateX(-2%) scale(1.08); }
 }
 
 /* 發射瞬間：角色向後震退 */
 @keyframes dw-qg-fire-jolt {
-    0%   { transform: translateY(-58%) translateX(0%)  scale(1.00); }
-    40%  { transform: translateY(-58%) translateX(-4%) scale(0.97); }
-    100% { transform: translateY(-58%) translateX(-2%) scale(0.99); }
+    0%   { transform: translateY(-58%) translateX(-2%) scale(1.08); }
+    40%  { transform: translateY(-58%) translateX(-6%) scale(1.00); }
+    100% { transform: translateY(-58%) translateX(-3%) scale(1.02); }
 }
 
 /* 淡出：退場 */
 @keyframes dw-qg-fadeout {
-    0%   { opacity: 1; transform: translateY(-58%) translateX(-2%) scale(0.99); }
-    100% { opacity: 0; transform: translateY(-58%) translateX(-12%) scale(0.94); }
+    0%   { opacity: 1; transform: translateY(-58%) translateX(-3%) scale(1.02); }
+    100% { opacity: 0; transform: translateY(-58%) translateX(-15%) scale(0.92); }
 }
 
-/* 光束：從掌心位置向右延伸後消散 */
-@keyframes dw-qg-beam {
-    0%   { width: 0;   opacity: 1;   left: 46%; }
-    55%  { width: 57%; opacity: 0.95; }
-    100% { width: 62%; opacity: 0;   }
+/* 收縮環：從大到小收到掌心 */
+@keyframes dw-ring-converge {
+    0%   { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+    80%  { opacity: 0.5; transform: translate(-50%, -50%) scale(0.15); }
+    100% { opacity: 0;   transform: translate(-50%, -50%) scale(0); }
 }
 
-/* 波環：從掌心擴散後消失 */
-@keyframes dw-qg-wave {
-    0%   { width: 0px;   height: 0px;   opacity: 0.92; border-width: 3px; }
-    100% { width: 220px; height: 220px; opacity: 0;    border-width: 1px; }
+/* 掌印飛出：放大→向右飛射 */
+@keyframes dw-palm-fire {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    30%  { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+    100% { opacity: 0; transform: translate(calc(70vw - 50%), calc(-50% + 0px)) scale(0.6); }
+}
+
+/* 螢幕震動（強化版） */
+@keyframes dw-shake {
+    0%   { transform: translate(-3px, 2px); }
+    25%  { transform: translate(3px, -3px); }
+    50%  { transform: translate(-2px, -2px); }
+    75%  { transform: translate(2px, 3px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Wild 從右上角斜砸 */
+@keyframes dw-meteor-drop {
+    0%   { transform: translate(80px, -150px) scale(0.4) rotate(25deg); opacity: 0; filter: brightness(3); }
+    30%  { opacity: 1; filter: brightness(2); }
+    75%  { transform: translate(2px, 4px) scale(1.08) rotate(-2deg); filter: brightness(1.4); }
+    90%  { transform: translate(-1px, -2px) scale(0.96) rotate(1deg); filter: brightness(1.1); }
+    100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+}
+
+/* 火焰尾跡消散 */
+@keyframes dw-fire-trail {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.5; }
+    100% { opacity: 0; }
+}
+
+/* 衝擊白光閃 */
+@keyframes dw-impact-flash {
+    0%   { opacity: 0; transform: scale(0.5); }
+    30%  { opacity: 0.9; transform: scale(1.2); }
+    100% { opacity: 0;  transform: scale(1.5); }
+}
+
+/* 著地衝擊波紋（更大更持久） */
+@keyframes dw-impact-ripple {
+    0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 180, 60, 0.8), 0 0 0 0 rgba(255, 100, 20, 0.5); }
+    20%  { transform: scale(1.12); box-shadow: 0 0 0 6px rgba(255, 180, 60, 0.6), 0 0 25px rgba(255, 100, 20, 0.4); }
+    50%  { transform: scale(0.97); }
+    100% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 180, 60, 0), 0 0 40px rgba(255, 100, 20, 0); }
+}
+
+/* 衝擊擴散環 */
+@keyframes dw-shockwave-ring {
+    0%   { width: 0; height: 0; opacity: 0.9; border-width: 3px; }
+    100% { width: 120px; height: 120px; opacity: 0; border-width: 1px; }
 }
 
 /* ── Retrigger Overlay ───────────────────────────────────── */
@@ -910,33 +1176,83 @@
     60%  { transform: scale(1.2) rotate(5deg); opacity: 1; filter: brightness(1.5); }
     100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
 }
-@keyframes dw-fog-in {
+/* ── FS 轉場 Keyframes ───────────────────────────────────── */
+
+/* 暗幕淡入 */
+@keyframes dw-dark-bg-in {
     from { opacity: 0; }
     to   { opacity: 1; }
 }
-@keyframes dw-dragon-enter {
-    0%   { left: -240px; opacity: 1; transform: translateY(-50%) scale(1); }
-    55%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1); }
-    75%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1); }
-    90%  { left: calc(50% - 110px); opacity: 0.4; transform: translateY(-50%) scale(0.35); }
+
+/* 龍衝刺（左→中→縮小消失） */
+@keyframes dw-dragon-rush {
+    0%   { left: -260px; opacity: 1; transform: translateY(-50%) scale(1); }
+    50%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1.05); }
+    70%  { left: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scale(1); }
+    85%  { left: calc(50% - 110px); opacity: 0.6; transform: translateY(-50%) scale(0.4); }
     100% { left: calc(50% - 110px); opacity: 0; transform: translateY(-50%) scale(0); }
 }
-@keyframes dw-wolf-enter {
-    0%   { right: -240px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    55%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    75%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    90%  { right: calc(50% - 110px); opacity: 0.4; transform: translateY(-50%) scaleX(-1) scale(0.35); }
+
+/* 狼衝刺（右→中→縮小消失） */
+@keyframes dw-wolf-rush {
+    0%   { right: -260px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    50%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1.05); }
+    70%  { right: calc(50% - 110px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
+    85%  { right: calc(50% - 110px); opacity: 0.6; transform: translateY(-50%) scaleX(-1) scale(0.4); }
     100% { right: calc(50% - 110px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0); }
 }
-@keyframes dw-mw-appear {
-    from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    60%  { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+
+/* 殘影跟隨 */
+@keyframes dw-ghost-trail {
+    0%   { opacity: 0; }
+    20%  { opacity: 0.5; }
+    60%  { opacity: 0.3; }
+    100% { opacity: 0; }
 }
+
+/* 速度線閃現 */
+@keyframes dw-speed-flash {
+    0%   { opacity: 0; }
+    15%  { opacity: 0.6; }
+    40%  { opacity: 0.3; }
+    100% { opacity: 0; }
+}
+
+/* 水墨爆發圓擴展 */
+@keyframes dw-ink-expand {
+    0%   { width: 0; height: 0; opacity: 0.9; }
+    60%  { opacity: 0.95; }
+    100% { width: 250vmax; height: 250vmax; opacity: 1; }
+}
+
+/* 水墨暈染背景淡入 */
+@keyframes dw-ink-wash-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* 郎君綻放（從墨水中心由小到大） */
+@keyframes dw-lord-bloom {
+    0%   { transform: translate(-50%, -55%) scale(0); opacity: 0; }
+    50%  { transform: translate(-50%, -55%) scale(1.18); opacity: 1; }
+    75%  { transform: translate(-50%, -55%) scale(0.95); opacity: 1; }
+    100% { transform: translate(-50%, -55%) scale(1.0); opacity: 1; }
+}
+
+/* 光暈擴展 */
+@keyframes dw-glow-expand {
+    0%   { width: 60px; height: 60px; opacity: 0; }
+    30%  { opacity: 0.6; }
+    100% { width: 500px; height: 500px; opacity: 0.25; }
+}
+
+/* 文字上滑出現 */
 @keyframes dw-text-appear {
     from { opacity: 0; transform: translateX(-50%) translateY(30px); }
     to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* 整體淡出 */
 @keyframes dw-overlay-fadeout {
     from { opacity: 1; }
     to   { opacity: 0; }
@@ -959,6 +1275,12 @@
         height: calc(var(--dw-symbol-size-tablet) * 4);
     }
     #dw-btn-spin { width: 78px; height: 78px; font-size: 1rem; }
+    /* FS 轉場 RWD */
+    #dw-trans-dragon-wrap,
+    #dw-trans-wolf-wrap { width: 180px; height: 180px; }
+    #dw-trans-mw { width: 200px; height: 200px; }
+    .dw-qg-palm { width: 42px; height: 42px; }
+    .dw-qg-charge-ring { width: 140px; height: 140px; }
 }
 @media (max-width: 480px) {
     #dw-game-container {
@@ -977,6 +1299,15 @@
     }
     #dw-btn-spin { width: 70px; height: 70px; font-size: 0.9rem; }
     #dw-header h1 { font-size: 1rem; }
+    /* FS 轉場 RWD */
+    #dw-trans-dragon-wrap,
+    #dw-trans-wolf-wrap { width: 140px; height: 140px; }
+    #dw-trans-mw { width: 160px; height: 160px; }
+    #dw-trans-text p { font-size: 1.4rem; }
+    #dw-trans-spin-count { font-size: 2.2rem; }
+    .dw-qg-palm { width: 36px; height: 36px; }
+    .dw-qg-charge-ring { width: 110px; height: 110px; }
+    #dw-qigong-m1 { max-width: 180px; }
 }
 @media (max-width: 360px) {
     .dw-symbol {
@@ -986,4 +1317,7 @@
     .dw-reel-viewport {
         height: calc(var(--dw-symbol-size-small) * 4);
     }
+    #dw-trans-dragon-wrap,
+    #dw-trans-wolf-wrap { width: 110px; height: 110px; }
+    #dw-trans-mw { width: 130px; height: 130px; }
 }
