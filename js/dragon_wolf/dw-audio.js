@@ -18,6 +18,9 @@ DragonWolf.Audio = {
     _bgmRunning:     false,
     _bgmLoaded:      false,
 
+    // SFX MP3 音檔（laugh 等）
+    _sfxBuffers:     {},
+
     /** buffer 載入完成後，若 bgmStart 已被呼叫但當時 buffer 不存在，補播 BGM */
     _onBgmLoaded: function() {
         if (this._bgmRunning && !this._bgmSource) {
@@ -54,6 +57,9 @@ DragonWolf.Audio = {
         // 預載 BGM 音檔
         this._loadBgmFiles();
 
+        // 預載 SFX MP3 音檔
+        this._loadSfxFiles();
+
         // 切換 App 回來時恢復 BGM
         var self = this;
         var _bgmWasRunning = false;
@@ -70,6 +76,46 @@ DragonWolf.Audio = {
                 }
             }
         });
+    },
+
+    /** 預載 SFX MP3 音檔（laugh 等） */
+    _loadSfxFiles: function() {
+        if (!this.ctx) return;
+        var self  = this;
+        var files = { laugh: 'audio/dragon_wolf/dw-laugh.mp3' };
+        var keys  = Object.keys(files);
+
+        function loadOne(key, url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'arraybuffer';
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    self.ctx.decodeAudioData(xhr.response, function(buffer) {
+                        self._sfxBuffers[key] = buffer;
+                    }, function() { /* decode fail — ignore */ });
+                }
+            };
+            xhr.onerror = function() { /* file not found — ignore */ };
+            xhr.send();
+        }
+
+        for (var i = 0; i < keys.length; i++) {
+            loadOne(keys[i], files[keys[i]]);
+        }
+    },
+
+    /** 播放已載入的 SFX MP3 buffer，回傳 true 表示成功 */
+    _playSfxBuffer: function(key) {
+        if (!this.ctx || !this._sfxBuffers[key]) return false;
+        var src  = this.ctx.createBufferSource();
+        var gain = this.ctx.createGain();
+        src.buffer = this._sfxBuffers[key];
+        gain.gain.value = 1.0;
+        src.connect(gain);
+        gain.connect(this.soundGain);
+        src.start(0);
+        return true;
     },
 
     /** 預載 Base / Free 兩個 BGM MP3 檔 */
@@ -237,9 +283,10 @@ DragonWolf.Audio = {
             case 'win_small':   this._sfxWinSmall();   break;
             case 'win_big':     this._sfxWinBig();     break;
             case 'scatter':     this._sfxScatter();    break;
-            case 'palm_hit':    this._sfxPalmHit();    break;
-            case 'fs_intro':    this._sfxFsIntro();    break;
-            case 'laugh':       this._sfxLaugh();      break;
+            case 'palm_hit':      this._sfxPalmHit();      break;
+            case 'meteor_impact': this._sfxMeteorImpact(); break;
+            case 'fs_intro':      this._sfxFsIntro();      break;
+            case 'laugh':         this._sfxLaugh();        break;
         }
     },
 
@@ -361,6 +408,52 @@ DragonWolf.Audio = {
         osc.start(t); osc.stop(t + 0.12);
     },
 
+    /** 隕石撞擊（Wild 著地，比 palm_hit 更重更震撼） */
+    _sfxMeteorImpact: function() {
+        if (!this.ctx) return;
+        var t = this.ctx.currentTime;
+        // 1. 重低頻撞擊（更長更深）
+        var osc1 = this.ctx.createOscillator();
+        var g1   = this.ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(80, t);
+        osc1.frequency.exponentialRampToValueAtTime(30, t + 0.25);
+        g1.gain.setValueAtTime(0.55, t);
+        g1.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        osc1.connect(g1); g1.connect(this.soundGain);
+        osc1.start(t); osc1.stop(t + 0.35);
+
+        // 2. 噪音爆裂（更大更寬）
+        var buf  = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.15, this.ctx.sampleRate);
+        var data = buf.getChannelData(0);
+        for (var i = 0; i < data.length; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 1.5);
+        }
+        var src  = this.ctx.createBufferSource();
+        var g2   = this.ctx.createGain();
+        var filt = this.ctx.createBiquadFilter();
+        src.buffer     = buf;
+        filt.type      = 'lowpass';
+        filt.frequency.setValueAtTime(800, t);
+        filt.frequency.exponentialRampToValueAtTime(200, t + 0.15);
+        filt.Q.value   = 1.0;
+        g2.gain.setValueAtTime(0.7, t);
+        g2.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        src.connect(filt); filt.connect(g2); g2.connect(this.soundGain);
+        src.start(t); src.stop(t + 0.18);
+
+        // 3. 金屬共鳴回響
+        var osc2 = this.ctx.createOscillator();
+        var g3   = this.ctx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(150, t + 0.02);
+        osc2.frequency.exponentialRampToValueAtTime(60, t + 0.2);
+        g3.gain.setValueAtTime(0.25, t + 0.02);
+        g3.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+        osc2.connect(g3); g3.connect(this.soundGain);
+        osc2.start(t + 0.02); osc2.stop(t + 0.3);
+    },
+
     /** Free Spins 進場音效 */
     _sfxFsIntro: function() {
         if (!this.ctx) return;
@@ -381,11 +474,13 @@ DragonWolf.Audio = {
         }
     },
 
-    /** 黑白郎君笑聲（轉場動畫用）— 程序化合成 */
+    /** 黑白郎君笑聲 — 優先用 MP3，fallback 程序化合成 */
     _sfxLaugh: function() {
         if (!this.ctx) return;
+        // 優先播放 MP3 音檔
+        if (this._playSfxBuffer('laugh')) return;
+        // Fallback：程序化合成 Ha Ha Ha
         var t = this.ctx.currentTime;
-        // Ha Ha Ha：三個衝擊音
         var times = [0, 0.22, 0.44];
         for (var k = 0; k < times.length; k++) {
             var dt   = t + times[k];
