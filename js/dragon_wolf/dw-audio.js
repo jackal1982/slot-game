@@ -295,23 +295,28 @@ DragonWolf.Audio = {
     },
 
     _sfxFreeBigwin: function() {
-        if (!this._playSfxBuffer('free-bigwin')) {
-            /* fallback: 用合成音代替，避免無聲 */
-            try {
+        if (this._playSfxBuffer('free-bigwin')) return;
+        /* fallback: free-bigwin.mp3 未載入，用笑聲 + 勝利升音階代替 */
+        console.warn('[DWAudio] free-bigwin.mp3 not loaded, using fallback');
+        this._sfxLaugh();
+        try {
+            var t     = this.ctx.currentTime + 0.5;
+            var notes = [523.25, 659.26, 783.99, 1046.5];
+            for (var i = 0; i < notes.length; i++) {
                 var osc  = this.ctx.createOscillator();
                 var gain = this.ctx.createGain();
-                var t    = this.ctx.currentTime;
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(440, t);
-                osc.frequency.linearRampToValueAtTime(880, t + 0.5);
-                gain.gain.setValueAtTime(0.3, t);
-                gain.gain.linearRampToValueAtTime(0, t + 1.0);
+                var dt   = t + i * 0.15;
+                osc.type = 'sine';
+                osc.frequency.value = notes[i];
+                gain.gain.setValueAtTime(0, dt);
+                gain.gain.linearRampToValueAtTime(0.3, dt + 0.05);
+                gain.gain.linearRampToValueAtTime(0, dt + 0.3);
                 osc.connect(gain);
                 gain.connect(this.soundGain);
-                osc.start(t);
-                osc.stop(t + 1.0);
-            } catch(e) {}
-        }
+                osc.start(dt);
+                osc.stop(dt + 0.35);
+            }
+        } catch(e) {}
     },
 
     _sfxSpinStart: function() {

@@ -329,6 +329,8 @@ DragonWolf.Animations = {
         var isBigWin = (totalWin >= bet * 50);
         var delay    = isBigWin ? 8000 : 3000;
 
+        console.log('[FS Summary] totalWin:', totalWin, 'bet:', bet, 'threshold:', bet * 50, 'isBigWin:', isBigWin);
+
         if (isBigWin) {
             try { DragonWolf.Audio.play('free-bigwin'); } catch(e) {}
         }
