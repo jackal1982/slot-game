@@ -135,6 +135,9 @@ SlotGame.Router = {
 
         // Update lobby balance
         SlotGame.Lobby.updateBalance();
+
+        // Check for low balance and show popup if needed
+        SlotGame.Lobby.checkLowBalance();
     },
 
     _showGame: function(gameType, done) {
