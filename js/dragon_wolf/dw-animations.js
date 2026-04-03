@@ -95,10 +95,10 @@ DragonWolf.Animations = {
         void el.offsetWidth;
         el.classList.add('dw-trans-playing');
 
-        // 郎君綻放完成時播放狂笑（3s）
+        // 郎君綻放完成時播放狂笑（1.8s，與郎君出現同步）
         setTimeout(function() {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
-        }, 3000);
+        }, 1800);
 
         // 5 秒後結束
         setTimeout(function() {
@@ -182,52 +182,99 @@ DragonWolf.Animations = {
     },
 
     /**
-     * 隕石墜落方式逐格放置 Wild
+     * 隕石墜落方式同時放置所有 Wild（並行 + overlay 疊加，避免原符號瞬間消失）
      * @param {Array}    positions  - [{reel, row}, ...] 位置陣列
-     * @param {number}   index      - 目前索引
+     * @param {number}   _index     - 已廢棄，保留僅供 API 相容
      * @param {Function} onComplete - 全部放置完後呼叫
      */
-    _placeWildsMeteor: function(positions, index, onComplete) {
-        var self = this;
-        if (index >= positions.length) {
+    _placeWildsMeteor: function(positions, _index, onComplete) {
+        if (!positions || positions.length === 0) {
             if (onComplete) onComplete();
             return;
         }
-        var pos = positions[index];
-        var reelGrid = document.getElementById('dw-reel-grid');
 
-        // 更新符號圖片（updateCell 會加 dw-wild-placed）
-        DragonWolf.Reels.updateCell(pos.reel, pos.row, 'WD');
+        var reelGrid  = document.getElementById('dw-reel-grid');
+        var wildSrc   = (DragonWolf.Config.SYMBOL_IMGS  && DragonWolf.Config.SYMBOL_IMGS['WD'])  || '';
+        var wildName  = (DragonWolf.Config.SYMBOL_NAMES && DragonWolf.Config.SYMBOL_NAMES['WD']) || 'WD';
+        var remaining = positions.length;
 
-        // 找到 DOM 元素，改用隕石動畫
-        var symbols = DragonWolf.Reels.strips[pos.reel].querySelectorAll('.dw-symbol');
-        var cell = symbols[pos.row];
-        if (cell) {
-            cell.classList.remove('dw-wild-placed');
-            cell.classList.add('dw-wild-meteor');
+        function onOneDone() {
+            remaining--;
+            if (remaining <= 0 && onComplete) onComplete();
         }
 
-        // 350ms 後：隕石著地 → 撞擊音效 + 衝擊波紋 + 強震
-        setTimeout(function() {
-            if (cell) {
-                cell.classList.remove('dw-wild-meteor');
-                cell.classList.add('dw-wild-impact');
-            }
-            // 著地撞擊音效（比飛行中更震撼）
-            try { DragonWolf.Audio.play('meteor_impact'); } catch(e) {}
-            // 著地強震（120ms）
-            if (reelGrid) {
-                reelGrid.classList.add('dw-screen-shake');
-                setTimeout(function() {
-                    reelGrid.classList.remove('dw-screen-shake');
-                }, 120);
-            }
-        }, 350);
+        // 所有位置同時開始
+        for (var i = 0; i < positions.length; i++) {
+            (function(pos) {
+                var strips = DragonWolf.Reels.strips;
+                if (!strips || !strips[pos.reel]) { onOneDone(); return; }
+                var symbols = strips[pos.reel].querySelectorAll('.dw-symbol');
+                var cell    = symbols[pos.row];
+                if (!cell) { onOneDone(); return; }
 
-        // 間隔 300ms 遞迴下一個位置（稍慢，每顆隕石更有存在感）
-        setTimeout(function() {
-            self._placeWildsMeteor(positions, index + 1, onComplete);
-        }, 300);
+                var originalImg = cell.querySelector('img');
+
+                // 1. 暗化原始符號（保持可見，降低亮度）
+                if (originalImg) {
+                    originalImg.style.filter = 'brightness(0.35)';
+                }
+
+                // 2. 建立 Wild overlay 疊加在原始符號上方
+                var overlay = document.createElement('img');
+                overlay.className = 'dw-wild-overlay';
+                overlay.src       = wildSrc;
+                overlay.alt       = wildName;
+                cell.appendChild(overlay);
+
+                // 3. 更新 data-symbol（即時反映邏輯狀態）
+                cell.setAttribute('data-symbol', 'WD');
+
+                // 4. 隕石飛入動畫
+                cell.classList.remove('dw-wild-placed');
+                cell.classList.add('dw-wild-meteor');
+
+                // 5. 350ms 後著地：衝擊動畫 + 音效 + 強震（250ms）
+                setTimeout(function() {
+                    cell.classList.remove('dw-wild-meteor');
+                    cell.classList.add('dw-wild-impact');
+                    try { DragonWolf.Audio.play('meteor_impact'); } catch(e) {}
+                    if (reelGrid) {
+                        reelGrid.classList.add('dw-screen-shake');
+                        setTimeout(function() {
+                            reelGrid.classList.remove('dw-screen-shake');
+                        }, 250);
+                    }
+                }, 350);
+
+                // 6. 800ms 後動畫結束：換底層 img src，移除 overlay
+                setTimeout(function() {
+                    if (originalImg) {
+                        originalImg.src    = wildSrc;
+                        originalImg.alt    = wildName;
+                        originalImg.style.filter = '';
+                    }
+                    if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                    cell.classList.remove('dw-wild-impact');
+                    cell.classList.add('dw-wild-placed');
+                    onOneDone();
+                }, 800);
+            })(positions[i]);
+        }
+    },
+
+    /** 清除所有殘留的 Wild overlay（防止 DOM 洩漏，在 cleanup 時呼叫） */
+    clearWildOverlays: function() {
+        var overlays = document.querySelectorAll('#dw-reel-area .dw-wild-overlay');
+        for (var i = 0; i < overlays.length; i++) {
+            var ov = overlays[i];
+            // 還原底層 img filter
+            var cell = ov.parentNode;
+            if (cell) {
+                var originalImg = cell.querySelector('img:not(.dw-wild-overlay)');
+                if (originalImg) originalImg.style.filter = '';
+            }
+            if (ov.parentNode) ov.parentNode.removeChild(ov);
+        }
     },
 
     /** 向後相容別名 */
