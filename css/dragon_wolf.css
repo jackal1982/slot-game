@@ -557,8 +557,8 @@
     transform:  translateY(-50%);
 }
 #dw-trans-wolf-wrap {
-    right:      -390px;
-    transform:  translateY(-50%) scaleX(-1);
+    left:       calc(100% + 390px);
+    transform:  translateY(-50%) translateX(-50%) scaleX(-1);
 }
 #dw-trans-dragon,
 #dw-trans-wolf {
@@ -735,6 +735,12 @@
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
     animation: dw-glow-expand 1.2s 1.8s ease-out forwards;
 }
+/* Phase 3: 郎君金光閃爍（出現後持續）+ 笑聲 pulse（1.8s 開始，持續約 1.8s） */
+#dw-fs-transition.dw-trans-playing #dw-trans-mw {
+    animation:
+        dw-lord-gold-flash 0.7s 2.2s ease-in-out 4,
+        dw-lord-pulse      0.35s 1.8s ease-in-out 5;
+}
 
 /* Phase 4: 文字出現 (3~3.5s) */
 #dw-fs-transition.dw-trans-playing #dw-trans-text {
@@ -759,13 +765,13 @@
 #dw-qigong-overlay.dw-qigong-active { opacity: 1; }
 #dw-qigong-overlay.hidden { display: none; }
 
-/* 角色圖片 */
+/* 角色圖片（放大 20%：54% → 65%，345px → 414px） */
 #dw-qigong-m1 {
     position:       absolute;
     left:           0;
     top:            50%;
-    width:          54%;
-    max-width:      345px;
+    width:          65%;
+    max-width:      414px;
     height:         auto;
     transform:      translateY(-58%) translateX(-130%);
     filter:         drop-shadow(0 0 10px rgba(160,60,255,0.45));
@@ -828,8 +834,15 @@
 }
 
 /* 螢幕震動（套用在 reel grid 上） */
-#dw-reel-grid.dw-screen-shake {
+#dw-reel-grid.dw-screen-shake,
+#dw-reel-grid.dw-screen-shake-medium {
     animation: dw-shake 0.08s infinite alternate;
+}
+#dw-reel-grid.dw-screen-shake-small {
+    animation: dw-shake-small 0.12s infinite alternate;
+}
+#dw-reel-grid.dw-screen-shake-large {
+    animation: dw-shake-large 0.06s infinite alternate;
 }
 
 /* 隕石從右上角斜砸 Wild */
@@ -982,6 +995,158 @@
     60%  { transform: translate( 10px, -6px) rotate( 0.5deg); }
     80%  { transform: translate( -6px,  8px) rotate(-0.5deg); }
     100% { transform: translate(  0px,  0px) rotate( 0deg); }
+}
+/* 小震動（2-4 顆，第一階段） */
+@keyframes dw-shake-small {
+    0%   { transform: translate(-4px,  2px) rotate(-0.3deg); }
+    25%  { transform: translate( 4px, -3px) rotate( 0.3deg); }
+    50%  { transform: translate(-3px,  3px) rotate(-0.2deg); }
+    75%  { transform: translate( 3px, -2px) rotate( 0.2deg); }
+    100% { transform: translate( 0px,  0px) rotate( 0deg); }
+}
+/* 大震動（9-16 顆，第三階段） */
+@keyframes dw-shake-large {
+    0%   { transform: translate(-20px, 10px) rotate(-1.5deg); }
+    20%  { transform: translate( 20px,-13px) rotate( 1.5deg); }
+    40%  { transform: translate(-16px, 16px) rotate(-1.5deg); }
+    60%  { transform: translate( 16px, -9px) rotate( 0.8deg); }
+    80%  { transform: translate(-10px, 13px) rotate(-0.8deg); }
+    100% { transform: translate(  0px,  0px) rotate( 0deg); }
+}
+
+/* ── 分級聚氣蓄力動畫 ─────────────────────────────────── */
+/* Tier 1：弱金光（共 1.5s charge） */
+@keyframes dw-qg-charge-t1 {
+    0%   { filter: drop-shadow(0 0 10px rgba(220,180,100,0.4)); transform: translateY(-58%) translateX(0%) scale(1.00); }
+    40%  { filter: drop-shadow(0 0 20px rgba(220,180,100,0.6)) brightness(1.06); transform: translateY(-58%) translateX(0%) scale(1.02); }
+    70%  { filter: drop-shadow(0 0 14px rgba(220,180,100,0.5)) brightness(1.03); transform: translateY(-58%) translateX(-0.5%) scale(1.01); }
+    100% { filter: drop-shadow(0 0 28px rgba(255,220,130,0.7)) brightness(1.12); transform: translateY(-58%) translateX(-1%) scale(1.05); }
+}
+/* Tier 2：弱→中金光（共 3.5s charge，43% 為相位切換） */
+@keyframes dw-qg-charge-t2 {
+    0%   { filter: drop-shadow(0 0 10px rgba(220,180,100,0.4)); transform: translateY(-58%) scale(1.00); }
+    20%  { filter: drop-shadow(0 0 22px rgba(220,180,100,0.65)) brightness(1.06); transform: translateY(-58%) scale(1.02); }
+    40%  { filter: drop-shadow(0 0 16px rgba(220,180,100,0.55)) brightness(1.04); transform: translateY(-58%) scale(1.01); }
+    46%  { filter: drop-shadow(0 0 50px rgba(255,230,100,1.0)) brightness(1.25); transform: translateY(-58%) scale(1.07); }
+    60%  { filter: drop-shadow(0 0 45px rgba(255,240,160,0.85)) brightness(1.22); transform: translateY(-58%) scale(1.05); }
+    80%  { filter: drop-shadow(0 0 35px rgba(255,220,130,0.82)) brightness(1.20); transform: translateY(-58%) scale(1.04); }
+    100% { filter: drop-shadow(0 0 55px rgba(255,240,160,0.92)) brightness(1.30); transform: translateY(-58%) translateX(-2%) scale(1.08); }
+}
+/* Tier 3：弱→中→強金光（共 6.5s charge，29%/60% 為相位切換） */
+@keyframes dw-qg-charge-t3 {
+    0%   { filter: drop-shadow(0 0 10px rgba(220,180,100,0.4)); transform: translateY(-58%) scale(1.00); }
+    14%  { filter: drop-shadow(0 0 20px rgba(220,180,100,0.6)) brightness(1.05); transform: translateY(-58%) scale(1.02); }
+    27%  { filter: drop-shadow(0 0 14px rgba(220,180,100,0.5)) brightness(1.03); transform: translateY(-58%) scale(1.01); }
+    31%  { filter: drop-shadow(0 0 55px rgba(255,230,100,1.0)) brightness(1.28); transform: translateY(-58%) scale(1.07); }
+    45%  { filter: drop-shadow(0 0 50px rgba(255,240,160,0.88)) brightness(1.26); transform: translateY(-58%) scale(1.05); }
+    57%  { filter: drop-shadow(0 0 40px rgba(255,220,130,0.85)) brightness(1.22); transform: translateY(-58%) scale(1.04); }
+    62%  { filter: drop-shadow(0 0 85px rgba(255,255,200,1.0)) brightness(1.60); transform: translateY(-58%) scale(1.12); }
+    78%  { filter: drop-shadow(0 0 95px rgba(255,255,200,0.92)) brightness(1.65); transform: translateY(-58%) scale(1.10); }
+    92%  { filter: drop-shadow(0 0 75px rgba(255,240,180,0.88)) brightness(1.60); transform: translateY(-58%) scale(1.09); }
+    100% { filter: drop-shadow(0 0 105px rgba(255,255,220,1.0)) brightness(1.80); transform: translateY(-58%) translateX(-2%) scale(1.15); }
+}
+
+/* ── Tier 分級：角色動畫 ──────────────────────────────── */
+/* 取代舊的 .dw-qigong-active #dw-qigong-m1 規則，使用 tier 類別覆蓋 */
+#dw-qigong-overlay.dw-tier1.dw-qigong-active #dw-qigong-m1 {
+    animation:
+        dw-qg-enter     0.50s 0.00s ease-out                         forwards,
+        dw-qg-charge-t1 1.50s 0.50s ease-in-out                      forwards,
+        dw-qg-fire-jolt 0.15s 2.00s cubic-bezier(0.1,0.8,0.3,1)     forwards,
+        dw-qg-fadeout   0.50s 3.30s ease-in                          forwards;
+}
+#dw-qigong-overlay.dw-tier2.dw-qigong-active #dw-qigong-m1 {
+    animation:
+        dw-qg-enter     0.50s 0.00s ease-out                         forwards,
+        dw-qg-charge-t2 3.50s 0.50s ease-in-out                      forwards,
+        dw-qg-fire-jolt 0.15s 4.00s cubic-bezier(0.1,0.8,0.3,1)     forwards,
+        dw-qg-fadeout   0.50s 5.30s ease-in                          forwards;
+}
+#dw-qigong-overlay.dw-tier3.dw-qigong-active #dw-qigong-m1 {
+    animation:
+        dw-qg-enter     0.50s 0.00s ease-out                         forwards,
+        dw-qg-charge-t3 6.50s 0.50s ease-in-out                      forwards,
+        dw-qg-fire-jolt 0.15s 7.00s cubic-bezier(0.1,0.8,0.3,1)     forwards,
+        dw-qg-fadeout   0.50s 8.30s ease-in                          forwards;
+}
+
+/* ── Tier 分級：蓄力收縮環（在 charge 最後 0.7s 收縮） ── */
+/* Tier 1：fire at 2s，ring 開始於 1.3-1.5s */
+#dw-qigong-overlay.dw-tier1.dw-qigong-active .dw-qg-charge-ring:nth-child(2) { animation: dw-ring-converge 0.9s 1.3s ease-in forwards; }
+#dw-qigong-overlay.dw-tier1.dw-qigong-active .dw-qg-charge-ring:nth-child(3) { animation: dw-ring-converge 0.8s 1.4s ease-in forwards; }
+#dw-qigong-overlay.dw-tier1.dw-qigong-active .dw-qg-charge-ring:nth-child(4) { animation: dw-ring-converge 0.7s 1.5s ease-in forwards; }
+/* Tier 2：fire at 4s，ring 開始於 3.3-3.5s */
+#dw-qigong-overlay.dw-tier2.dw-qigong-active .dw-qg-charge-ring:nth-child(2) { animation: dw-ring-converge 0.9s 3.3s ease-in forwards; }
+#dw-qigong-overlay.dw-tier2.dw-qigong-active .dw-qg-charge-ring:nth-child(3) { animation: dw-ring-converge 0.8s 3.4s ease-in forwards; }
+#dw-qigong-overlay.dw-tier2.dw-qigong-active .dw-qg-charge-ring:nth-child(4) { animation: dw-ring-converge 0.7s 3.5s ease-in forwards; }
+/* Tier 3：fire at 7s，ring 開始於 6.3-6.5s */
+#dw-qigong-overlay.dw-tier3.dw-qigong-active .dw-qg-charge-ring:nth-child(2) { animation: dw-ring-converge 0.9s 6.3s ease-in forwards; }
+#dw-qigong-overlay.dw-tier3.dw-qigong-active .dw-qg-charge-ring:nth-child(3) { animation: dw-ring-converge 0.8s 6.4s ease-in forwards; }
+#dw-qigong-overlay.dw-tier3.dw-qigong-active .dw-qg-charge-ring:nth-child(4) { animation: dw-ring-converge 0.7s 6.5s ease-in forwards; }
+
+/* ── 壓制舊的掌印飛出（tier 模式改用單顆氣功球） ──────── */
+#dw-qigong-overlay.dw-tier1.dw-qigong-active #dw-qg-palm-0,
+#dw-qigong-overlay.dw-tier1.dw-qigong-active #dw-qg-palm-1,
+#dw-qigong-overlay.dw-tier1.dw-qigong-active #dw-qg-palm-2,
+#dw-qigong-overlay.dw-tier1.dw-qigong-active #dw-qg-palm-3,
+#dw-qigong-overlay.dw-tier1.dw-qigong-active #dw-qg-palm-4,
+#dw-qigong-overlay.dw-tier2.dw-qigong-active #dw-qg-palm-0,
+#dw-qigong-overlay.dw-tier2.dw-qigong-active #dw-qg-palm-1,
+#dw-qigong-overlay.dw-tier2.dw-qigong-active #dw-qg-palm-2,
+#dw-qigong-overlay.dw-tier2.dw-qigong-active #dw-qg-palm-3,
+#dw-qigong-overlay.dw-tier2.dw-qigong-active #dw-qg-palm-4,
+#dw-qigong-overlay.dw-tier3.dw-qigong-active #dw-qg-palm-0,
+#dw-qigong-overlay.dw-tier3.dw-qigong-active #dw-qg-palm-1,
+#dw-qigong-overlay.dw-tier3.dw-qigong-active #dw-qg-palm-2,
+#dw-qigong-overlay.dw-tier3.dw-qigong-active #dw-qg-palm-3,
+#dw-qigong-overlay.dw-tier3.dw-qigong-active #dw-qg-palm-4 { animation: none !important; }
+
+/* ── 氣功球（單顆，依 tier 大小不同） ────────────────── */
+#dw-qg-ball {
+    position:       absolute;
+    left:           30%;
+    top:            42%;
+    border-radius:  50%;
+    background:     radial-gradient(circle at 35% 35%,
+                        #fff 0%,
+                        rgba(255, 240, 180, 0.95) 15%,
+                        rgba(255, 200, 80, 0.9) 35%,
+                        rgba(220, 140, 30, 0.7) 60%,
+                        transparent 100%);
+    transform:      translate(-50%, -50%) scale(0);
+    opacity:        0;
+    pointer-events: none;
+    box-shadow:     0 0 20px rgba(255, 220, 100, 0.9),
+                    0 0 50px rgba(255, 180, 50, 0.7),
+                    0 0 100px rgba(220, 140, 30, 0.4);
+}
+#dw-qg-ball::before {
+    content:        '';
+    position:       absolute;
+    top:            20%;
+    left:           -55%;
+    width:          75%;
+    height:         60%;
+    background:     linear-gradient(to right,
+                        transparent 0%,
+                        rgba(255,200,80,0.3) 30%,
+                        rgba(255,180,50,0.5) 60%,
+                        rgba(255,220,100,0.3) 100%);
+    border-radius:  50% 0 0 50%;
+    filter:         blur(6px);
+}
+#dw-qg-ball.dw-ball-small  { width:  80px; height:  80px; }
+#dw-qg-ball.dw-ball-medium { width: 160px; height: 160px; }
+#dw-qg-ball.dw-ball-large  { width: 320px; height: 320px; }
+
+@keyframes dw-qg-ball-fire {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+    30%  { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+    100% { opacity: 0; transform: translate(calc(75vw - 50%), -50%) scale(0.5); }
+}
+#dw-qg-ball.dw-ball-fire {
+    animation: dw-qg-ball-fire 0.6s cubic-bezier(0.2, 0, 0.6, 1) forwards;
 }
 
 /* Wild 從右上角斜砸 */
@@ -1200,24 +1365,24 @@
     to   { opacity: 1; }
 }
 
-/* 龍衝刺（左→中→縮小消失） */
+/* 龍衝刺（左→中心完全重疊→縮小消失） */
 @keyframes dw-dragon-rush {
-    0%   { left: -390px; opacity: 1; transform: translateY(-50%) scale(1); }
-    45%  { left: calc(50% - 165px); opacity: 1; transform: translateY(-50%) scale(1.05); }
-    58%  { left: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scale(1); }
-    72%  { left: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scale(1); }
-    85%  { left: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scale(0.3); }
-    100% { left: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scale(0); }
+    0%   { left: -390px; opacity: 1; transform: translateY(-50%) translateX(-50%) scale(1); }
+    45%  { left: 50%; opacity: 1; transform: translateY(-50%) translateX(-50%) scale(1.05); }
+    58%  { left: 50%; opacity: 0.62; transform: translateY(-50%) translateX(-50%) scale(1); }
+    72%  { left: 50%; opacity: 0.62; transform: translateY(-50%) translateX(-50%) scale(1); }
+    85%  { left: 50%; opacity: 0; transform: translateY(-50%) translateX(-50%) scale(0.3); }
+    100% { left: 50%; opacity: 0; transform: translateY(-50%) translateX(-50%) scale(0); }
 }
 
-/* 狼衝刺（右→中→縮小消失） */
+/* 狼衝刺（右→中心完全重疊→縮小消失），改用 left 確保與龍同一中心點 */
 @keyframes dw-wolf-rush {
-    0%   { right: -390px; opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1); }
-    45%  { right: calc(50% - 165px); opacity: 1; transform: translateY(-50%) scaleX(-1) scale(1.05); }
-    58%  { right: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scaleX(-1) scale(1); }
-    72%  { right: calc(50% - 165px); opacity: 0.62; transform: translateY(-50%) scaleX(-1) scale(1); }
-    85%  { right: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0.3); }
-    100% { right: calc(50% - 165px); opacity: 0; transform: translateY(-50%) scaleX(-1) scale(0); }
+    0%   { left: calc(100% + 390px); opacity: 1; transform: translateY(-50%) translateX(-50%) scaleX(-1) scale(1); }
+    45%  { left: 50%; opacity: 1; transform: translateY(-50%) translateX(-50%) scaleX(-1) scale(1.05); }
+    58%  { left: 50%; opacity: 0.62; transform: translateY(-50%) translateX(-50%) scaleX(-1) scale(1); }
+    72%  { left: 50%; opacity: 0.62; transform: translateY(-50%) translateX(-50%) scaleX(-1) scale(1); }
+    85%  { left: 50%; opacity: 0; transform: translateY(-50%) translateX(-50%) scaleX(-1) scale(0.3); }
+    100% { left: 50%; opacity: 0; transform: translateY(-50%) translateX(-50%) scaleX(-1) scale(0); }
 }
 
 /* 殘影跟隨 */
@@ -1249,12 +1414,24 @@
     to   { opacity: 1; }
 }
 
-/* 郎君綻放（從墨水中心由小到大） */
+/* 郎君綻放（從墨水中心由小到大，放大 50%） */
 @keyframes dw-lord-bloom {
     0%   { transform: translate(-50%, -55%) scale(0); opacity: 0; }
-    50%  { transform: translate(-50%, -55%) scale(1.18); opacity: 1; }
-    75%  { transform: translate(-50%, -55%) scale(0.95); opacity: 1; }
-    100% { transform: translate(-50%, -55%) scale(1.0); opacity: 1; }
+    50%  { transform: translate(-50%, -55%) scale(1.77); opacity: 1; }
+    75%  { transform: translate(-50%, -55%) scale(1.43); opacity: 1; }
+    100% { transform: translate(-50%, -55%) scale(1.5); opacity: 1; }
+}
+
+/* 金光閃爍（郎君出現後持續閃爍） */
+@keyframes dw-lord-gold-flash {
+    0%, 100% { filter: drop-shadow(0 0 40px var(--dw-accent-gold)) brightness(1.1); }
+    50%       { filter: drop-shadow(0 0 90px rgba(255, 215, 0, 1)) drop-shadow(0 0 130px rgba(255, 180, 50, 0.8)) brightness(1.5); }
+}
+
+/* 狂傲 pulse（笑聲期間縮放） */
+@keyframes dw-lord-pulse {
+    0%, 100% { transform: scale(1.0); }
+    50%      { transform: scale(1.15); }
 }
 
 /* 光暈擴展 */
@@ -1325,7 +1502,7 @@
     #dw-trans-spin-count { font-size: 2.2rem; }
     .dw-qg-palm { width: 36px; height: 36px; }
     .dw-qg-charge-ring { width: 110px; height: 110px; }
-    #dw-qigong-m1 { max-width: 270px; }
+    #dw-qigong-m1 { max-width: 324px; }
 }
 @media (max-width: 360px) {
     .dw-symbol {

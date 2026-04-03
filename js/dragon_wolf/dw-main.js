@@ -147,7 +147,10 @@ DragonWolf.Main = {
         // 高亮 M1 連線
         DragonWolf.Reels.highlightM1Wins(result.wins);
 
-        DragonWolf.Animations.playQigong(grid, function(wildResult) {
+        // 預先決定百搭數量（供動畫層判斷 tier），apply() 稍後會複用此結果
+        var wildCount = DragonWolf.Features.randomWilds.previewCount(grid);
+
+        DragonWolf.Animations.playQigong(grid, wildCount, function(wildResult) {
             // 重新評估（grid 已被修改）
             var newResult = DragonWolf.Paylines.evaluate(grid, state.getBet(), isFree);
             DragonWolf.Main._continueAfterEval(grid, newResult, isFree);
