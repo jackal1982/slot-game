@@ -117,13 +117,21 @@ DragonWolf.Animations = {
             }
         }, 3000);
 
+        // 整體淡出（4.2s）— 用 JS CSS transition 控制，不用 CSS animation
+        // 原因：Safari/iOS 上 CSS animation 會把父容器推到 GPU 合成層，
+        // 導致子元素的 JS transition（文字出現）無法正確渲染
+        setTimeout(function() {
+            el.style.transition = 'opacity 0.8s ease-in';
+            el.style.opacity = '0';
+        }, 4200);
+
         // 轉場結束：使用固定 setTimeout，不依賴 animationend
-        // 原因：手機版多動畫元素的 animationend 事件行為不可靠，bubble 事件可能
-        // 在 T=3.55s（dw-lord-pulse 結束）時提前觸發，截斷文字動畫
         setTimeout(function() {
             el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
-            // 清除文字 inline styles，為下次觸發重置
+            // 清除所有 inline styles，為下次觸發重置
+            el.style.opacity = '';
+            el.style.transition = '';
             var tEl = document.getElementById('dw-trans-text');
             if (tEl) {
                 tEl.style.opacity = '';
