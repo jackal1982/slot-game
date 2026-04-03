@@ -745,10 +745,9 @@
 /* Phase 4: 文字出現由 JS setTimeout(3000) 控制（CSS transition），不使用 CSS animation-delay
    原因：手機版多動畫並行時 animation-delay 不可靠 */
 
-/* Phase 5: 整體淡出 (4.2~5s) */
-#dw-fs-transition.dw-trans-playing {
-    animation: dw-overlay-fadeout 0.8s 4.2s ease-in forwards;
-}
+/* Phase 5: 整體淡出由 JS setTimeout(4200) 控制（CSS transition），不使用 CSS animation
+   原因：在 Safari/iOS 上，父容器的 CSS opacity animation 會使整個 overlay 被 GPU 合成，
+   導致子元素（#dw-trans-text）的 JS CSS transition 無法正確觸發，文字不顯示 */
 
 /* ── 氣功 Overlay（降龍十八掌風格）──────────────────────── */
 #dw-qigong-overlay {
