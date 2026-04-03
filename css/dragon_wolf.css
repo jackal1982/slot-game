@@ -738,12 +738,8 @@
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
     animation: dw-glow-expand 1.2s 1.8s ease-out forwards;
 }
-/* Phase 3: 郎君金光閃爍（出現後持續）+ 笑聲 pulse（1.8s 開始，持續約 1.8s） */
-#dw-fs-transition.dw-trans-playing #dw-trans-mw {
-    animation:
-        dw-lord-gold-flash 0.7s 2.2s ease-in-out 4,
-        dw-lord-pulse      0.35s 1.8s ease-in-out 5;
-}
+/* Phase 3: 郎君金光閃爍 + pulse — 改由 JS 控制，避免 Safari/iOS 重複 CSS animation
+   干擾 GPU 合成層，導致 #dw-trans-text 的 JS transition 無法渲染 */
 
 /* Phase 4: 文字出現由 JS setTimeout(3000) 控制（CSS transition），不使用 CSS animation-delay
    原因：手機版多動畫並行時 animation-delay 不可靠 */
