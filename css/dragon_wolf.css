@@ -645,22 +645,25 @@
     pointer-events: none;
 }
 #dw-trans-mw {
-    width:     360px;
-    height:    360px;
-    filter:    drop-shadow(0 0 40px var(--dw-accent-gold));
-    position:  relative;
-    z-index:   1;
+    width:        360px;
+    height:       360px;
+    filter:       drop-shadow(0 0 40px var(--dw-accent-gold));
+    position:     relative;
+    z-index:      1;
+    will-change:  filter, transform;
 }
 
 /* 文字 */
 #dw-trans-text {
-    position:   absolute;
-    bottom:     22%;
-    left:       50%;
-    transform:  translateX(-50%) translateY(30px);
-    text-align: center;
-    opacity:    0;
-    z-index:    6;
+    position:    absolute;
+    bottom:      22%;
+    left:        50%;
+    transform:   translateX(-50%) translateY(30px);
+    text-align:  center;
+    opacity:     0;
+    z-index:     6;
+    will-change: opacity, transform;
+    isolation:   isolate;
 }
 #dw-trans-text p {
     font-size:   1.8rem;
