@@ -9,6 +9,7 @@ DragonWolf.Animations = {
     _winCycleIndex:    0,
     _winCycleWins:     null,
     _winCycleCallback: null,
+    _fsSummaryTimer:   null,
 
     // ── 勝利循環展示 ──────────────────────────────────────
 
@@ -252,23 +253,45 @@ DragonWolf.Animations = {
 
     // ── FS 總結動畫 ───────────────────────────────────────
 
+    _clearFSSummaryTimers: function() {
+        if (this._fsSummaryTimer !== null) {
+            clearTimeout(this._fsSummaryTimer);
+            this._fsSummaryTimer = null;
+        }
+    },
+
     playFSSummary: function(totalWin, onComplete) {
-        // 顯示 FS 總結 overlay
+        // 防洩漏：先清除舊定時器
+        this._clearFSSummaryTimers();
+
         var el = document.getElementById('dw-fs-summary');
         if (!el) { if (onComplete) onComplete(); return; }
+
+        // 立即停止 Free Game BGM
+        try { DragonWolf.Audio.bgmStop(); } catch(e) {}
+
+        // 顯示 overlay
         var amtEl = document.getElementById('dw-fs-summary-amount');
         if (amtEl) amtEl.textContent = totalWin.toLocaleString();
         el.classList.remove('hidden');
         el.classList.add('dw-overlay-active');
-        try { DragonWolf.Audio.play('win_big'); } catch(e) {}
 
-        var btn = document.getElementById('dw-btn-fs-collect');
-        if (btn) {
-            btn.onclick = function() {
-                el.classList.remove('dw-overlay-active');
-                el.classList.add('hidden');
-                if (onComplete) onComplete();
-            };
+        // 判斷大贏閾值
+        var bet = 0;
+        try { bet = DragonWolf.State.getBet(); } catch(e) {}
+        var isBigWin = (totalWin >= bet * 50);
+        var delay    = isBigWin ? 8000 : 3000;
+
+        if (isBigWin) {
+            try { DragonWolf.Audio.play('free-bigwin'); } catch(e) {}
         }
+
+        var self = this;
+        this._fsSummaryTimer = setTimeout(function() {
+            self._fsSummaryTimer = null;
+            el.classList.remove('dw-overlay-active');
+            el.classList.add('hidden');
+            if (onComplete) onComplete();
+        }, delay);
     }
 };
