@@ -100,15 +100,23 @@ DragonWolf.Animations = {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 1800);
 
-        // 5 秒後結束
-        setTimeout(function() {
-            el.classList.remove('dw-trans-playing');
-            el.classList.add('hidden');
-            setTimeout(function() {
-                el.style.opacity = '';
-                if (onComplete) onComplete();
-            }, 100);
-        }, DragonWolf.Config.FS_TRANSITION_DURATION);
+        // 使用 rAF 精確計時結束轉場（避免手機端 setTimeout 被節流導致延遲）
+        var duration  = DragonWolf.Config.FS_TRANSITION_DURATION;
+        var startTime = null;
+        function checkEnd(ts) {
+            if (startTime === null) startTime = ts;
+            if (ts - startTime >= duration) {
+                el.classList.remove('dw-trans-playing');
+                el.classList.add('hidden');
+                setTimeout(function() {
+                    el.style.opacity = '';
+                    if (onComplete) onComplete();
+                }, 100);
+            } else {
+                requestAnimationFrame(checkEnd);
+            }
+        }
+        requestAnimationFrame(checkEnd);
     },
 
     /** 將龍/狼主圖 src 複製到殘影 ghost div 的 background-image */

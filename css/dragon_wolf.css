@@ -1414,18 +1414,18 @@
     to   { opacity: 1; }
 }
 
-/* 郎君綻放（從墨水中心由小到大，放大 50%） */
+/* 郎君綻放（從墨水中心由小到大，scale 1.2） */
 @keyframes dw-lord-bloom {
     0%   { transform: translate(-50%, -55%) scale(0); opacity: 0; }
-    50%  { transform: translate(-50%, -55%) scale(1.77); opacity: 1; }
-    75%  { transform: translate(-50%, -55%) scale(1.43); opacity: 1; }
-    100% { transform: translate(-50%, -55%) scale(1.5); opacity: 1; }
+    50%  { transform: translate(-50%, -55%) scale(1.42); opacity: 1; }
+    75%  { transform: translate(-50%, -55%) scale(1.14); opacity: 1; }
+    100% { transform: translate(-50%, -55%) scale(1.2); opacity: 1; }
 }
 
-/* 金光閃爍（郎君出現後持續閃爍） */
+/* 金光閃爍（郎君出現後持續閃爍）— 改用 opacity 避免 filter 佔用 CPU 主執行緒 */
 @keyframes dw-lord-gold-flash {
-    0%, 100% { filter: drop-shadow(0 0 40px var(--dw-accent-gold)) brightness(1.1); }
-    50%       { filter: drop-shadow(0 0 90px rgba(255, 215, 0, 1)) drop-shadow(0 0 130px rgba(255, 180, 50, 0.8)) brightness(1.5); }
+    0%, 100% { opacity: 0.85; }
+    50%       { opacity: 1; }
 }
 
 /* 狂傲 pulse（笑聲期間縮放） */
@@ -1434,11 +1434,11 @@
     50%      { transform: scale(1.15); }
 }
 
-/* 光暈擴展 */
+/* 光暈擴展 — 改用 transform:scale 避免 width/height 動畫觸發 layout 佔用主執行緒 */
 @keyframes dw-glow-expand {
-    0%   { width: 60px; height: 60px; opacity: 0; }
+    0%   { transform: translate(-50%, -50%) scale(1); opacity: 0; }
     30%  { opacity: 0.6; }
-    100% { width: 500px; height: 500px; opacity: 0.25; }
+    100% { transform: translate(-50%, -50%) scale(8.33); opacity: 0.25; }
 }
 
 /* 文字上滑出現 */
