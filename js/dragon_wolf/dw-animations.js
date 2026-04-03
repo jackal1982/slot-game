@@ -100,27 +100,40 @@ DragonWolf.Animations = {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 1800);
 
-        // 轉場結束：監聽 dw-overlay-fadeout 的 animationend（需 filter animationName
-        // 避免子元素 dw-lord-gold-flash / dw-lord-pulse 的 bubble 事件誤觸發）
-        // 同時保留 setTimeout fallback，確保手機上 animationend 未觸發時仍能完成
-        var done = false;
-        var finish = function() {
-            if (done) return;
-            done = true;
-            el.removeEventListener('animationend', onAnimEnd);
+        // 文字出現（3s）— 直接用 JS 控制，不依賴 CSS animation-delay
+        // 原因：手機版 CSS animation-delay 在多動畫並行時可能被截斷，導致文字不出現
+        var textEl = document.getElementById('dw-trans-text');
+        if (textEl) {
+            textEl.style.opacity = '0';
+            textEl.style.transform = 'translateX(-50%) translateY(30px)';
+            textEl.style.transition = '';
+        }
+        setTimeout(function() {
+            var tEl = document.getElementById('dw-trans-text');
+            if (tEl) {
+                tEl.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                tEl.style.opacity = '1';
+                tEl.style.transform = 'translateX(-50%) translateY(0)';
+            }
+        }, 3000);
+
+        // 轉場結束：使用固定 setTimeout，不依賴 animationend
+        // 原因：手機版多動畫元素的 animationend 事件行為不可靠，bubble 事件可能
+        // 在 T=3.55s（dw-lord-pulse 結束）時提前觸發，截斷文字動畫
+        setTimeout(function() {
             el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
+            // 清除文字 inline styles，為下次觸發重置
+            var tEl = document.getElementById('dw-trans-text');
+            if (tEl) {
+                tEl.style.opacity = '';
+                tEl.style.transform = '';
+                tEl.style.transition = '';
+            }
             setTimeout(function() {
-                el.style.opacity = '';
                 if (onComplete) onComplete();
             }, 100);
-        };
-        var onAnimEnd = function(e) {
-            if (e.animationName === 'dw-overlay-fadeout') finish();
-        };
-        el.addEventListener('animationend', onAnimEnd);
-        // Safety fallback：FS_TRANSITION_DURATION + 200ms 緩衝
-        setTimeout(finish, DragonWolf.Config.FS_TRANSITION_DURATION + 200);
+        }, DragonWolf.Config.FS_TRANSITION_DURATION);
     },
 
     /** 將龍/狼主圖 src 複製到殘影 ghost div 的 background-image */
