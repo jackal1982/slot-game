@@ -22,7 +22,7 @@
 
         <div class="lobby-balance-bar">
             <span class="lobby-balance-label">BALANCE:</span>
-            <span id="lobby-balance-amount">10,000</span>
+            <span id="lobby-balance-amount">50,000</span>
         </div>
 
         <div class="lobby-main">
@@ -33,6 +33,26 @@
         <div class="lobby-footer">
             <button id="lobby-btn-sound">SOUND: ON</button>
             <button id="lobby-btn-music">MUSIC: ON</button>
+        </div>
+
+        <!-- Low Balance Popup -->
+        <div id="low-balance-overlay" class="lb-overlay" style="display:none;">
+            <div id="low-balance-popup" class="lb-popup">
+                <div id="lb-content-ask">
+                    <h2 class="lb-title">餘額過低</h2>
+                    <p class="lb-msg">您的餘額不足 1,000，是否自動補值到 50,000？</p>
+                    <p class="lb-current">當前餘額：<span id="lb-current-amount"></span></p>
+                    <div class="lb-buttons">
+                        <button id="lb-btn-yes" class="lb-btn lb-btn-yes">是</button>
+                        <button id="lb-btn-no" class="lb-btn lb-btn-no">否</button>
+                    </div>
+                </div>
+                <div id="lb-content-success" style="display:none;">
+                    <div class="lb-success-icon">✓</div>
+                    <h2 class="lb-title">充值成功！</h2>
+                    <p class="lb-msg">餘額已補值至 50,000</p>
+                </div>
+            </div>
         </div>
     </div>
 

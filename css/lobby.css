@@ -350,6 +350,126 @@
     }
 }
 
+/* ── Low Balance Popup ────────────────────── */
+.lb-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 25, 41, 0.72);
+    backdrop-filter: blur(4px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.lb-popup {
+    background: #fff;
+    border-radius: 18px;
+    padding: 36px 32px 28px;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 16px 48px rgba(0, 77, 153, 0.28);
+    text-align: center;
+    position: relative;
+}
+
+.lb-popup.lb-pop-in {
+    animation: lbPopIn 380ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes lbPopIn {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.lb-title {
+    margin: 0 0 12px;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.lb-msg {
+    margin: 0 0 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.lb-current {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+#lb-current-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent-gold);
+}
+
+.lb-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.lb-btn {
+    flex: 1;
+    max-width: 140px;
+    padding: 13px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 150ms, transform 150ms;
+    letter-spacing: 1px;
+}
+
+.lb-btn:hover  { opacity: 0.88; transform: scale(1.03); }
+.lb-btn:active { transform: scale(0.97); }
+.lb-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.lb-btn-yes {
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-amber) 100%);
+    color: #fff;
+}
+
+.lb-btn-no {
+    background: #fff;
+    border: 2px solid var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+/* Success state */
+.lb-success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-amber) 100%);
+    color: #fff;
+    font-size: 32px;
+    line-height: 64px;
+    margin: 0 auto 16px;
+    box-shadow: 0 4px 16px rgba(0, 153, 255, 0.35);
+}
+
+/* RWD */
+@media (max-width: 480px) {
+    .lb-popup { padding: 28px 20px 22px; }
+    .lb-title { font-size: 19px; }
+    .lb-msg { font-size: 14px; }
+    .lb-btn { padding: 12px 0; font-size: 15px; }
+}
+
+@media (max-width: 360px) {
+    .lb-popup { padding: 24px 16px 18px; border-radius: 14px; }
+    .lb-buttons { gap: 8px; }
+}
+
 /* Small mobile */
 @media (max-width: 360px) {
     .lobby-header h1 { font-size: 18px; }

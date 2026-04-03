@@ -112,6 +112,79 @@ SlotGame.Lobby = {
                 self.updateSettingsDisplay();
             });
         }
+
+        // Low balance popup buttons
+        var btnYes = document.getElementById('lb-btn-yes');
+        var btnNo  = document.getElementById('lb-btn-no');
+
+        if (btnYes) {
+            btnYes.addEventListener('click', function() {
+                if (btnYes.disabled) return;
+                btnYes.disabled = true;
+                btnNo.disabled  = true;
+
+                SlotGame.Platform.setBalance(50000);
+                self.updateBalance();
+
+                var contentAsk     = document.getElementById('lb-content-ask');
+                var contentSuccess = document.getElementById('lb-content-success');
+                if (contentAsk)     contentAsk.style.display     = 'none';
+                if (contentSuccess) contentSuccess.style.display = '';
+
+                setTimeout(function() {
+                    self.hideLowBalancePopup();
+                    btnYes.disabled = false;
+                    btnNo.disabled  = false;
+                }, 3000);
+            });
+        }
+
+        if (btnNo) {
+            btnNo.addEventListener('click', function() {
+                self.hideLowBalancePopup();
+            });
+        }
+    },
+
+    // ── Low Balance Popup ─────────────────────────────
+
+    checkLowBalance: function() {
+        if (SlotGame.Platform.getBalance() < 1000) {
+            this.showLowBalancePopup();
+        }
+    },
+
+    showLowBalancePopup: function() {
+        var overlay        = document.getElementById('low-balance-overlay');
+        var popup          = document.getElementById('low-balance-popup');
+        var contentAsk     = document.getElementById('lb-content-ask');
+        var contentSuccess = document.getElementById('lb-content-success');
+        var currentAmount  = document.getElementById('lb-current-amount');
+
+        if (!overlay) return;
+
+        // Reset to ask state
+        if (contentAsk)     contentAsk.style.display     = '';
+        if (contentSuccess) contentSuccess.style.display = 'none';
+
+        // Show current balance
+        if (currentAmount) {
+            currentAmount.textContent = SlotGame.Platform.getBalance().toLocaleString();
+        }
+
+        // Trigger pop-in animation
+        if (popup) {
+            popup.classList.remove('lb-pop-in');
+            void popup.offsetHeight; // reflow
+            popup.classList.add('lb-pop-in');
+        }
+
+        overlay.style.display = 'flex';
+    },
+
+    hideLowBalancePopup: function() {
+        var overlay = document.getElementById('low-balance-overlay');
+        if (overlay) overlay.style.display = 'none';
     },
 
     _launchedFromLobby: false,

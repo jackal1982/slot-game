@@ -5,7 +5,7 @@
  */
 SlotGame.Platform = {
     _state: {
-        totalBalance: 10000,
+        totalBalance: 50000,
         currentGame: null,
         games: {
             slot_game: {
@@ -122,7 +122,7 @@ SlotGame.Platform = {
             if (legacyRaw) {
                 var legacy = JSON.parse(legacyRaw);
                 this._state.totalBalance = (typeof legacy.balance === 'number' && legacy.balance >= 0)
-                    ? legacy.balance : 10000;
+                    ? legacy.balance : 50000;
                 if (typeof legacy.betIndex === 'number') {
                     this._state.games.slot_game.betIndex = legacy.betIndex;
                 }
@@ -185,7 +185,7 @@ SlotGame.Platform = {
      */
     reset: function() {
         this._state = {
-            totalBalance: 10000,
+            totalBalance: 50000,
             currentGame: null,
             games: { slot_game: { betIndex: 2, jackpotPool: 5000 }, dragon_wolf: { betIndex: 0 } },
             settings: { soundEnabled: true, musicEnabled: true, turboMode: false }
