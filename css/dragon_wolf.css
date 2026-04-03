@@ -742,10 +742,8 @@
         dw-lord-pulse      0.35s 1.8s ease-in-out 5;
 }
 
-/* Phase 4: 文字出現 (3~3.5s) */
-#dw-fs-transition.dw-trans-playing #dw-trans-text {
-    animation: dw-text-appear 0.5s 3s ease-out forwards;
-}
+/* Phase 4: 文字出現由 JS setTimeout(3000) 控制（CSS transition），不使用 CSS animation-delay
+   原因：手機版多動畫並行時 animation-delay 不可靠 */
 
 /* Phase 5: 整體淡出 (4.2~5s) */
 #dw-fs-transition.dw-trans-playing {
