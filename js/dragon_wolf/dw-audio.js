@@ -82,7 +82,10 @@ DragonWolf.Audio = {
     _loadSfxFiles: function() {
         if (!this.ctx) return;
         var self  = this;
-        var files = { laugh: 'audio/dragon_wolf/dw-laugh.mp3' };
+        var files = {
+            laugh:        'audio/dragon_wolf/dw-laugh.mp3',
+            'free-bigwin': 'audio/dragon_wolf/free-bigwin.mp3'
+        };
         var keys  = Object.keys(files);
 
         function loadOne(key, url) {
@@ -287,6 +290,27 @@ DragonWolf.Audio = {
             case 'meteor_impact': this._sfxMeteorImpact(); break;
             case 'fs_intro':      this._sfxFsIntro();      break;
             case 'laugh':         this._sfxLaugh();        break;
+            case 'free-bigwin':   this._sfxFreeBigwin();   break;
+        }
+    },
+
+    _sfxFreeBigwin: function() {
+        if (!this._playSfxBuffer('free-bigwin')) {
+            /* fallback: 用合成音代替，避免無聲 */
+            try {
+                var osc  = this.ctx.createOscillator();
+                var gain = this.ctx.createGain();
+                var t    = this.ctx.currentTime;
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, t);
+                osc.frequency.linearRampToValueAtTime(880, t + 0.5);
+                gain.gain.setValueAtTime(0.3, t);
+                gain.gain.linearRampToValueAtTime(0, t + 1.0);
+                osc.connect(gain);
+                gain.connect(this.soundGain);
+                osc.start(t);
+                osc.stop(t + 1.0);
+            } catch(e) {}
         }
     },
 
