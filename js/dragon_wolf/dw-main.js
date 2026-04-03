@@ -285,7 +285,7 @@ DragonWolf.Main = {
 
         // 播放 FS 總結，玩家按「收取」後才切回 Base Game BGM
         DragonWolf.Animations.playFSSummary(totalWin, function() {
-            try { DragonWolf.Audio.bgmSetMode('base'); } catch(e) {}
+            try { DragonWolf.Audio.bgmStart('base'); } catch(e) {}
             DragonWolf.Main._toIdle(false);
         });
     },
