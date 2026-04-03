@@ -132,53 +132,98 @@ DragonWolf.Animations = {
     // ── 氣功（降龍十八掌風格）動畫 ─────────────────────────
 
     /**
-     * 播放黑白郎君發氣功動畫，並以隕石墜落方式放置 Wild
+     * 播放黑白郎君發氣功動畫（分級聚氣），並以隕石墜落方式放置 Wild
      * @param {string[][]} grid      - 直接修改的 grid
+     * @param {number}     wildCount - 預先決定的百搭數量（由 randomWilds.previewCount 取得）
      * @param {Function}   onComplete - ({ positions, count }) 動畫結束後呼叫
      */
-    playQigong: function(grid, onComplete) {
-        var self = this;
+    playQigong: function(grid, wildCount, onComplete) {
+        var self     = this;
         var reelGrid = document.getElementById('dw-reel-grid');
-
-        // 顯示氣功 overlay，觸發 CSS 動畫序列
         var qigongEl = document.getElementById('dw-qigong-overlay');
+        var ballEl   = document.getElementById('dw-qg-ball');
+
+        // 決定 tier（聚氣時間）
+        var tier;
+        if      (wildCount <= 4) { tier = 1; }
+        else if (wildCount <= 8) { tier = 2; }
+        else                     { tier = 3; }
+
+        // tier 對應的聚氣時長（enter 0.5s 之後的純聚氣時間）
+        var CHARGE_MS = [0, 1500, 3500, 6500][tier];
+        var FIRE_AT   = 500 + CHARGE_MS;   // 發射時間（ms from start）
+
+        // 設定球大小
+        var ballSize = ['', 'dw-ball-small', 'dw-ball-medium', 'dw-ball-large'][tier];
+
+        // ── 顯示 overlay，加入 tier class ──
         if (qigongEl) {
-            qigongEl.classList.remove('hidden');
-            void qigongEl.offsetWidth; // 強制 reflow
-            qigongEl.classList.add('dw-qigong-active');
+            qigongEl.classList.remove('hidden', 'dw-tier1', 'dw-tier2', 'dw-tier3');
+            void qigongEl.offsetWidth;
+            qigongEl.classList.add('dw-qigong-active', 'dw-tier' + tier);
+        }
+        if (ballEl) {
+            ballEl.classList.remove('dw-ball-small', 'dw-ball-medium', 'dw-ball-large', 'dw-ball-fire');
+            ballEl.classList.add(ballSize);
         }
 
-        // 蓄力階段（0.5s）：螢幕震動 + 笑聲
+        // ── Phase 1（500ms）：小震動 + 笑聲 ──
         setTimeout(function() {
-            if (reelGrid) reelGrid.classList.add('dw-screen-shake');
+            if (reelGrid) reelGrid.classList.add('dw-screen-shake-small');
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 500);
 
-        // 發射時機（1.5s）：停止震動 + 掌力音效 + 計算 Wild
+        // ── Phase 2 切換（2500ms，tier 2/3）：中震動 ──
+        if (tier >= 2) {
+            setTimeout(function() {
+                if (reelGrid) {
+                    reelGrid.classList.remove('dw-screen-shake-small');
+                    reelGrid.classList.add('dw-screen-shake-medium');
+                }
+            }, 2500);
+        }
+
+        // ── Phase 3 切換（4500ms，tier 3）：大震動 ──
+        if (tier >= 3) {
+            setTimeout(function() {
+                if (reelGrid) {
+                    reelGrid.classList.remove('dw-screen-shake-medium');
+                    reelGrid.classList.add('dw-screen-shake-large');
+                }
+            }, 4500);
+        }
+
+        // ── 發射（FIRE_AT）：停震 + 音效 + 計算 Wild + 發球 ──
         var result;
         setTimeout(function() {
-            if (reelGrid) reelGrid.classList.remove('dw-screen-shake');
+            if (reelGrid) reelGrid.classList.remove('dw-screen-shake-small', 'dw-screen-shake-medium', 'dw-screen-shake-large');
             try { DragonWolf.Audio.play('palm_hit'); } catch(e) {}
             result = DragonWolf.Features.randomWilds.apply(grid);
-        }, 1500);
 
-        // 隕石墜落放置 Wild（2.2s 開始）
+            if (ballEl) {
+                void ballEl.offsetWidth;
+                ballEl.classList.add('dw-ball-fire');
+            }
+        }, FIRE_AT);
+
+        // ── 隕石墜落放置 Wild（發射後 700ms）──
         setTimeout(function() {
             var fireTime = Date.now();
-
             self._placeWildsMeteor(result.positions, 0, function() {
-                // 確保等到角色淡出完成（發射後 1.8s）再隱藏 overlay
                 var elapsed  = Date.now() - fireTime;
                 var waitMore = Math.max(0, 1800 - elapsed);
                 setTimeout(function() {
                     if (qigongEl) {
-                        qigongEl.classList.remove('dw-qigong-active');
+                        qigongEl.classList.remove('dw-qigong-active', 'dw-tier1', 'dw-tier2', 'dw-tier3');
                         qigongEl.classList.add('hidden');
+                    }
+                    if (ballEl) {
+                        ballEl.classList.remove('dw-ball-small', 'dw-ball-medium', 'dw-ball-large', 'dw-ball-fire');
                     }
                     if (onComplete) onComplete(result);
                 }, waitMore);
             });
-        }, 2200);
+        }, FIRE_AT + 700);
     },
 
     /**
