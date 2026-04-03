@@ -100,15 +100,27 @@ DragonWolf.Animations = {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 1800);
 
-        // 5 秒後結束
-        setTimeout(function() {
+        // 轉場結束：監聽 dw-overlay-fadeout 的 animationend（需 filter animationName
+        // 避免子元素 dw-lord-gold-flash / dw-lord-pulse 的 bubble 事件誤觸發）
+        // 同時保留 setTimeout fallback，確保手機上 animationend 未觸發時仍能完成
+        var done = false;
+        var finish = function() {
+            if (done) return;
+            done = true;
+            el.removeEventListener('animationend', onAnimEnd);
             el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
             setTimeout(function() {
                 el.style.opacity = '';
                 if (onComplete) onComplete();
             }, 100);
-        }, DragonWolf.Config.FS_TRANSITION_DURATION);
+        };
+        var onAnimEnd = function(e) {
+            if (e.animationName === 'dw-overlay-fadeout') finish();
+        };
+        el.addEventListener('animationend', onAnimEnd);
+        // Safety fallback：FS_TRANSITION_DURATION + 200ms 緩衝
+        setTimeout(finish, DragonWolf.Config.FS_TRANSITION_DURATION + 200);
     },
 
     /** 將龍/狼主圖 src 複製到殘影 ghost div 的 background-image */

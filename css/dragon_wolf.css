@@ -1414,12 +1414,12 @@
     to   { opacity: 1; }
 }
 
-/* 郎君綻放（從墨水中心由小到大，放大 50%） */
+/* 郎君綻放（從墨水中心由小到大，縮小至 80% = 1.5×0.8=1.2） */
 @keyframes dw-lord-bloom {
     0%   { transform: translate(-50%, -55%) scale(0); opacity: 0; }
-    50%  { transform: translate(-50%, -55%) scale(1.77); opacity: 1; }
-    75%  { transform: translate(-50%, -55%) scale(1.43); opacity: 1; }
-    100% { transform: translate(-50%, -55%) scale(1.5); opacity: 1; }
+    50%  { transform: translate(-50%, -55%) scale(1.42); opacity: 1; }
+    75%  { transform: translate(-50%, -55%) scale(1.14); opacity: 1; }
+    100% { transform: translate(-50%, -55%) scale(1.2); opacity: 1; }
 }
 
 /* 金光閃爍（郎君出現後持續閃爍） */
