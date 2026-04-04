@@ -695,71 +695,72 @@
     animation: dw-dark-bg-in 0.4s ease-out forwards;
 }
 
-/* Phase 1: 龍狼衝刺入場 (0~1s) */
+/* Phase 1: 龍狼衝刺入場 (0~2s)  — 放慢 50%，原 1s → 2s */
 #dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap {
-    animation: dw-dragon-rush 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    animation: dw-dragon-rush 2s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
     mix-blend-mode: screen;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap {
-    animation: dw-wolf-rush 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    animation: dw-wolf-rush 2s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
     mix-blend-mode: screen;
 }
 
-/* Phase 1: 殘影跟隨 (交錯延遲) */
+/* Phase 1: 殘影跟隨 (交錯延遲) — 等比 ×2 */
 #dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap .dw-trans-ghost:nth-child(1) {
-    animation: dw-ghost-trail 0.9s 0.04s ease-out forwards;
+    animation: dw-ghost-trail 1.8s 0.08s ease-out forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap .dw-trans-ghost:nth-child(2) {
-    animation: dw-ghost-trail 0.85s 0.08s ease-out forwards;
+    animation: dw-ghost-trail 1.7s 0.16s ease-out forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-dragon-wrap .dw-trans-ghost:nth-child(3) {
-    animation: dw-ghost-trail 0.8s 0.12s ease-out forwards;
+    animation: dw-ghost-trail 1.6s 0.24s ease-out forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap .dw-trans-ghost:nth-child(1) {
-    animation: dw-ghost-trail 0.9s 0.04s ease-out forwards;
+    animation: dw-ghost-trail 1.8s 0.08s ease-out forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap .dw-trans-ghost:nth-child(2) {
-    animation: dw-ghost-trail 0.85s 0.08s ease-out forwards;
+    animation: dw-ghost-trail 1.7s 0.16s ease-out forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-wolf-wrap .dw-trans-ghost:nth-child(3) {
-    animation: dw-ghost-trail 0.8s 0.12s ease-out forwards;
+    animation: dw-ghost-trail 1.6s 0.24s ease-out forwards;
 }
 
-/* Phase 1: 速度線閃現 (0~0.8s) */
+/* Phase 1: 速度線閃現 (0~1.6s) — 等比 ×2 */
 #dw-fs-transition.dw-trans-playing #dw-trans-speed-lines {
-    animation: dw-speed-flash 0.8s ease-out forwards;
+    animation: dw-speed-flash 1.6s ease-out forwards;
 }
 
-/* Phase 2: 水墨爆發 (1~1.8s) */
+/* Phase 2: 水墨爆發 (2~2.8s) — delay +1s */
 #dw-fs-transition.dw-trans-playing #dw-trans-ink-burst {
-    animation: dw-ink-expand 0.8s 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: dw-ink-expand 0.8s 1.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-ink-wash {
-    animation: dw-ink-wash-in 0.8s 1s ease-out forwards;
+    animation: dw-ink-wash-in 0.8s 2s ease-out forwards;
 }
 
-/* Phase 3: 郎君綻放 (1.8~3s) */
+/* Phase 3: 郎君綻放 (2.8~4s) — delay +1s */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-wrap {
-    animation: dw-lord-bloom 1.2s 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: dw-lord-bloom 1.2s 2.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
-    animation: dw-glow-expand 1.2s 1.8s ease-out forwards,
-               dw-lord-glow-pulse 0.7s 3.0s ease-in-out 4;
+    animation: dw-glow-expand 1.2s 2.8s ease-out forwards,
+               dw-lord-glow-pulse 0.7s 4.0s ease-in-out 4;
 }
-/* Phase 3: 郎君 pulse（只用 transform，GPU 可合成） */
+/* Phase 3: 郎君 pulse（只用 transform，GPU 可合成） — delay +1s */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw {
-    animation: dw-lord-pulse 0.35s 1.8s ease-in-out 5;
+    animation: dw-lord-pulse 0.35s 2.8s ease-in-out 5;
 }
 
-/* Phase 4: 文字出現 — 純 CSS animation-delay，不依賴 JS setTimeout（Safari 手機主線程阻塞時 timer 失準） */
+/* Phase 4: 文字出現 — delay +1s */
 #dw-fs-transition.dw-trans-playing #dw-trans-text {
-    animation: dw-text-appear 0.5s 3s ease-out forwards;
+    animation: dw-text-appear 0.5s 4s ease-out forwards;
 }
 
-/* Phase 5: 整體淡出 — 放在 #dw-trans-content 而非 position:fixed 父容器，
+/* Phase 5: 整體淡出 — delay +1s
+   放在 #dw-trans-content 而非 position:fixed 父容器，
    避免 iOS Safari 合成層合併導致子元素 animation forwards 不生效 */
 #dw-fs-transition.dw-trans-playing #dw-trans-content {
-    animation: dw-overlay-fadeout 0.8s 4.2s ease-in forwards;
+    animation: dw-overlay-fadeout 0.8s 5.2s ease-in forwards;
 }
 
 /* ── 氣功 Overlay（降龍十八掌風格）──────────────────────── */

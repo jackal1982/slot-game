@@ -265,8 +265,8 @@ DragonWolf.Main = {
             DragonWolf.Features.freeSpins.start(count);
             state.inFreeSpins = true;
 
-            // 切換為 Free Game BGM
-            try { DragonWolf.Audio.bgmSetMode('free'); } catch(e) {}
+            // 啟動 Free Game BGM（bgmStop 已在轉場動畫開始時呼叫）
+            try { DragonWolf.Audio.bgmStart('free'); } catch(e) {}
 
             // 更新 HUD
             DragonWolf.UI.updateFreeSpinsHud();
