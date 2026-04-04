@@ -144,10 +144,10 @@ SlotGame.Audio = {
                 // bgmStart() 若 ctx 仍 suspended 會立即 return；
                 // onstatechange(running) 時再由內部的 !_bgmPlaying 邏輯補播。
                 self.ctx.resume().then(function() {
-                    _restoreBgm();
+                    setTimeout(function() { _restoreBgm(); }, 500);
                 }).catch(function() {});
             } else if (self.ctx.state === 'running') {
-                _restoreBgm();
+                setTimeout(function() { _restoreBgm(); }, 500);
             }
             // 不管 resume 成功與否，加觸控監聽作為 iOS fallback
             _addGestureListeners();
@@ -416,6 +416,27 @@ SlotGame.Audio = {
         }, 600);
 
         this._bgmGain = null;
+    },
+
+    /**
+     * BGM 健康檢查：MUSIC ON 但 BGM 沒在播時重啟。
+     * 在 spin 流程中呼叫，利用已有的 user gesture 鏈來恢復 iOS 靜音。
+     */
+    ensureBgm: function() {
+        if (!SlotGame.State.musicEnabled) return;
+        if (this._bgmPlaying) return;
+        // 清除殘留狀態，完全重建 BGM
+        if (this._bgmSchedulerId) {
+            clearInterval(this._bgmSchedulerId);
+            this._bgmSchedulerId = null;
+        }
+        var nodes = this._bgmActiveNodes;
+        this._bgmActiveNodes = [];
+        for (var i = 0; i < nodes.length; i++) {
+            try { nodes[i].stop(); } catch(e) {}
+        }
+        this._bgmGain = null;
+        this.bgmStart();
     },
 
     /**
