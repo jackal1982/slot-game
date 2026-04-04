@@ -89,12 +89,19 @@ SlotGame.Audio = {
         var _needsGestureResume = false;
 
         var _restoreBgm = function() {
-            // 不依賴 _bgmWasPlaying：iOS 上 onstatechange(suspended) 可能在
-            // visibilitychange(hidden) 之前觸發，導致 bgmStop() 先把
-            // _bgmPlaying 清為 false，_bgmWasPlaying 因此抓到 false。
-            // 修正：只要 MUSIC 開關是 ON，就強制清除 guard 並重新啟動 BGM。
             if (SlotGame.State.musicEnabled) {
-                self._bgmPlaying = false; // 強制清除 guard，確保 bgmStart 可重建 scheduler
+                // 強制清除所有 BGM 狀態，確保 bgmStart 完全重建
+                if (self._bgmSchedulerId) {
+                    clearInterval(self._bgmSchedulerId);
+                    self._bgmSchedulerId = null;
+                }
+                var nodes = self._bgmActiveNodes;
+                self._bgmActiveNodes = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    try { nodes[i].stop(); } catch(e) {}
+                }
+                self._bgmGain = null; // bgmStart 會建立全新 GainNode
+                self._bgmPlaying = false;
                 self.bgmStart();
             }
             _bgmWasPlaying = false;

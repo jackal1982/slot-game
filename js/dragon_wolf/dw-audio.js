@@ -67,12 +67,25 @@ DragonWolf.Audio = {
         var _needsGestureResume = false;
 
         var _restoreBgm = function() {
-            // 不依賴 _bgmWasRunning：iOS 上 onstatechange(suspended) 可能在
-            // visibilitychange(hidden) 之前觸發，導致 bgmStop() 先把
-            // _bgmRunning 清為 false，_bgmWasRunning 因此抓到 false。
-            // 修正：只要 MUSIC 開關是 ON，就強制清除 guard 並重新啟動 BGM。
             if (DragonWolf.State.musicEnabled) {
-                self._bgmRunning = false; // 強制清除 guard，確保 bgmStart 能重建 source
+                // 強制停止並清除舊 source node（iOS suspend 後節點永久失效）
+                if (self._bgmSource) {
+                    try { self._bgmSource.stop(); } catch(e) {}
+                    try { self._bgmSource.disconnect(); } catch(e) {}
+                    self._bgmSource = null;
+                }
+                // 重建 _bgmGain：iOS Safari 的 cancelScheduledValues 不可靠，
+                // 舊的 fade-out automation 可能讓 gain 卡在 0，導致新 source 無聲。
+                // 直接替換成全新的 GainNode 才能根治。
+                if (self._bgmGain) {
+                    try { self._bgmGain.disconnect(); } catch(e) {}
+                }
+                if (self.ctx && self.masterGain) {
+                    self._bgmGain = self.ctx.createGain();
+                    self._bgmGain.gain.value = 1.0;
+                    self._bgmGain.connect(self.masterGain);
+                }
+                self._bgmRunning = false;
                 self.bgmStart(_lastBgmMode);
             }
             _bgmWasRunning = false;
