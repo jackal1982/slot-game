@@ -88,6 +88,7 @@ SlotGame.Audio = {
             if (_bgmWasPlaying && SlotGame.State.musicEnabled) {
                 if (self._bgmMode !== _bgmWasMode) self.bgmSetMode(_bgmWasMode);
                 self.bgmStart();
+                _bgmWasPlaying = false; // 防止 fallback listener 重複恢復
             }
             _needsGestureResume = false;
         };
@@ -123,19 +124,14 @@ SlotGame.Audio = {
                     // iOS 上 resume() 可能 resolve 但 state 仍非 running
                     if (self.ctx.state === 'running') {
                         _restoreBgm();
-                    } else {
-                        // resume 成功但未 running，等用戶觸控
-                        _addGestureListeners();
                     }
-                }).catch(function() {
-                    // resume 被拒絕（iOS 無 user gesture），等用戶觸控
-                    _addGestureListeners();
-                });
+                }).catch(function() {});
             } else if (self.ctx.state === 'running') {
                 _restoreBgm();
-            } else {
-                _addGestureListeners();
             }
+            // 不管 resume 成功與否，加一次性觸控監聽作為 iOS fallback
+            // （_restoreBgm 已清除 _bgmWasPlaying，不會重複恢復）
+            _addGestureListeners();
         };
 
         document.addEventListener('visibilitychange', function() {

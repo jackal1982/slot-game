@@ -69,6 +69,7 @@ DragonWolf.Audio = {
         var _restoreBgm = function() {
             if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
                 self.bgmStart(_lastBgmMode);
+                _bgmWasRunning = false; // 防止 fallback listener 重複恢復
             }
             _needsGestureResume = false;
         };
@@ -104,18 +105,14 @@ DragonWolf.Audio = {
                     // iOS 上 resume() 可能 resolve 但 state 仍非 running
                     if (self.ctx.state === 'running') {
                         _restoreBgm();
-                    } else {
-                        _addGestureListeners();
                     }
-                }).catch(function() {
-                    // resume 被拒絕（iOS 無 user gesture），等用戶觸控
-                    _addGestureListeners();
-                });
+                }).catch(function() {});
             } else if (self.ctx.state === 'running') {
                 _restoreBgm();
-            } else {
-                _addGestureListeners();
             }
+            // 不管 resume 成功與否，加一次性觸控監聽作為 iOS fallback
+            // （_restoreBgm 已清除 _bgmWasRunning，不會重複恢復）
+            _addGestureListeners();
         };
 
         document.addEventListener('visibilitychange', function() {
