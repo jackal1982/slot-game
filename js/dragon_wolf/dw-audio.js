@@ -64,22 +64,63 @@ DragonWolf.Audio = {
         var self = this;
         var _bgmWasRunning = false;
         var _lastBgmMode   = 'base';
+        var _needsGestureResume = false;
+
+        var _restoreBgm = function() {
+            if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
+                self.bgmStart(_lastBgmMode);
+            }
+            _needsGestureResume = false;
+        };
+
+        // iOS fallback：resume AudioContext on next user gesture
+        var _gestureResumeHandler = function() {
+            if (!_needsGestureResume) return;
+            if (!self.ctx || self.ctx.state === 'running') {
+                _restoreBgm();
+                return;
+            }
+            self.ctx.resume().then(function() {
+                if (self.ctx.state === 'running') _restoreBgm();
+            }).catch(function() {});
+        };
+
+        var _addGestureListeners = function() {
+            _needsGestureResume = true;
+            document.addEventListener('touchstart', _gestureResumeHandler, { once: true });
+            document.addEventListener('click', _gestureResumeHandler, { once: true });
+        };
+
+        var _removeGestureListeners = function() {
+            _needsGestureResume = false;
+            document.removeEventListener('touchstart', _gestureResumeHandler);
+            document.removeEventListener('click', _gestureResumeHandler);
+        };
 
         var _resumeAudioAndBgm = function() {
             if (!self.ctx) return;
             if (self.ctx.state === 'suspended') {
                 self.ctx.resume().then(function() {
-                    if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
-                        self.bgmStart(_lastBgmMode);
+                    // iOS 上 resume() 可能 resolve 但 state 仍非 running
+                    if (self.ctx.state === 'running') {
+                        _restoreBgm();
+                    } else {
+                        _addGestureListeners();
                     }
+                }).catch(function() {
+                    // resume 被拒絕（iOS 無 user gesture），等用戶觸控
+                    _addGestureListeners();
                 });
-            } else if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
-                self.bgmStart(_lastBgmMode);
+            } else if (self.ctx.state === 'running') {
+                _restoreBgm();
+            } else {
+                _addGestureListeners();
             }
         };
 
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
+                _removeGestureListeners();
                 _bgmWasRunning = self._bgmRunning || false;
                 _lastBgmMode   = self._bgmMode || 'base';
                 self.bgmStop();
