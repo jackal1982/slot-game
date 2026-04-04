@@ -92,8 +92,9 @@ SlotGame.Audio = {
             // 不依賴 _bgmWasPlaying：iOS 上 onstatechange(suspended) 可能在
             // visibilitychange(hidden) 之前觸發，導致 bgmStop() 先把
             // _bgmPlaying 清為 false，_bgmWasPlaying 因此抓到 false。
-            // 修正：只要 MUSIC 開關是 ON，就直接恢復 BGM。
+            // 修正：只要 MUSIC 開關是 ON，就強制清除 guard 並重新啟動 BGM。
             if (SlotGame.State.musicEnabled) {
+                self._bgmPlaying = false; // 強制清除 guard，確保 bgmStart 可重建 scheduler
                 self.bgmStart();
             }
             _bgmWasPlaying = false;
@@ -107,8 +108,11 @@ SlotGame.Audio = {
                 _restoreBgm();
                 return;
             }
+            // iOS 上 ctx.resume() resolve 後 state 可能仍為 suspended，
+            // 不做 state 判斷，直接呼叫 _restoreBgm。
+            // bgmStart() 若 ctx 仍 suspended 會立即 return（由 onstatechange 補播）。
             self.ctx.resume().then(function() {
-                if (self.ctx.state === 'running') _restoreBgm();
+                _restoreBgm();
             }).catch(function() {});
         };
 
@@ -128,17 +132,17 @@ SlotGame.Audio = {
         var _resumeAudioAndBgm = function() {
             if (!self.ctx) return;
             if (self.ctx.state === 'suspended') {
+                // iOS 上 ctx.resume() resolve 後 state 可能仍為 suspended，
+                // 不做 state 判斷，直接呼叫 _restoreBgm。
+                // bgmStart() 若 ctx 仍 suspended 會立即 return；
+                // onstatechange(running) 時再由內部的 !_bgmPlaying 邏輯補播。
                 self.ctx.resume().then(function() {
-                    // iOS 上 resume() 可能 resolve 但 state 仍非 running
-                    if (self.ctx.state === 'running') {
-                        _restoreBgm();
-                    }
+                    _restoreBgm();
                 }).catch(function() {});
             } else if (self.ctx.state === 'running') {
                 _restoreBgm();
             }
-            // 不管 resume 成功與否，加一次性觸控監聽作為 iOS fallback
-            // （_restoreBgm 已清除 _bgmWasPlaying，不會重複恢復）
+            // 不管 resume 成功與否，加觸控監聽作為 iOS fallback
             _addGestureListeners();
         };
 
