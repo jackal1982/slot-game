@@ -85,11 +85,14 @@ SlotGame.Audio = {
         var _needsGestureResume = false;
 
         var _restoreBgm = function() {
-            if (_bgmWasPlaying && SlotGame.State.musicEnabled) {
-                if (self._bgmMode !== _bgmWasMode) self.bgmSetMode(_bgmWasMode);
+            // 不依賴 _bgmWasPlaying：iOS 上 onstatechange(suspended) 可能在
+            // visibilitychange(hidden) 之前觸發，導致 bgmStop() 先把
+            // _bgmPlaying 清為 false，_bgmWasPlaying 因此抓到 false。
+            // 修正：只要 MUSIC 開關是 ON，就直接恢復 BGM。
+            if (SlotGame.State.musicEnabled) {
                 self.bgmStart();
-                _bgmWasPlaying = false; // 防止 fallback listener 重複恢復
             }
+            _bgmWasPlaying = false;
             _needsGestureResume = false;
         };
 
