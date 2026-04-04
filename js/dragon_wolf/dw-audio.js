@@ -95,6 +95,9 @@ DragonWolf.Audio = {
         // iOS fallback：resume AudioContext on next user gesture
         var _gestureResumeHandler = function() {
             if (!_needsGestureResume) return;
+            // 只在 DW 遊戲中才恢復 DW BGM，避免切到 Slot 後誤啟 DW BGM
+            var _hash = window.location.hash.replace(/^#\/?/, '');
+            if (_hash !== 'game/dragon_wolf') { _needsGestureResume = false; return; }
             if (!self.ctx || self.ctx.state === 'running') {
                 _restoreBgm();
                 return;
@@ -123,6 +126,10 @@ DragonWolf.Audio = {
 
         var _resumeAudioAndBgm = function() {
             if (!self.ctx) return;
+            // 只在 BGM 原本有播、且當前是 DW 遊戲時才恢復 DW BGM
+            if (!_bgmWasRunning) return;
+            var _hash = window.location.hash.replace(/^#\/?/, '');
+            if (_hash !== 'game/dragon_wolf') return;
             if (self.ctx.state === 'suspended') {
                 // iOS 上 ctx.resume() resolve 後 state 可能仍為 suspended，
                 // 不做 state 判斷，直接呼叫 _restoreBgm。
@@ -285,32 +292,6 @@ DragonWolf.Audio = {
     bgmStop: function() {
         this._bgmRunning = false;
         this._stopBgmSource(0.15);
-    },
-
-    /**
-     * BGM 健康檢查：MUSIC ON 但 BGM 沒在播時重啟。
-     * 在 spin 流程中呼叫，利用已有的 user gesture 鏈來恢復 iOS 靜音。
-     */
-    ensureBgm: function() {
-        if (!DragonWolf.State.musicEnabled) return;
-        if (this._bgmRunning && this._bgmSource) return;
-        // 停掉失效的舊 source
-        if (this._bgmSource) {
-            try { this._bgmSource.stop(); } catch(e) {}
-            try { this._bgmSource.disconnect(); } catch(e) {}
-            this._bgmSource = null;
-        }
-        // 重建 _bgmGain（iOS 舊 GainNode 可能已卡在 0）
-        if (this._bgmGain) {
-            try { this._bgmGain.disconnect(); } catch(e) {}
-        }
-        if (this.ctx && this.masterGain) {
-            this._bgmGain = this.ctx.createGain();
-            this._bgmGain.gain.value = 1.0;
-            this._bgmGain.connect(this.masterGain);
-        }
-        this._bgmRunning = false;
-        this.bgmStart(this._bgmMode || 'base');
     },
 
     bgmSetMode: function(mode) {

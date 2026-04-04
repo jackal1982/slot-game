@@ -51,9 +51,6 @@ SlotGame.Main = {
         // Guard: can only spin in IDLE
         if (state.phase !== 'IDLE') return;
 
-        // BGM 健康檢查：AUTO 模式切回 App 後 BGM 可能靜音，利用 spin gesture 鏈恢復
-        try { SlotGame.Audio.ensureBgm(); } catch(e) {}
-
         // Check if in free spins
         var isFree = state.inFreeSpins;
 
