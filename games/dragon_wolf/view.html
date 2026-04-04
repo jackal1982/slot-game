@@ -100,6 +100,26 @@
         <button id="dw-btn-music" class="dw-icon-btn">MUSIC: ON</button>
     </div>
 
+    <!-- Debug Panel（轉場動畫 debug 用） -->
+    <div id="dw-debug-panel" style="
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 99999;
+        background: rgba(0,0,0,0.85);
+        color: #0f0;
+        font-family: monospace;
+        font-size: 11px;
+        padding: 8px;
+        max-width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #0f0;
+        display: none;
+        pointer-events: none;
+        -webkit-transform: translateZ(0);
+    "></div>
+
     <!-- FS 轉場動畫（龍狼融合 → 水墨暈開 → 郎君綻放） -->
     <div id="dw-fs-transition" class="hidden">
       <div id="dw-trans-content">
