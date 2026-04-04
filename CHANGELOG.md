@@ -33,6 +33,37 @@
 - PR #56: CLAUDE.md 瘦身（297→239 行，-42%）+ 新增 CHANGELOG.md（PR 歷史與 Bug 記錄分離）+ 移除過時文件（ARCHITECTURE.md、PAYLINE_VISUAL_DESIGN.md）
 - PR #57: 黑白龍狼傳 Free Game 進場前先結算 Base Game 贏分（dw-main.js 時序重構：有贏線時先播 win cycle 再 Scatter 高亮再轉場）+ 兩款遊戲 Paytable 賠分根據 Bet 倍數動態調整（dw-ui.js: cfg.BASE_BET→State.getBet()、ui.js: sym.pay×betPerLine + 每次開啟重建）
 - PR #58: Fortune Slots Win Cycle 重構為 event-driven（animations.js: showWinLines 加 onComplete callback + _showNextWinLine 逐線播完一輪後自動推進；main.js: 移除 timer-based showDuration，改由 callback 驅動；stopWinLines 清除 callback 防止手動結算後重複觸發）
+- PR #59: 黑白龍狼傳 Free Game 轉場與氣功動畫全面升級
+- PR #60: DW 轉場動畫人物放大 50% + 龍狼完全重疊合體效果
+- PR #61: 更換黑白龍狼傳背景音樂（Normal + Free Game）
+- PR #62: 黑白龍狼傳 Free Game 結束 popup 自動關閉機制
+- PR #63: 修復 Free Game 結束後 Base BGM 未恢復播放
+- PR #64: 黑白龍狼傳三項動畫調整（笑聲同步、百搭並行放置、疊加效果）
+- PR #65: 初始餘額調整為 50,000 及低餘額充值 popup
+- PR #66: DW free-bigwin 音效 fallback 升級，補 debug log
+- PR #67: DW 四項動畫調整 — 龍狼融合/郎君強化/分級聚氣系統
+- PR #69: DW 轉場動畫手機版修復 + 黑白郎君縮小 80%
+- PR #70: DW 手機版 FS 轉場「免費遊戲」文字不顯示根因修復
+- PR #71: DW FS 轉場文字不顯示 — 移除父容器 CSS animation 防 Safari GPU 合成干擾
+- PR #72: DW FS 轉場文字不顯示 — will-change + isolation 強制獨立合成層
+- PR #73: DW FS 轉場文字不顯示 — 移除重複 CSS animation 改 JS 控制 pulse/glow
+- PR #74: DW FS 轉場最終修復 — CSS animation 回歸、class 控制、v=74 cache-busting
+- PR #75: DW FS 轉場改純 CSS animation-delay — 修復 Safari/Chrome 手機版
+- PR #76: DW FS 轉場父容器不動畫 opacity — 修復 iOS Safari 文字不顯示
+- PR #77: DW FS 轉場加入可見 debug overlay
+- PR #78: DW debug panel 改善 — 過濾噪音、觸控滾動、縮小字體
+- PR #79: DW FS 轉場 Safari iOS 凍結 — filter 改 GPU compositable
+- PR #80: DW 轉場金光效果修復 — img 不支援 ::after
+- PR #81: 修復手機切換 App 回來時音樂音效消失
+- PR #82: iOS 切換 App 回來後音樂不恢復 — user gesture fallback
+- PR #83: iOS 切換 App 回來後音效不恢復 — 必定觸發 gesture fallback
+- PR #84: iOS 切換 App 回來後 BGM 不恢復
+- PR #85: iOS 切回 App 後 BGM 不恢復 — 根治三大根因
+- PR #86: iOS 切回 App 後 BGM 不恢復（重新實作，根治三大根因）
+- PR #87: 根治 iOS BGM 不恢復 — 重建 GainNode 取代 cancelScheduledValues
+- PR #88: AUTO 模式切回 App 後 BGM 不恢復（spin 健康檢查 + 500ms 延遲）
+- PR #89: 修復兩款遊戲 BGM 同時播放（PR #88 引入的迴歸 bug）
+- PR #90: 黑白龍狼傳 Free Game 轉場優化 — 轉場動畫開始時停止 Base BGM（bgmStop + callback 改用 bgmStart('free')）+ 龍狼衝刺動畫放慢 50%（Phase 1 從 1s→2s，Phase 2~5 delay +1s，總時長 5.5s→6.5s）
 
 ## 已修復 Bug 完整記錄
 1. **targetY 計算錯誤**：prepend current symbols 後 totalHeight 僅用 reelStrip.length → 轉軸提前 3 格停止
