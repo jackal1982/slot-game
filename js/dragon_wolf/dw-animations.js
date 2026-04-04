@@ -96,35 +96,30 @@ DragonWolf.Animations = {
         el.classList.add('dw-trans-playing');
 
         // 郎君綻放完成時播放狂笑（1.8s，與郎君出現同步）
-        // pulse/glow 改回 CSS animation（dw-lord-gold-flash / dw-lord-pulse），比 JS setInterval 更流暢
+        // 音效用 setTimeout OK — 音效不影響視覺，延遲也無大礙
         setTimeout(function() {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 1800);
 
-        // 文字出現（3s）— 加 CSS class 觸發 transition
-        setTimeout(function() {
-            var tEl = document.getElementById('dw-trans-text');
-            if (tEl) {
-                void tEl.offsetWidth; // 強制 reflow 確保 transition 觸發
-                tEl.classList.add('dw-text-show');
-            }
-        }, 3000);
+        // 文字出現 & 整體淡出：全部由 CSS animation-delay 控制
+        // （Safari 手機 GPU 合成阻塞主線程時，setTimeout 會積壓，CSS animation-delay 不受影響）
 
-        // 整體淡出（4.2s）— 加 CSS class 觸發 transition
-        setTimeout(function() {
-            el.classList.add('dw-trans-fadeout');
-        }, 4200);
-
-        // 轉場結束：使用固定 setTimeout，不依賴 animationend
-        setTimeout(function() {
-            el.classList.remove('dw-trans-playing', 'dw-trans-fadeout');
+        // Cleanup：移除 class、隱藏 overlay
+        // 使用 8s timeout 作為 fallback（CSS 動畫在 5s 完成，多留 3s 緩衝給 Safari）
+        var cleaned = false;
+        function cleanup() {
+            if (cleaned) return;
+            cleaned = true;
+            el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
-            var tEl = document.getElementById('dw-trans-text');
-            if (tEl) tEl.classList.remove('dw-text-show');
+            // 重置子元素的 animation 狀態（移除 playing 後 animation 自動停止）
             setTimeout(function() {
                 if (onComplete) onComplete();
             }, 100);
-        }, DragonWolf.Config.FS_TRANSITION_DURATION);
+        }
+
+        // 主 cleanup timer：8s（CSS 淡出在 4.2+0.8=5s 完成）
+        setTimeout(cleanup, DragonWolf.Config.FS_TRANSITION_DURATION);
     },
 
     /** 將龍/狼主圖 src 複製到殘影 ghost div 的 background-image */

@@ -663,11 +663,7 @@
     opacity:     0;
     z-index:     6;
 }
-#dw-trans-text.dw-text-show {
-    opacity:    1 !important;
-    transform:  translateX(-50%) translateY(0) !important;
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
+/* .dw-text-show 已廢棄 — 文字出現改由 CSS animation-delay 控制（見 .dw-trans-playing #dw-trans-text） */
 #dw-trans-text p {
     font-size:   1.8rem;
     font-weight: 900;
@@ -748,12 +744,14 @@
         dw-lord-pulse      0.35s 1.8s ease-in-out 5;
 }
 
-/* Phase 4: 文字出現 — JS classList.add('dw-text-show') 在 setTimeout(3000) 觸發 */
+/* Phase 4: 文字出現 — 純 CSS animation-delay，不依賴 JS setTimeout（Safari 手機主線程阻塞時 timer 失準） */
+#dw-fs-transition.dw-trans-playing #dw-trans-text {
+    animation: dw-text-appear 0.5s 3s ease-out forwards;
+}
 
-/* Phase 5: 整體淡出 — JS classList.add('dw-trans-fadeout') 在 setTimeout(4200) 觸發 */
-#dw-fs-transition.dw-trans-fadeout {
-    opacity:    0 !important;
-    transition: opacity 0.8s ease-in;
+/* Phase 5: 整體淡出 — 純 CSS animation-delay，不依賴 JS setTimeout */
+#dw-fs-transition.dw-trans-playing {
+    animation: dw-overlay-fadeout 0.8s 4.2s ease-in forwards;
 }
 
 /* ── 氣功 Overlay（降龍十八掌風格）──────────────────────── */
