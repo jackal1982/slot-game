@@ -111,6 +111,9 @@ SlotGame.Audio = {
         // iOS fallback: resume AudioContext on next user gesture
         var _gestureResumeHandler = function() {
             if (!_needsGestureResume) return;
+            // 只在 Fortune Slots 或大廳才恢復 BGM，避免 DW 遊戲中誤啟 Slot BGM
+            var _hash = window.location.hash.replace(/^#\/?/, '');
+            if (_hash === 'game/dragon_wolf') { _needsGestureResume = false; return; }
             if (!self.ctx || self.ctx.state === 'running') {
                 _restoreBgm();
                 return;
@@ -138,6 +141,10 @@ SlotGame.Audio = {
 
         var _resumeAudioAndBgm = function() {
             if (!self.ctx) return;
+            // 只在 BGM 原本有播、且當前不是 DW 遊戲時才恢復 Slot BGM
+            if (!_bgmWasPlaying) return;
+            var _hash = window.location.hash.replace(/^#\/?/, '');
+            if (_hash === 'game/dragon_wolf') return;
             if (self.ctx.state === 'suspended') {
                 // iOS 上 ctx.resume() resolve 後 state 可能仍為 suspended，
                 // 不做 state 判斷，直接呼叫 _restoreBgm。
@@ -416,27 +423,6 @@ SlotGame.Audio = {
         }, 600);
 
         this._bgmGain = null;
-    },
-
-    /**
-     * BGM 健康檢查：MUSIC ON 但 BGM 沒在播時重啟。
-     * 在 spin 流程中呼叫，利用已有的 user gesture 鏈來恢復 iOS 靜音。
-     */
-    ensureBgm: function() {
-        if (!SlotGame.State.musicEnabled) return;
-        if (this._bgmPlaying) return;
-        // 清除殘留狀態，完全重建 BGM
-        if (this._bgmSchedulerId) {
-            clearInterval(this._bgmSchedulerId);
-            this._bgmSchedulerId = null;
-        }
-        var nodes = this._bgmActiveNodes;
-        this._bgmActiveNodes = [];
-        for (var i = 0; i < nodes.length; i++) {
-            try { nodes[i].stop(); } catch(e) {}
-        }
-        this._bgmGain = null;
-        this.bgmStart();
     },
 
     /**

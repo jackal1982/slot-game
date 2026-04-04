@@ -69,9 +69,6 @@ DragonWolf.Main = {
         if (state.phase !== 'IDLE') return;
         DragonWolf.UI.resetSlamStop();  // 確保 AUTO/Free Spins 自動發局時急停旗標正確重置
 
-        // BGM 健康檢查：AUTO 模式切回 App 後 BGM 可能靜音，利用 spin gesture 鏈恢復
-        try { DragonWolf.Audio.ensureBgm(); } catch(e) {}
-
         var isFree = state.inFreeSpins;
 
         if (!isFree) {
