@@ -95,94 +95,32 @@ DragonWolf.Animations = {
         void el.offsetWidth;
         el.classList.add('dw-trans-playing');
 
-        // 郎君綻放完成時播放狂笑 + JS 控制 pulse/glow（1.8s，與郎君出現同步）
-        // 原本的 CSS animation（dw-lord-gold-flash / dw-lord-pulse）已移除，
-        // 因為重複 CSS animation 在 Safari/iOS 會干擾 GPU 合成層，導致文字 JS transition 失效
-        var _pulseInterval = null;
-        var _glowInterval  = null;
+        // 郎君綻放完成時播放狂笑（1.8s，與郎君出現同步）
+        // pulse/glow 改回 CSS animation（dw-lord-gold-flash / dw-lord-pulse），比 JS setInterval 更流暢
         setTimeout(function() {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
-
-            var mwEl = document.getElementById('dw-trans-mw');
-            if (mwEl) {
-                var _pulseState = false;
-                var _glowState  = false;
-                // Pulse：每 350ms 切換 scale（共 5 次 × 350ms = 1750ms）
-                _pulseInterval = setInterval(function() {
-                    _pulseState = !_pulseState;
-                    mwEl.style.transform = _pulseState ? 'scale(1.15)' : 'scale(1.0)';
-                }, 350);
-                // 金光 glow：每 350ms 切換 filter，從 2.2s 開始（延遲 400ms）
-                setTimeout(function() {
-                    _glowInterval = setInterval(function() {
-                        _glowState = !_glowState;
-                        mwEl.style.filter = _glowState
-                            ? 'drop-shadow(0 0 90px rgba(255,215,0,1)) drop-shadow(0 0 130px rgba(255,180,50,0.8)) brightness(1.5)'
-                            : 'drop-shadow(0 0 40px rgba(220,180,50,0.8)) brightness(1.1)';
-                    }, 350);
-                    // 4 次 × 700ms = 2800ms 後停止 glow
-                    setTimeout(function() {
-                        clearInterval(_glowInterval);
-                        _glowInterval = null;
-                        if (mwEl) mwEl.style.filter = '';
-                    }, 2800);
-                }, 400);
-                // 5 次 × 350ms = 1750ms 後停止 pulse
-                setTimeout(function() {
-                    clearInterval(_pulseInterval);
-                    _pulseInterval = null;
-                    if (mwEl) mwEl.style.transform = '';
-                }, 1750);
-            }
         }, 1800);
 
-        // 文字出現（3s）— 直接用 JS 控制，不依賴 CSS animation-delay
-        // 原因：手機版 CSS animation-delay 在多動畫並行時可能被截斷，導致文字不出現
-        var textEl = document.getElementById('dw-trans-text');
-        if (textEl) {
-            textEl.style.opacity = '0';
-            textEl.style.transform = 'translateX(-50%) translateY(30px)';
-            textEl.style.transition = '';
-        }
+        // 文字出現（3s）— 加 CSS class 觸發 transition
         setTimeout(function() {
             var tEl = document.getElementById('dw-trans-text');
             if (tEl) {
-                tEl.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-                tEl.style.opacity = '1';
-                tEl.style.transform = 'translateX(-50%) translateY(0)';
+                void tEl.offsetWidth; // 強制 reflow 確保 transition 觸發
+                tEl.classList.add('dw-text-show');
             }
         }, 3000);
 
-        // 整體淡出（4.2s）— 用 JS CSS transition 控制，不用 CSS animation
-        // 原因：Safari/iOS 上 CSS animation 會把父容器推到 GPU 合成層，
-        // 導致子元素的 JS transition（文字出現）無法正確渲染
+        // 整體淡出（4.2s）— 加 CSS class 觸發 transition
         setTimeout(function() {
-            el.style.transition = 'opacity 0.8s ease-in';
-            el.style.opacity = '0';
+            el.classList.add('dw-trans-fadeout');
         }, 4200);
 
         // 轉場結束：使用固定 setTimeout，不依賴 animationend
         setTimeout(function() {
-            // 保險：清除可能殘留的 JS pulse/glow interval
-            if (_pulseInterval) { clearInterval(_pulseInterval); _pulseInterval = null; }
-            if (_glowInterval)  { clearInterval(_glowInterval);  _glowInterval  = null; }
-
-            el.classList.remove('dw-trans-playing');
+            el.classList.remove('dw-trans-playing', 'dw-trans-fadeout');
             el.classList.add('hidden');
-            // 清除所有 inline styles，為下次觸發重置
-            el.style.opacity = '';
-            el.style.transition = '';
             var tEl = document.getElementById('dw-trans-text');
-            if (tEl) {
-                tEl.style.opacity = '';
-                tEl.style.transform = '';
-                tEl.style.transition = '';
-            }
-            var mwEl = document.getElementById('dw-trans-mw');
-            if (mwEl) {
-                mwEl.style.transform = '';
-                mwEl.style.filter    = '';
-            }
+            if (tEl) tEl.classList.remove('dw-text-show');
             setTimeout(function() {
                 if (onComplete) onComplete();
             }, 100);
