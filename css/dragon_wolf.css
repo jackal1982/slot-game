@@ -523,6 +523,14 @@
 }
 #dw-fs-transition.hidden { display: none; }
 
+/* Content wrapper — fadeout 動畫放在這層，避免 position:fixed 父容器的 opacity 動畫
+   導致 iOS Safari 合成器不獨立提升子元素合成層（#dw-trans-text 文字不顯示） */
+#dw-trans-content {
+    position: absolute;
+    inset:    0;
+    overflow: hidden;
+}
+
 /* 背景層 1：暗幕 */
 #dw-trans-dark-bg {
     position:   absolute;
@@ -749,8 +757,9 @@
     animation: dw-text-appear 0.5s 3s ease-out forwards;
 }
 
-/* Phase 5: 整體淡出 — 純 CSS animation-delay，不依賴 JS setTimeout */
-#dw-fs-transition.dw-trans-playing {
+/* Phase 5: 整體淡出 — 放在 #dw-trans-content 而非 position:fixed 父容器，
+   避免 iOS Safari 合成層合併導致子元素 animation forwards 不生效 */
+#dw-fs-transition.dw-trans-playing #dw-trans-content {
     animation: dw-overlay-fadeout 0.8s 4.2s ease-in forwards;
 }
 

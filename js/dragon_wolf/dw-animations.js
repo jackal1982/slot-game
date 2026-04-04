@@ -105,7 +105,7 @@ DragonWolf.Animations = {
         // （Safari 手機 GPU 合成阻塞主線程時，setTimeout 會積壓，CSS animation-delay 不受影響）
 
         // Cleanup：移除 class、隱藏 overlay
-        // 使用 8s timeout 作為 fallback（CSS 動畫在 5s 完成，多留 3s 緩衝給 Safari）
+        // CSS 動畫在 5s 完成（4.2s delay + 0.8s），5.5s cleanup
         var cleaned = false;
         function cleanup() {
             if (cleaned) return;
@@ -118,7 +118,7 @@ DragonWolf.Animations = {
             }, 100);
         }
 
-        // 主 cleanup timer：8s（CSS 淡出在 4.2+0.8=5s 完成）
+        // 主 cleanup timer：5.5s（CSS 淡出在 4.2+0.8=5s 完成）
         setTimeout(cleanup, DragonWolf.Config.FS_TRANSITION_DURATION);
     },
 
