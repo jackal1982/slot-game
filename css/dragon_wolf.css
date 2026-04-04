@@ -644,13 +644,14 @@
     width:         60px;
     height:        60px;
     border-radius: 50%;
-    transform:     translate(-50%, -50%);
+    transform:     translate(-50%, -50%) translateZ(0);
     background:    radial-gradient(circle,
-                       rgba(220, 180, 100, 0.6) 0%,
-                       rgba(180, 140, 60, 0.3) 40%,
+                       rgba(255, 200, 60, 0.8) 0%,
+                       rgba(255, 170, 30, 0.4) 40%,
                        transparent 70%);
     opacity:       0;
     pointer-events: none;
+    will-change:   opacity, width, height;
 }
 #dw-trans-mw {
     width:        360px;
@@ -742,25 +743,12 @@
     animation: dw-lord-bloom 1.2s 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
-    animation: dw-glow-expand 1.2s 1.8s ease-out forwards;
+    animation: dw-glow-expand 1.2s 1.8s ease-out forwards,
+               dw-lord-glow-pulse 0.7s 3.0s ease-in-out 4;
 }
 /* Phase 3: 郎君 pulse（只用 transform，GPU 可合成） */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw {
     animation: dw-lord-pulse 0.35s 1.8s ease-in-out 5;
-}
-/* 金光效果改用 pseudo-element + opacity 動畫（GPU 可合成，不阻塞主線程） */
-#dw-fs-transition.dw-trans-playing #dw-trans-mw::after {
-    content: '';
-    position: absolute;
-    inset: -30px;
-    border-radius: 50%;
-    background: radial-gradient(circle,
-                    rgba(255, 215, 100, 0.6) 0%,
-                    rgba(255, 200, 80, 0.3) 40%,
-                    transparent 70%);
-    pointer-events: none;
-    z-index: -1;
-    animation: dw-lord-glow-pulse 0.7s 2.2s ease-in-out 4;
 }
 
 /* Phase 4: 文字出現 — 純 CSS animation-delay，不依賴 JS setTimeout（Safari 手機主線程阻塞時 timer 失準） */
@@ -1444,9 +1432,9 @@
     100% { transform: translate(-50%, -55%) scale(1.2); opacity: 1; }
 }
 
-/* 金光脈衝（pseudo-element，只用 opacity — GPU 可合成，不凍結主線程） */
+/* 金光脈衝（glow div，只用 opacity — GPU 可合成，不凍結主線程） */
 @keyframes dw-lord-glow-pulse {
-    0%, 100% { opacity: 0.3; }
+    0%, 100% { opacity: 0.4; }
     50%      { opacity: 1; }
 }
 
@@ -1456,11 +1444,11 @@
     50%      { transform: scale(1.15); }
 }
 
-/* 光暈擴展 */
+/* 光暈擴展 — 結束時保持較高 opacity 以便脈衝接手 */
 @keyframes dw-glow-expand {
     0%   { width: 60px; height: 60px; opacity: 0; }
-    30%  { opacity: 0.6; }
-    100% { width: 500px; height: 500px; opacity: 0.25; }
+    30%  { opacity: 0.8; }
+    100% { width: 550px; height: 550px; opacity: 0.5; }
 }
 
 /* 文字上滑出現 */
