@@ -129,10 +129,10 @@ DragonWolf.Audio = {
                 // bgmStart() 會設 _bgmRunning=true；若 ctx 仍 suspended，
                 // 待 onstatechange(running) 時由 _playBgmTrack 補播。
                 self.ctx.resume().then(function() {
-                    _restoreBgm();
+                    setTimeout(function() { _restoreBgm(); }, 500);
                 }).catch(function() {});
             } else if (self.ctx.state === 'running') {
-                _restoreBgm();
+                setTimeout(function() { _restoreBgm(); }, 500);
             }
             // 不管 resume 成功與否，加觸控監聽作為 iOS fallback
             _addGestureListeners();
@@ -285,6 +285,32 @@ DragonWolf.Audio = {
     bgmStop: function() {
         this._bgmRunning = false;
         this._stopBgmSource(0.15);
+    },
+
+    /**
+     * BGM 健康檢查：MUSIC ON 但 BGM 沒在播時重啟。
+     * 在 spin 流程中呼叫，利用已有的 user gesture 鏈來恢復 iOS 靜音。
+     */
+    ensureBgm: function() {
+        if (!DragonWolf.State.musicEnabled) return;
+        if (this._bgmRunning && this._bgmSource) return;
+        // 停掉失效的舊 source
+        if (this._bgmSource) {
+            try { this._bgmSource.stop(); } catch(e) {}
+            try { this._bgmSource.disconnect(); } catch(e) {}
+            this._bgmSource = null;
+        }
+        // 重建 _bgmGain（iOS 舊 GainNode 可能已卡在 0）
+        if (this._bgmGain) {
+            try { this._bgmGain.disconnect(); } catch(e) {}
+        }
+        if (this.ctx && this.masterGain) {
+            this._bgmGain = this.ctx.createGain();
+            this._bgmGain.gain.value = 1.0;
+            this._bgmGain.connect(this.masterGain);
+        }
+        this._bgmRunning = false;
+        this.bgmStart(this._bgmMode || 'base');
     },
 
     bgmSetMode: function(mode) {
