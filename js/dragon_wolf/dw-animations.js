@@ -95,11 +95,22 @@ DragonWolf.Animations = {
         }
         dbg('playFSTransition START, spinCount=' + spinCount);
 
-        // 監聽 animationstart / animationend
+        // 監聽 animationstart / animationend（過濾 ghost-trail 噪音）
+        var ghostCount = {start: 0, end: 0};
         el.addEventListener('animationstart', function(e) {
+            if (e.animationName === 'dw-ghost-trail') {
+                ghostCount.start++;
+                if (ghostCount.start === 1) dbg('ANIM START: dw-ghost-trail (first)');
+                return;
+            }
             dbg('ANIM START: ' + e.animationName + ' on ' + (e.target.id || e.target.className));
         });
         el.addEventListener('animationend', function(e) {
+            if (e.animationName === 'dw-ghost-trail') {
+                ghostCount.end++;
+                if (ghostCount.end === 1) dbg('ANIM END: dw-ghost-trail (first)');
+                return;
+            }
             dbg('ANIM END: ' + e.animationName + ' on ' + (e.target.id || e.target.className));
         });
 
@@ -130,6 +141,16 @@ DragonWolf.Animations = {
 
         // 文字出現 & 整體淡出：全部由 CSS animation-delay 控制
         // （Safari 手機 GPU 合成阻塞主線程時，setTimeout 會積壓，CSS animation-delay 不受影響）
+
+        // Debug: 1900ms 檢查 mw-wrap 狀態（lord-bloom 應已開始）
+        setTimeout(function() {
+            var mwWrap = document.getElementById('dw-trans-mw-wrap');
+            if (mwWrap) {
+                var cs = window.getComputedStyle(mwWrap);
+                dbg('1900ms: mw-wrap opacity=' + cs.opacity + ' transform=' + cs.transform);
+                dbg('1900ms: mw-wrap animation=' + (cs.animation || cs.webkitAnimation || 'none'));
+            }
+        }, 1900);
 
         // Debug: 3200ms 檢查文字與容器狀態
         setTimeout(function() {
@@ -175,8 +196,13 @@ DragonWolf.Animations = {
             if (cleaned) return;
             cleaned = true;
             dbg('cleanup: removing classes');
+            dbg('ghost-trail count: start=' + ghostCount.start + ' end=' + ghostCount.end);
             el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
+            // 自動滾動到底部
+            if (debugPanel) {
+                debugPanel.scrollTop = debugPanel.scrollHeight;
+            }
             // 重置子元素的 animation 狀態（移除 playing 後 animation 自動停止）
             setTimeout(function() {
                 if (onComplete) onComplete();
