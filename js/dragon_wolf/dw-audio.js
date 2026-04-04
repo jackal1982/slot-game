@@ -67,10 +67,14 @@ DragonWolf.Audio = {
         var _needsGestureResume = false;
 
         var _restoreBgm = function() {
-            if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
+            // 不依賴 _bgmWasRunning：iOS 上 onstatechange(suspended) 可能在
+            // visibilitychange(hidden) 之前觸發，導致 bgmStop() 先把
+            // _bgmRunning 清為 false，_bgmWasRunning 因此抓到 false。
+            // 修正：只要 MUSIC 開關是 ON，就直接恢復 BGM。
+            if (DragonWolf.State.musicEnabled) {
                 self.bgmStart(_lastBgmMode);
-                _bgmWasRunning = false; // 防止 fallback listener 重複恢復
             }
+            _bgmWasRunning = false;
             _needsGestureResume = false;
         };
 
