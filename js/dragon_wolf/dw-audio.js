@@ -90,16 +90,17 @@ DragonWolf.Audio = {
             }).catch(function() {});
         };
 
+        // 持久監聽：touchstart/click 永駐，靠 _needsGestureResume 旗標控制
+        // 避免 { once: true } 在 iOS resume 失敗時監聽器被消耗
+        document.addEventListener('touchstart', _gestureResumeHandler, { passive: true });
+        document.addEventListener('click', _gestureResumeHandler);
+
         var _addGestureListeners = function() {
             _needsGestureResume = true;
-            document.addEventListener('touchstart', _gestureResumeHandler, { once: true });
-            document.addEventListener('click', _gestureResumeHandler, { once: true });
         };
 
         var _removeGestureListeners = function() {
             _needsGestureResume = false;
-            document.removeEventListener('touchstart', _gestureResumeHandler);
-            document.removeEventListener('click', _gestureResumeHandler);
         };
 
         var _resumeAudioAndBgm = function() {
@@ -136,6 +137,17 @@ DragonWolf.Audio = {
                 _resumeAudioAndBgm();
             }
         });
+
+        // 鏈接 ctx.onstatechange：ctx 恢復 running 時自動播放待啟動的 BGM
+        // Fortune Slots 已設定 onstatechange，此處保留原 handler 並追加 DW 邏輯
+        var _prevOnStateChange = this.ctx.onstatechange;
+        this.ctx.onstatechange = function(e) {
+            if (_prevOnStateChange) _prevOnStateChange.call(self.ctx, e);
+            // ctx 變為 running 且 BGM 已標記要播但尚未建立 source → 補播
+            if (self.ctx.state === 'running' && self._bgmRunning && !self._bgmSource) {
+                self._playBgmTrack(self._bgmMode);
+            }
+        };
     },
 
     /** 預載 SFX MP3 音檔（laugh 等） */
@@ -239,11 +251,17 @@ DragonWolf.Audio = {
         if (!DragonWolf.State.musicEnabled) return;
 
         var newMode = mode || 'base';
-        if (this._bgmRunning && this._bgmMode === newMode) return;
+        // 允許重啟：若 _bgmSource 已失效（null）也要重建，不能 return
+        if (this._bgmRunning && this._bgmMode === newMode && this._bgmSource) return;
 
         this._bgmMode = newMode;
         this._bgmRunning = true;
-        this._playBgmTrack(newMode);
+
+        // 僅在 ctx 為 running 時才建立 source；否則由 onstatechange 補播
+        // 避免在 suspended ctx 上 start() BufferSource 被 iOS 靜默消耗
+        if (this.ctx.state === 'running') {
+            this._playBgmTrack(newMode);
+        }
     },
 
     bgmStop: function() {

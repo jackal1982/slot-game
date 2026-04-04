@@ -62,7 +62,11 @@ SlotGame.Audio = {
                 self._warmUp();
             }
             if (self.ctx.state === 'running' && !self._bgmPlaying && SlotGame.State.musicEnabled) {
-                self.bgmStart();
+                // 只在 Fortune Slots 或大廳才啟動程序化 BGM，避免在 DW 遊戲中誤啟
+                var curGame = SlotGame.Platform.getCurrentGame();
+                if (!curGame || curGame === 'slot') {
+                    self.bgmStart();
+                }
             }
             if (self.ctx.state === 'suspended') {
                 self._ready = false;
@@ -108,16 +112,17 @@ SlotGame.Audio = {
             }).catch(function() {});
         };
 
+        // 持久監聽：touchstart/click 永駐，靠 _needsGestureResume 旗標控制
+        // 避免 { once: true } 在 iOS resume 失敗時監聽器被消耗
+        document.addEventListener('touchstart', _gestureResumeHandler, { passive: true });
+        document.addEventListener('click', _gestureResumeHandler);
+
         var _addGestureListeners = function() {
             _needsGestureResume = true;
-            document.addEventListener('touchstart', _gestureResumeHandler, { once: true });
-            document.addEventListener('click', _gestureResumeHandler, { once: true });
         };
 
         var _removeGestureListeners = function() {
             _needsGestureResume = false;
-            document.removeEventListener('touchstart', _gestureResumeHandler);
-            document.removeEventListener('click', _gestureResumeHandler);
         };
 
         var _resumeAudioAndBgm = function() {
