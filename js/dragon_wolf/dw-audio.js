@@ -63,17 +63,35 @@ DragonWolf.Audio = {
         // 切換 App 回來時恢復 BGM
         var self = this;
         var _bgmWasRunning = false;
+        var _lastBgmMode   = 'base';
+
+        var _resumeAudioAndBgm = function() {
+            if (!self.ctx) return;
+            if (self.ctx.state === 'suspended') {
+                self.ctx.resume().then(function() {
+                    if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
+                        self.bgmStart(_lastBgmMode);
+                    }
+                });
+            } else if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
+                self.bgmStart(_lastBgmMode);
+            }
+        };
+
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 _bgmWasRunning = self._bgmRunning || false;
+                _lastBgmMode   = self._bgmMode || 'base';
                 self.bgmStop();
             } else {
-                if (self.ctx && self.ctx.state === 'suspended') {
-                    self.ctx.resume();
-                }
-                if (_bgmWasRunning && DragonWolf.State.musicEnabled) {
-                    self.bgmStart(self._bgmMode);
-                }
+                _resumeAudioAndBgm();
+            }
+        });
+
+        // iOS Safari BFCache: pageshow fires when returning from BFCache
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                _resumeAudioAndBgm();
             }
         });
     },
