@@ -94,5 +94,6 @@ DragonWolf.Config = {
     WIN_CYCLE_DELAY:     1500,
 
     // FS 轉場動畫時長（ms）
-    FS_TRANSITION_DURATION: 5000
+    // CSS 動畫在 ~5s 完成（fadeout 4.2s + 0.8s），8s 給 Safari 手機充足緩衝
+    FS_TRANSITION_DURATION: 8000
 };
