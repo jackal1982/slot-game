@@ -81,17 +81,32 @@ SlotGame.Audio = {
 
         // Resume on tab visibility change — restore BGM when returning from background
         var _bgmWasPlaying = false;
+        var _resumeAudioAndBgm = function() {
+            if (!self.ctx) return;
+            if (self.ctx.state === 'suspended') {
+                self.ctx.resume().then(function() {
+                    if (_bgmWasPlaying && SlotGame.State.musicEnabled) {
+                        self.bgmStart();
+                    }
+                });
+            } else if (_bgmWasPlaying && SlotGame.State.musicEnabled) {
+                self.bgmStart();
+            }
+        };
+
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 _bgmWasPlaying = self._bgmPlaying || false;
                 self.bgmStop();
             } else {
-                if (self.ctx && self.ctx.state === 'suspended') {
-                    self.ctx.resume();
-                }
-                if (_bgmWasPlaying && SlotGame.State.musicEnabled) {
-                    self.bgmStart();
-                }
+                _resumeAudioAndBgm();
+            }
+        });
+
+        // iOS Safari BFCache: pageshow fires when returning from BFCache
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                _resumeAudioAndBgm();
             }
         });
     },
