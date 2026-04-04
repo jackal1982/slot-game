@@ -70,8 +70,9 @@ DragonWolf.Audio = {
             // 不依賴 _bgmWasRunning：iOS 上 onstatechange(suspended) 可能在
             // visibilitychange(hidden) 之前觸發，導致 bgmStop() 先把
             // _bgmRunning 清為 false，_bgmWasRunning 因此抓到 false。
-            // 修正：只要 MUSIC 開關是 ON，就直接恢復 BGM。
+            // 修正：只要 MUSIC 開關是 ON，就強制清除 guard 並重新啟動 BGM。
             if (DragonWolf.State.musicEnabled) {
+                self._bgmRunning = false; // 強制清除 guard，確保 bgmStart 能重建 source
                 self.bgmStart(_lastBgmMode);
             }
             _bgmWasRunning = false;
@@ -85,8 +86,12 @@ DragonWolf.Audio = {
                 _restoreBgm();
                 return;
             }
+            // iOS 上 ctx.resume() resolve 後 state 可能仍為 suspended，
+            // 不做 state 判斷，直接呼叫 _restoreBgm。
+            // bgmStart() 會設 _bgmRunning=true；若 ctx 仍 suspended，
+            // 待 onstatechange(running) 時由 _playBgmTrack 補播。
             self.ctx.resume().then(function() {
-                if (self.ctx.state === 'running') _restoreBgm();
+                _restoreBgm();
             }).catch(function() {});
         };
 
@@ -106,17 +111,17 @@ DragonWolf.Audio = {
         var _resumeAudioAndBgm = function() {
             if (!self.ctx) return;
             if (self.ctx.state === 'suspended') {
+                // iOS 上 ctx.resume() resolve 後 state 可能仍為 suspended，
+                // 不做 state 判斷，直接呼叫 _restoreBgm。
+                // bgmStart() 會設 _bgmRunning=true；若 ctx 仍 suspended，
+                // 待 onstatechange(running) 時由 _playBgmTrack 補播。
                 self.ctx.resume().then(function() {
-                    // iOS 上 resume() 可能 resolve 但 state 仍非 running
-                    if (self.ctx.state === 'running') {
-                        _restoreBgm();
-                    }
+                    _restoreBgm();
                 }).catch(function() {});
             } else if (self.ctx.state === 'running') {
                 _restoreBgm();
             }
-            // 不管 resume 成功與否，加一次性觸控監聽作為 iOS fallback
-            // （_restoreBgm 已清除 _bgmWasRunning，不會重複恢復）
+            // 不管 resume 成功與否，加觸控監聽作為 iOS fallback
             _addGestureListeners();
         };
 
@@ -290,6 +295,8 @@ DragonWolf.Audio = {
         src.buffer = buffer;
         src.loop   = true;
         src.connect(this._bgmGain);
+        // 清除前一次 bgmStop 留下的 fade-out 排程，避免新 source 被靜音
+        this._bgmGain.gain.cancelScheduledValues(0);
         this._bgmGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
         src.start(0);
         this._bgmSource = src;
