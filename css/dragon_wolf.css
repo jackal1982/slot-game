@@ -655,10 +655,9 @@
 #dw-trans-mw {
     width:        360px;
     height:       360px;
-    filter:       drop-shadow(0 0 40px var(--dw-accent-gold));
     position:     relative;
     z-index:      1;
-    transform:    translateZ(0);
+    transform:    translateZ(0);  /* promote to GPU layer */
 }
 
 /* 文字 */
@@ -745,11 +744,23 @@
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
     animation: dw-glow-expand 1.2s 1.8s ease-out forwards;
 }
-/* Phase 3: 郎君金光閃爍 + pulse（CSS animation，比 JS setInterval 更流暢） */
+/* Phase 3: 郎君 pulse（只用 transform，GPU 可合成） */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw {
-    animation:
-        dw-lord-gold-flash 0.7s 2.2s ease-in-out 4,
-        dw-lord-pulse      0.35s 1.8s ease-in-out 5;
+    animation: dw-lord-pulse 0.35s 1.8s ease-in-out 5;
+}
+/* 金光效果改用 pseudo-element + opacity 動畫（GPU 可合成，不阻塞主線程） */
+#dw-fs-transition.dw-trans-playing #dw-trans-mw::after {
+    content: '';
+    position: absolute;
+    inset: -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+                    rgba(255, 215, 100, 0.6) 0%,
+                    rgba(255, 200, 80, 0.3) 40%,
+                    transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: dw-lord-glow-pulse 0.7s 2.2s ease-in-out 4;
 }
 
 /* Phase 4: 文字出現 — 純 CSS animation-delay，不依賴 JS setTimeout（Safari 手機主線程阻塞時 timer 失準） */
@@ -1433,10 +1444,10 @@
     100% { transform: translate(-50%, -55%) scale(1.2); opacity: 1; }
 }
 
-/* 金光閃爍（郎君出現後持續閃爍） */
-@keyframes dw-lord-gold-flash {
-    0%, 100% { filter: drop-shadow(0 0 40px var(--dw-accent-gold)) brightness(1.1); }
-    50%       { filter: drop-shadow(0 0 90px rgba(255, 215, 0, 1)) drop-shadow(0 0 130px rgba(255, 180, 50, 0.8)) brightness(1.5); }
+/* 金光脈衝（pseudo-element，只用 opacity — GPU 可合成，不凍結主線程） */
+@keyframes dw-lord-glow-pulse {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 1; }
 }
 
 /* 狂傲 pulse（笑聲期間縮放） */

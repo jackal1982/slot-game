@@ -80,11 +80,13 @@ DragonWolf.Animations = {
             return;
         }
 
-        // === Debug Panel ===
-        var debugPanel = document.getElementById('dw-debug-panel');
+        // === Debug Panel（僅 ?debug=1 時啟用）===
+        var debugEnabled = /[?&]debug=1/.test(window.location.search);
+        var debugPanel = debugEnabled ? document.getElementById('dw-debug-panel') : null;
         var debugLog = [];
         var t0 = Date.now();
         function dbg(msg) {
+            if (!debugEnabled) return;
             var elapsed = Date.now() - t0;
             var line = elapsed + 'ms: ' + msg;
             debugLog.push(line);
@@ -94,25 +96,6 @@ DragonWolf.Animations = {
             }
         }
         dbg('playFSTransition START, spinCount=' + spinCount);
-
-        // 監聽 animationstart / animationend（過濾 ghost-trail 噪音）
-        var ghostCount = {start: 0, end: 0};
-        el.addEventListener('animationstart', function(e) {
-            if (e.animationName === 'dw-ghost-trail') {
-                ghostCount.start++;
-                if (ghostCount.start === 1) dbg('ANIM START: dw-ghost-trail (first)');
-                return;
-            }
-            dbg('ANIM START: ' + e.animationName + ' on ' + (e.target.id || e.target.className));
-        });
-        el.addEventListener('animationend', function(e) {
-            if (e.animationName === 'dw-ghost-trail') {
-                ghostCount.end++;
-                if (ghostCount.end === 1) dbg('ANIM END: dw-ghost-trail (first)');
-                return;
-            }
-            dbg('ANIM END: ' + e.animationName + ' on ' + (e.target.id || e.target.className));
-        });
 
         var spinCountEl = document.getElementById('dw-trans-spin-count');
         if (spinCountEl) spinCountEl.textContent = '× ' + spinCount;
@@ -139,56 +122,6 @@ DragonWolf.Animations = {
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
         }, 1800);
 
-        // 文字出現 & 整體淡出：全部由 CSS animation-delay 控制
-        // （Safari 手機 GPU 合成阻塞主線程時，setTimeout 會積壓，CSS animation-delay 不受影響）
-
-        // Debug: 1900ms 檢查 mw-wrap 狀態（lord-bloom 應已開始）
-        setTimeout(function() {
-            var mwWrap = document.getElementById('dw-trans-mw-wrap');
-            if (mwWrap) {
-                var cs = window.getComputedStyle(mwWrap);
-                dbg('1900ms: mw-wrap opacity=' + cs.opacity + ' transform=' + cs.transform);
-                dbg('1900ms: mw-wrap animation=' + (cs.animation || cs.webkitAnimation || 'none'));
-            }
-        }, 1900);
-
-        // Debug: 3200ms 檢查文字與容器狀態
-        setTimeout(function() {
-            var textEl = document.getElementById('dw-trans-text');
-            if (textEl) {
-                var cs = window.getComputedStyle(textEl);
-                dbg('3200ms: text opacity=' + cs.opacity + ' display=' + cs.display + ' visibility=' + cs.visibility);
-                dbg('3200ms: text animation=' + (cs.animation || cs.webkitAnimation || 'none'));
-                dbg('3200ms: text transform=' + cs.transform);
-            }
-            var parentEl = document.getElementById('dw-fs-transition');
-            if (parentEl) {
-                var pcs = window.getComputedStyle(parentEl);
-                dbg('3200ms: parent opacity=' + pcs.opacity + ' display=' + pcs.display);
-                dbg('3200ms: parent animation=' + (pcs.animation || pcs.webkitAnimation || 'none'));
-            }
-            var contentEl = document.getElementById('dw-trans-content');
-            if (contentEl) {
-                var ccs = window.getComputedStyle(contentEl);
-                dbg('3200ms: content opacity=' + ccs.opacity);
-                dbg('3200ms: content animation=' + (ccs.animation || ccs.webkitAnimation || 'none'));
-            }
-        }, 3200);
-
-        // Debug: 4500ms 再檢查一次
-        setTimeout(function() {
-            var textEl = document.getElementById('dw-trans-text');
-            if (textEl) {
-                var cs = window.getComputedStyle(textEl);
-                dbg('4500ms: text opacity=' + cs.opacity);
-            }
-            var contentEl = document.getElementById('dw-trans-content');
-            if (contentEl) {
-                var ccs = window.getComputedStyle(contentEl);
-                dbg('4500ms: content opacity=' + ccs.opacity);
-            }
-        }, 4500);
-
         // Cleanup：移除 class、隱藏 overlay
         // CSS 動畫在 5s 完成（4.2s delay + 0.8s），5.5s cleanup
         var cleaned = false;
@@ -196,21 +129,16 @@ DragonWolf.Animations = {
             if (cleaned) return;
             cleaned = true;
             dbg('cleanup: removing classes');
-            dbg('ghost-trail count: start=' + ghostCount.start + ' end=' + ghostCount.end);
             el.classList.remove('dw-trans-playing');
             el.classList.add('hidden');
-            // 自動滾動到底部
             if (debugPanel) {
                 debugPanel.scrollTop = debugPanel.scrollHeight;
+                setTimeout(function() { debugPanel.style.display = 'none'; }, 15000);
             }
             // 重置子元素的 animation 狀態（移除 playing 後 animation 自動停止）
             setTimeout(function() {
                 if (onComplete) onComplete();
             }, 100);
-            // Debug panel 保持顯示 15 秒後隱藏
-            setTimeout(function() {
-                if (debugPanel) debugPanel.style.display = 'none';
-            }, 15000);
         }
 
         // 主 cleanup timer：5.5s（CSS 淡出在 4.2+0.8=5s 完成）
