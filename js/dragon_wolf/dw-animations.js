@@ -204,10 +204,11 @@ DragonWolf.Animations = {
             ballEl.classList.add(ballSize);
         }
 
-        // ── Phase 1（500ms）：小震動 + 笑聲 ──
+        // ── Phase 1（500ms）：小震動 + 聚氣音效（依 tier 選對應音檔）──
+        var _tier = tier; // closure capture
         setTimeout(function() {
             if (reelGrid) reelGrid.classList.add('dw-screen-shake-small');
-            try { DragonWolf.Audio.play('laugh'); } catch(e) {}
+            try { DragonWolf.Audio.play('qigong_' + _tier); } catch(e) {}
         }, 500);
 
         // ── Phase 2 切換（2500ms，tier 2/3）：中震動 ──

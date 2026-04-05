@@ -181,7 +181,10 @@ DragonWolf.Audio = {
         var self  = this;
         var files = {
             laugh:        'audio/dragon_wolf/dw-laugh.mp3',
-            'free-bigwin': 'audio/dragon_wolf/free-bigwin.mp3'
+            'free-bigwin': 'audio/dragon_wolf/free-bigwin.mp3',
+            qigong_1:     'audio/dragon_wolf/qigong-1.mp3',
+            qigong_2:     'audio/dragon_wolf/qigong-2.mp3',
+            qigong_3:     'audio/dragon_wolf/qigong-3.mp3'
         };
         var keys  = Object.keys(files);
 
@@ -396,6 +399,9 @@ DragonWolf.Audio = {
             case 'fs_intro':      this._sfxFsIntro();      break;
             case 'laugh':         this._sfxLaugh();        break;
             case 'free-bigwin':   this._sfxFreeBigwin();   break;
+            case 'qigong_1':      this._sfxQigong(1);      break;
+            case 'qigong_2':      this._sfxQigong(2);      break;
+            case 'qigong_3':      this._sfxQigong(3);      break;
         }
     },
 
@@ -606,6 +612,13 @@ DragonWolf.Audio = {
             osc.connect(gain); gain.connect(this.soundGain);
             osc.start(dt); osc.stop(dt + 0.2);
         }
+    },
+
+    /** 聚氣音效（tier 1/2/3）— 優先用 MP3，fallback 笑聲 */
+    _sfxQigong: function(tier) {
+        if (!this.ctx) return;
+        if (this._playSfxBuffer('qigong_' + tier)) return;
+        this._sfxLaugh(); // fallback
     },
 
     /** 黑白郎君笑聲 — 優先用 MP3，fallback 程序化合成 */
