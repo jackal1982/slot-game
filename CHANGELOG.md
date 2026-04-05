@@ -64,6 +64,13 @@
 - PR #88: AUTO 模式切回 App 後 BGM 不恢復（spin 健康檢查 + 500ms 延遲）
 - PR #89: 修復兩款遊戲 BGM 同時播放（PR #88 引入的迴歸 bug）
 - PR #90: 黑白龍狼傳 Free Game 轉場優化 — 轉場動畫開始時停止 Base BGM（bgmStop + callback 改用 bgmStart('free')）+ 龍狼衝刺動畫放慢 50%（Phase 1 從 1s→2s，Phase 2~5 delay +1s，總時長 5.5s→6.5s）
+- PR #91: 補充 CHANGELOG.md — PR #59~#89 歷史記錄（31 條新增）
+- PR #92: CLAUDE.md 新增 iOS BGM 無法自動恢復的系統限制說明（勿重複嘗試）
+- PR #93: 消除 DW FS 轉場龍狼消失到郎君出現的 1 秒空白（Phase 3 延遲從 2.8s→2.0s）
+- PR #94: 手機 UX 優化 — 雙擊 zoom 防止（html/overlay 明確加 touch-action: manipulation）+ 橫向 CSS transform 強制直向鎖定（含左右兩方向，後被 PR #96 取代）
+- PR #95: DW 聚氣音效 Tier 制 — 新增 qigong-1/2/3.mp3，依百搭數量（tier）播放對應音效（2s/4s/7s），fallback 至笑聲合成
+- PR #96: 手機橫向改為直式 UI 自然裁切 — 移除 PR #94 的 body-rotation 旋轉方案，改由 overflow:hidden 自然裁切；保留 orientationchange reflow handler
+- PR #97: CLAUDE.md 更新 — PR #90~#96 修改記錄、iOS 雙擊 zoom / 橫向處理防踩坑、DW FS 轉場時序、聚氣音效 Tier 制、audio/dragon_wolf 目錄說明
 
 ## 已修復 Bug 完整記錄
 1. **targetY 計算錯誤**：prepend current symbols 後 totalHeight 僅用 reelStrip.length → 轉軸提前 3 格停止
