@@ -212,34 +212,6 @@
     }
 }
 
-/* === 手機橫向：CSS transform 強制直向鎖定 ===
-   max-height: 500px 涵蓋所有 iPhone 橫向高度（SE:375px / 14:390px / Pro Max:430px）
-   JS (platform.js) 偵測旋轉方向，在 body 上設 class landscape-ccw / landscape-cw */
-@media (orientation: landscape) and (max-height: 500px) {
-    /* 左轉（home 鍵在右側，angle=90）→ body 旋轉 -90° */
-    body.landscape-ccw {
-        position:         absolute;
-        top:              100%;      /* 移至 viewport 左下角作為旋轉支點 */
-        left:             0;
-        width:            100vh;    /* 橫向高度 = 直向寬度 */
-        height:           100vw;    /* 橫向寬度 = 直向高度 */
-        transform:        rotate(-90deg);
-        transform-origin: left top;
-        overflow:         hidden;
-    }
-    /* 右轉（home 鍵在左側，angle=-90）→ body 旋轉 +90° */
-    body.landscape-cw {
-        position:         absolute;
-        top:              0;
-        left:             100%;     /* 移至 viewport 右上角作為旋轉支點 */
-        width:            100vh;
-        height:           100vw;
-        transform:        rotate(90deg);
-        transform-origin: left top;
-        overflow:         hidden;
-    }
-}
-
 /* === Landscape Mobile (very short screens) === */
 @media (max-height: 400px) and (orientation: landscape) {
     #jackpot-banner { padding: 3px 0; }
