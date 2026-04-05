@@ -31,12 +31,10 @@ SlotGame.Platform = {
      */
     init: function() {
         this.load();
-        this._applyOrientationLock();
         var self = this;
         window.addEventListener('orientationchange', function() {
-            // 等待旋轉動畫完成（約 300ms）後套用鎖定並強制 reflow
+            // 等待旋轉動畫完成（約 300ms）後強制 reflow 修復 iOS viewport
             setTimeout(function() {
-                self._applyOrientationLock();
                 window.scrollTo(0, 0);
                 document.documentElement.style.height = 'auto';
                 requestAnimationFrame(function() {
@@ -44,24 +42,6 @@ SlotGame.Platform = {
                 });
             }, 300);
         });
-    },
-
-    /**
-     * Detect phone orientation angle and apply CSS class to body for portrait lock.
-     * landscape-ccw: rotated left (angle=90) → rotate body -90°
-     * landscape-cw:  rotated right (angle=-90/270) → rotate body +90°
-     */
-    _applyOrientationLock: function() {
-        var angle = 0;
-        if (screen.orientation && typeof screen.orientation.angle !== 'undefined') {
-            angle = screen.orientation.angle;
-        } else if (typeof window.orientation !== 'undefined') {
-            angle = window.orientation;
-        }
-        if (angle === 270) angle = -90; // normalize
-        document.body.classList.remove('landscape-ccw', 'landscape-cw');
-        if (angle === 90)  document.body.classList.add('landscape-ccw');
-        if (angle === -90) document.body.classList.add('landscape-cw');
     },
 
     // ── Balance API ──────────────────────────────────────
