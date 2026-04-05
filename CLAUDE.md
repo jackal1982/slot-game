@@ -139,6 +139,7 @@ tools/
 - **非同步載入的 BGM**：XHR 預載 buffer 可能晚於 `bgmStart()` 呼叫，需 `_onBgmLoaded()` 回調補播
 - **RTP 調校**：修改賠率時不要同時改 Reel Strips（交互影響大）；DW 曾因 BASE_PAY/FREE_PAY 數值不一致導致 RTP 超 100%
 - **DW generateGrid 視窗限制**：Free Game M1 同視窗≤2、所有模式 A 符號同視窗≤2（防 Ways 堆疊爆分）
+- **iOS BGM 無法自動恢復（勿重複嘗試）**：iOS 所有瀏覽器（Safari/Chrome/Firefox）底層皆為 WebKit，`AudioContext.resume()` 強制要求 user gesture，在 `visibilitychange` 中呼叫無效。切換 App 後 BGM 無法自動恢復是 **Apple 系統層級限制**，無法透過 Web Audio API 繞過。目前實作已是最佳解：切回 App 後點畫面/SPIN 即恢復。Android 及桌機不受此限制，可自動恢復。若未來想追求 iOS 真正自動恢復，需將 BGM 改為 HTML `<audio>` 元素 + Media Session API，但效果不保證且需重構。
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
