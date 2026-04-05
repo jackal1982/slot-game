@@ -105,6 +105,9 @@ css/
   dragon_wolf.css   # 黑白龍狼傳專用樣式（5×4 grid、深色主題）
 images/             # SVG 符號圖檔 + reel-bg-fortune.svg 背景 + slot-icon.svg
   dragon_wolf/      # 黑白龍狼傳 SVG：dragon, wolf, tiger, phoenix, koi, turtle, coin, sword, jade, scatter, wild（11 個）
+audio/
+  dragon_wolf/      # 黑白龍狼傳音效 MP3：dw-bgm-normal, dw-bgm-free, dw-laugh, free-bigwin
+                    # 聚氣音效：qigong-1.mp3（2s）, qigong-2.mp3（4s）, qigong-3.mp3（7s）
 tools/
   rtp-verify-fortune-slots.js  # Fortune Slots RTP 驗證腳本（Node.js，Monte Carlo 500 萬次）
   rtp-verify-dragon-wolf.js    # 黑白龍狼傳 RTP 驗證腳本（Node.js，Monte Carlo 1000 萬次）
@@ -140,6 +143,8 @@ tools/
 - **RTP 調校**：修改賠率時不要同時改 Reel Strips（交互影響大）；DW 曾因 BASE_PAY/FREE_PAY 數值不一致導致 RTP 超 100%
 - **DW generateGrid 視窗限制**：Free Game M1 同視窗≤2、所有模式 A 符號同視窗≤2（防 Ways 堆疊爆分）
 - **iOS BGM 無法自動恢復（勿重複嘗試）**：iOS 所有瀏覽器（Safari/Chrome/Firefox）底層皆為 WebKit，`AudioContext.resume()` 強制要求 user gesture，在 `visibilitychange` 中呼叫無效。切換 App 後 BGM 無法自動恢復是 **Apple 系統層級限制**，無法透過 Web Audio API 繞過。目前實作已是最佳解：切回 App 後點畫面/SPIN 即恢復。Android 及桌機不受此限制，可自動恢復。若未來想追求 iOS 真正自動恢復，需將 BGM 改為 HTML `<audio>` 元素 + Media Session API，但效果不保證且需重構。
+- **iOS 雙擊 zoom（PR #94）**：iOS 10+ 刻意忽略 `user-scalable=no`，`position: fixed` 的 overlay 元素不可靠繼承 touch-action，需對 `html, body`、`.overlay`、`.dw-overlay`、`#dw-fs-transition`、`.lb-overlay` 等各自明確加 `touch-action: manipulation`，才能根治 popup 上雙擊放大問題。
+- **手機橫向處理（PR #96）**：遊戲設計為直式，橫向時不做旋轉（曾試 CSS body transform 方案但棄用）。現行方案：完全不調整畫面，由 `overflow: hidden` 自然裁切底部超出內容。`platform.js` 保留 `orientationchange` reflow handler（300ms 後 `scrollTo(0,0)` + `height: auto` → rAF 還原），修復切回直向時 iOS viewport 殘留問題。
 
 ## RWD 斷點
 | 斷點 | 目標 | 符號尺寸 |
@@ -152,7 +157,7 @@ tools/
 ## PR 歷史
 > 完整 PR 歷史與 Bug 修復記錄見 [CHANGELOG.md](CHANGELOG.md)
 >
-> 最新：PR #58（Fortune Slots Win Cycle 重構為 event-driven）
+> 最新：PR #96（手機橫向改為直式 UI 自然裁切，移除旋轉方案）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
@@ -231,6 +236,11 @@ tools/
 - **Free Spins M1 數量（最新）**：軸1=21、軸2=9、軸3=9、軸4=6、軸5=6
 - **Free Game WD 數量（最新）**：軸2=4、軸3=5、軸4=5、軸5=6（PR #42 調降）
 - **randomWilds 機率（最新）**：2~4個 60%、5~8個 36%、9~12個 3%、13~16個 1%（PR #42 調整）
+- **FS 轉場動畫時序（PR #90 + #93）**：進入 Free Game 時先呼叫 `Audio.bgmStop()` 停 Base BGM，Phase 1 黑龍/白狼衝刺 2s（原 1s）；Phase 3 郎君出現延遲從 2.8s 改為 2.0s（消除龍狼消失後約 1 秒空白）；`FS_TRANSITION_DURATION` = 6500ms
+- **聚氣音效 Tier 制（PR #95）**：`dw-audio.js` 預載 `qigong-1/2/3.mp3`，`_sfxQigong(tier)` 依 tier 播放對應音檔（fallback 至笑聲合成）；`dw-animations.js` Phase 1（500ms）改呼叫 `Audio.play('qigong_' + tier)`：
+  - Tier 1（2~4 wilds，FIRE_AT=2s）→ qigong-1.mp3（2 秒）
+  - Tier 2（5~8 wilds，FIRE_AT=4s）→ qigong-2.mp3（4 秒）
+  - Tier 3（9+ wilds，FIRE_AT=7s）→ qigong-3.mp3（7 秒）
 
 ### RTP 驗證
 - 驗證腳本：`tools/rtp-verify-dragon-wolf.js`（Node.js，獨立執行）
