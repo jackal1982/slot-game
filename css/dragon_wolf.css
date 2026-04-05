@@ -738,17 +738,17 @@
     animation: dw-ink-wash-in 0.8s 2s ease-out forwards;
 }
 
-/* Phase 3: 郎君綻放 (2.8~4s) — delay +1s */
+/* Phase 3: 郎君綻放 (2.0~3.2s) — 對齊龍狼消失時間點，消除空白斷層 */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-wrap {
-    animation: dw-lord-bloom 1.2s 2.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: dw-lord-bloom 1.2s 2.0s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 #dw-fs-transition.dw-trans-playing #dw-trans-mw-glow {
-    animation: dw-glow-expand 1.2s 2.8s ease-out forwards,
-               dw-lord-glow-pulse 0.7s 4.0s ease-in-out 4;
+    animation: dw-glow-expand 1.2s 2.0s ease-out forwards,
+               dw-lord-glow-pulse 0.7s 3.2s ease-in-out 4;
 }
-/* Phase 3: 郎君 pulse（只用 transform，GPU 可合成） — delay +1s */
+/* Phase 3: 郎君 pulse（只用 transform，GPU 可合成） */
 #dw-fs-transition.dw-trans-playing #dw-trans-mw {
-    animation: dw-lord-pulse 0.35s 2.8s ease-in-out 5;
+    animation: dw-lord-pulse 0.35s 2.0s ease-in-out 5;
 }
 
 /* Phase 4: 文字出現 — delay +1s */

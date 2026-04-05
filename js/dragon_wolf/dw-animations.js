@@ -121,9 +121,9 @@ DragonWolf.Animations = {
         // 郎君綻放完成時播放狂笑（1.8s，與郎君出現同步）
         // 音效用 setTimeout OK — 音效不影響視覺，延遲也無大礙
         setTimeout(function() {
-            dbg('2800ms: laugh timer fired');
+            dbg('2000ms: laugh timer fired');
             try { DragonWolf.Audio.play('laugh'); } catch(e) {}
-        }, 2800);
+        }, 2000);
 
         // Cleanup：移除 class、隱藏 overlay
         // CSS 動畫在 5s 完成（4.2s delay + 0.8s），5.5s cleanup
