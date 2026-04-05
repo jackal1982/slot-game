@@ -362,6 +362,7 @@
     justify-content: center;
     padding: 16px;
     box-sizing: border-box;
+    touch-action: manipulation;         /* Fix: iOS double-tap zoom prevention */
 }
 
 .lb-popup {
