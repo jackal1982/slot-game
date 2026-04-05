@@ -1,6 +1,11 @@
 # Slot Game Development Reference
 # Fortune Slots - Complete Architecture & Development Guide
 
+> **Scope**: This document covers **Fortune Slots** specifically (5×3, 20-payline, `window.SlotGame`).
+> For **Dragon Wolf Legend** (5×4, 1024-Ways, `window.DragonWolf`), refer to:
+> - Game spec: `GAME_SPEC_dragon_wolf.md`
+> - Source: `js/dragon_wolf/` directory
+
 > **Purpose**: This document records the complete architecture, design decisions, problems encountered, and solutions applied during the development of "Fortune Slots". Use as a reference when building future slot games.
 
 ---
