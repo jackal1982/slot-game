@@ -451,6 +451,7 @@
     opacity:    0;
     pointer-events: none;
     transition: opacity 0.3s;
+    touch-action: manipulation;         /* Fix: iOS double-tap zoom prevention */
 }
 .dw-overlay.dw-overlay-active {
     opacity:        1;
@@ -520,6 +521,7 @@
     display:         flex;
     align-items:     center;
     justify-content: center;
+    touch-action:    manipulation;      /* Fix: iOS double-tap zoom prevention */
 }
 #dw-fs-transition.hidden { display: none; }
 

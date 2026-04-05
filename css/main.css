@@ -35,6 +35,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    touch-action: manipulation;         /* Fix: iOS double-tap zoom prevention */
 }
 
 body {
@@ -201,6 +202,7 @@ body {
     overflow-y: auto;
     padding: 10px 0;
     box-sizing: border-box;
+    touch-action: manipulation;         /* Fix: iOS double-tap zoom prevention */
 }
 
 .overlay.active {
