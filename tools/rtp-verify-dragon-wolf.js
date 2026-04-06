@@ -17,9 +17,9 @@ const BASE_REEL_CONFIGS = [
 ];
 
 const FREE_REEL_CONFIGS = [
-    { SC:2,       M1:21, M4:5,  A1:14, A2:17, A3:24, A4:27 }, // 軸1 (110)
-    { SC:2, WD:4, M1:9,  M4:7,  A1:14, A2:17, A3:24, A4:38 }, // 軸2 (115) WD:6→4, M4:5→7
-    { SC:2, WD:5, M1:9,  M4:7,  A1:14, A2:17, A3:24, A4:42 }, // 軸3 (120) WD:7→5, M4:5→7
+    { SC:4,       M1:21, M4:5,  A1:14, A2:17, A3:24, A4:27 }, // 軸1 (112) SC:2→4, Retrigger↑ ~0.2%
+    { SC:4, WD:4, M1:9,  M4:7,  A1:14, A2:17, A3:24, A4:38 }, // 軸2 (117) SC:2→4, Retrigger↑ ~0.2%
+    { SC:3, WD:5, M1:9,  M4:7,  A1:14, A2:17, A3:24, A4:42 }, // 軸3 (121) SC:2→3, Retrigger↑ ~0.2%
     {       WD:5, M1:6,  M4:11, A1:15, A2:17, A3:26, A4:42 }, // 軸4 (122) WD:8→5, M1:8→6, M4:6→11
     {       WD:6, M1:6,  M4:11, A1:15, A2:17, A3:26, A4:47 }  // 軸5 (128) WD:9→6, M1:8→6, M4:6→11
 ];
@@ -39,17 +39,17 @@ const BASE_PAY = {
 };
 
 const FREE_PAY = {
-    M1: { 3: 0.07, 4: 0.20, 5: 0.35 },  // 4連 0.18→0.20（補 Free ~0.4%）
-    M4: { 3: 0.03, 4: 0.07, 5: 0.13 },  // 4連 0.06→0.07
-    A1: { 3: 0.01, 4: 0.03, 5: 0.07 },
-    A2: { 3: 0.01, 4: 0.03, 5: 0.04 },
-    A3: { 3: 0.01, 4: 0.03, 5: 0.04 },
-    A4: { 3: 0.01, 4: 0.01, 5: 0.03 }
+    M1: { 3: 0.075, 4: 0.21,  5: 0.37  },  // ×1.066 補償 SC:4+4+3 視窗佔用
+    M4: { 3: 0.032, 4: 0.075, 5: 0.14  },
+    A1: { 3: 0.01,  4: 0.032, 5: 0.075 },
+    A2: { 3: 0.01,  4: 0.032, 5: 0.043 },
+    A3: { 3: 0.01,  4: 0.032, 5: 0.043 },
+    A4: { 3: 0.01,  4: 0.01,  5: 0.032 }
 };
 
 // ── _buildReel（同 dw-rng.js，確保性洗牌 + SC/WD 等距插入）──────────────────
 
-function buildReel(counts) {
+function buildReel(counts, fixedSeed) {
     const specials = [];
     const normals  = [];
 
@@ -61,8 +61,13 @@ function buildReel(counts) {
         }
     }
 
-    let seed = normals.length * 31;
-    for (const s of specials) seed += s.count * 7;
+    let seed;
+    if (fixedSeed != null) {
+        seed = fixedSeed;
+    } else {
+        seed = normals.length * 31;
+        for (const s of specials) seed += s.count * 7;
+    }
 
     function seededRand() {
         seed = (seed * 1103515245 + 12345) & 0x7fffffff;
@@ -92,8 +97,10 @@ function buildReel(counts) {
 
 // ── 一次性建立所有輪帶 ────────────────────────────────────────────────────────
 
-const baseReels = BASE_REEL_CONFIGS.map(buildReel);
-const freeReels = FREE_REEL_CONFIGS.map(buildReel);
+const baseReels = BASE_REEL_CONFIGS.map(cfg => buildReel(cfg));
+// Free Reel 使用固定 seed（原始 SC:2 設定時的種子值），確保 SC 數量調整不影響普通符號排列
+const FREE_REEL_FIXED_SEEDS = [3362, 3421, 3552, 3662, 3824];
+const freeReels = FREE_REEL_CONFIGS.map((cfg, i) => buildReel(cfg, FREE_REEL_FIXED_SEEDS[i]));
 
 // ── 視窗合法性檢查（同 dw-rng.js 更新後邏輯）────────────────────────────────
 
