@@ -157,7 +157,7 @@ tools/
 ## PR 歷史
 > 完整 PR 歷史與 Bug 修復記錄見 [CHANGELOG.md](CHANGELOG.md)
 >
-> 最新：PR #96（手機橫向改為直式 UI 自然裁切，移除旋轉方案）
+> 最新：PR #102（黑白龍狼傳 Free Game Retrigger 機率調高至 ~0.2%）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
@@ -198,7 +198,7 @@ tools/
 - **BET_MULTIPLIERS**：[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 連續整數
 - **AUTO 功能**：自動連續 Spin，餘額不足自動取消
 
-### Symbol 賠率表（黑白龍狼傳 — PR #42 定版）
+### Symbol 賠率表（黑白龍狼傳 — PR #42 定版，Free Game 賠率 PR #102 微調）
 
 **Base Game（per-way 倍率 × bet）**
 | Symbol | 說明 | 3連 | 4連 | 5連 |
@@ -214,14 +214,15 @@ tools/
 **Free Game（per-way 倍率 × bet）**
 | Symbol | 說明 | 3連 | 4連 | 5連 |
 |--------|------|-----|-----|-----|
-| M1 | 黑白郎君 | 0.07 | 0.20 | 0.35 |
-| M4 | 憶無心 | 0.03 | 0.07 | 0.13 |
-| A1 | A | 0.01 | 0.03 | 0.07 |
-| A2 | K | 0.01 | 0.03 | 0.04 |
-| A3 | Q | 0.01 | 0.03 | 0.04 |
-| A4 | J | 0.01 | 0.01 | 0.03 |
+| M1 | 黑白郎君 | 0.075 | 0.21 | 0.37 |
+| M4 | 憶無心 | 0.032 | 0.075 | 0.14 |
+| A1 | A | 0.01 | 0.032 | 0.075 |
+| A2 | K | 0.01 | 0.032 | 0.043 |
+| A3 | Q | 0.01 | 0.032 | 0.043 |
+| A4 | J | 0.01 | 0.01 | 0.032 |
 
 - Scatter 觸發 Free Spins（固定 10 次，可重觸發 +10 次，上限 50 次）；觸發率 ~2.56%（約 1/39），Base Game SC 數量：軸1=7、軸2=8、軸3=8
+- **Free Game Retrigger 機率 ~0.2%**（每局 FS）：Free Reel SC 數量調高（軸1=4、軸2=4、軸3=3），賠率同步 ×1.066 補償視窗佔用
 - 1024-Ways 賠付：每軸各有幾個相符符號就乘幾（如軸1×2×1×3×2=12 種 way）
 
 ### 命名空間與模組
@@ -230,10 +231,12 @@ tools/
 
 ### 關鍵實作細節
 - **dw-rng.js `generateGrid`**：SC/WD 每軸最多 1 個；Free Game M1 同視窗最多 2 個；所有模式任一 A 符號同視窗最多 2 個（PR #42 新增）；均透過最多 1000 次重試 + fallback 全掃描確保
+- **dw-rng.js `_buildReel` fixedSeed（PR #102）**：Free Reel 使用固定 seed 陣列 `[3362, 3421, 3552, 3662, 3824]`，確保 SC 數量改變時普通符號排列順序不變，RTP 可預期。Base Reel 仍使用動態 seed。
 - **dw-reels.js**：動畫 extra 符號使用 `_lastStops` 確保每次 spin 啟動畫面與上次結果一致；`_reelStopped[]` 陣列防止已停止軸再次回彈
 - **dw-main.js `onSpin`**：立即更新 `State.grid`，防止 M1 特色（Free Spins 等）污染 grid 狀態
 - **dw-payways.js**：1024-Ways 計算方式：統計每軸相符符號數，乘積即為 way 數，再乘賠率
 - **Free Spins M1 數量（最新）**：軸1=21、軸2=9、軸3=9、軸4=6、軸5=6
+- **Free Game SC 數量（最新，PR #102）**：軸1=4、軸2=4、軸3=3（Retrigger ~0.2%）
 - **Free Game WD 數量（最新）**：軸2=4、軸3=5、軸4=5、軸5=6（PR #42 調降）
 - **randomWilds 機率（最新）**：2~4個 60%、5~8個 36%、9~12個 3%、13~16個 1%（PR #42 調整）
 - **FS 轉場動畫時序（PR #90 + #93）**：進入 Free Game 時先呼叫 `Audio.bgmStop()` 停 Base BGM，Phase 1 黑龍/白狼衝刺 2s（原 1s）；Phase 3 郎君出現延遲從 2.8s 改為 2.0s（消除龍狼消失後約 1 秒空白）；`FS_TRANSITION_DURATION` = 6500ms
@@ -247,4 +250,5 @@ tools/
 - 指令：`node tools/rtp-verify-dragon-wolf.js`
 - 目標：95.5%~96.5%（Base 60% + Free 36%）
 - 實測（PR #42，1000 萬局）：Total **96.04%**（Base **60.31%** + Free **35.74%**）
+- 實測（PR #102，1000 萬局）：Total **95.67%**（Base **60.32%** + Free **35.35%**）；Retrigger ~0.194%/局 FS
 - 注意：舊版 `rtp_verify_dragon_wolf_final.js` 使用過時賠率，結果不可信

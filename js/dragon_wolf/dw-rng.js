@@ -11,14 +11,19 @@ DragonWolf.RNG = {
 
     init: function() {
         this._baseReels = this._buildAllReels(DragonWolf.Config.BASE_REEL_CONFIGS);
-        this._freeReels  = this._buildAllReels(DragonWolf.Config.FREE_REEL_CONFIGS);
+        // Free Reel 使用固定 seed（原始 SC:2 設定時計算的種子值）
+        // 固定 seed 確保 SC 數量調整時，普通符號排列順序不變，RTP 可預期
+        // 種子計算公式：normals.length * 31 + Σ(specials[i].count * 7)（以 SC:2 為基準）
+        var FREE_REEL_FIXED_SEEDS = [3362, 3421, 3552, 3662, 3824];
+        this._freeReels  = this._buildAllReels(DragonWolf.Config.FREE_REEL_CONFIGS, FREE_REEL_FIXED_SEEDS);
     },
 
-    /** 從設定陣列建立所有輪帶 */
-    _buildAllReels: function(configs) {
+    /** 從設定陣列建立所有輪帶，optionalFixedSeeds 可傳入固定種子陣列 */
+    _buildAllReels: function(configs, optionalFixedSeeds) {
         var reels = [];
         for (var i = 0; i < configs.length; i++) {
-            reels.push(this._buildReel(configs[i]));
+            var fixedSeed = (optionalFixedSeeds && i < optionalFixedSeeds.length) ? optionalFixedSeeds[i] : null;
+            reels.push(this._buildReel(configs[i], fixedSeed));
         }
         return reels;
     },
@@ -26,10 +31,11 @@ DragonWolf.RNG = {
     /**
      * buildReel：等距插入 SC/WD，確定性亂數排列普通符號。
      * 移植自 rtp_verify_dw_v3.js buildReel()，確保與 RTP 驗證一致。
-     * @param {Object} counts - { SC:n, WD:n, M2:n, ... }
+     * @param {Object} counts    - { SC:n, WD:n, M2:n, ... }
+     * @param {number} fixedSeed - （可選）固定種子值，傳入時忽略自動計算
      * @returns {string[]}
      */
-    _buildReel: function(counts) {
+    _buildReel: function(counts, fixedSeed) {
         var specials = [];
         var normals  = [];
 
@@ -46,10 +52,15 @@ DragonWolf.RNG = {
             }
         }
 
-        // 確定性洗牌（seed 由輪帶長度決定，確保每次結果一致）
-        var seed = normals.length * 31;
-        for (var k = 0; k < specials.length; k++) {
-            seed += specials[k].count * 7;
+        // 確定性洗牌種子：若傳入 fixedSeed 則使用固定值（SC 數量改變時保持相同普通符號排列）
+        var seed;
+        if (fixedSeed != null) {
+            seed = fixedSeed;
+        } else {
+            seed = normals.length * 31;
+            for (var k = 0; k < specials.length; k++) {
+                seed += specials[k].count * 7;
+            }
         }
 
         function seededRand() {
