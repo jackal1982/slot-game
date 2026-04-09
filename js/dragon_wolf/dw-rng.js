@@ -11,10 +11,9 @@ DragonWolf.RNG = {
 
     init: function() {
         this._baseReels = this._buildAllReels(DragonWolf.Config.BASE_REEL_CONFIGS);
-        // Free Reel 使用固定 seed（原始 SC:2 設定時計算的種子值）
-        // 固定 seed 確保 SC 數量調整時，普通符號排列順序不變，RTP 可預期
-        // 種子計算公式：normals.length * 31 + Σ(specials[i].count * 7)（以 SC:2 為基準）
-        var FREE_REEL_FIXED_SEEDS = [3362, 3421, 3552, 3662, 3824];
+        // Free Reel 使用固定 seed v2（SC:5/6/6 + M1:21/10/11 設定的種子值）
+        // 固定 seed 確保 SC 數量微調時，普通符號排列順序不變，RTP 可預期
+        var FREE_REEL_FIXED_SEEDS = [3321, 3418, 3518, 3662, 3824];
         this._freeReels  = this._buildAllReels(DragonWolf.Config.FREE_REEL_CONFIGS, FREE_REEL_FIXED_SEEDS);
     },
 

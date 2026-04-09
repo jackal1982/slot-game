@@ -71,7 +71,8 @@
 - PR #95: DW 聚氣音效 Tier 制 — 新增 qigong-1/2/3.mp3，依百搭數量（tier）播放對應音效（2s/4s/7s），fallback 至笑聲合成
 - PR #96: 手機橫向改為直式 UI 自然裁切 — 移除 PR #94 的 body-rotation 旋轉方案，改由 overflow:hidden 自然裁切；保留 orientationchange reflow handler
 - PR #97: CLAUDE.md 更新 — PR #90~#96 修改記錄、iOS 雙擊 zoom / 橫向處理防踩坑、DW FS 轉場時序、聚氣音效 Tier 制、audio/dragon_wolf 目錄說明
-- PR #102: 黑白龍狼傳 Free Game Retrigger 機率調高至 ~0.2% — Free Reel SC 數量：軸1/2 從 2→4、軸3 從 2→3；FREE_PAY 全面 ×1.066 補償 SC 視窗佔用；dw-rng.js `_buildReel` 加入 fixedSeed 機制（Free Reel 固定 seed=[3362,3421,3552,3662,3824]，SC 數量改變不影響普通符號排列）；修正 tools/rtp-verify-dragon-wolf.js 的 `map(buildReel)` index 污染 bug。RTP 驗證：95.67%（Base 60.32% + Free 35.35%）
+- PR #102: 黑白龍狼傳 Free Game Retrigger 機率調高至 ~0.2%
+- PR #103: 黑白龍狼傳 RTP 結構重組 — Base 60%→50%、Free 36%→46%（Total 96%）；M2=M3 黑龍白狼賠率統一（雙主角等強）；Free Reel SC:5/6/6（Retrigger ~0.83%）、M1 軸2:9→10/軸3:9→11（M1 trigger 12.5%）；FREE_PAY 全面重算；fixedSeed v2=[3321,3418,3518,3662,3824]。RTP 驗證：95.89%（Base 49.91% + Free 45.99%） — Free Reel SC 數量：軸1/2 從 2→4、軸3 從 2→3；FREE_PAY 全面 ×1.066 補償 SC 視窗佔用；dw-rng.js `_buildReel` 加入 fixedSeed 機制（Free Reel 固定 seed=[3362,3421,3552,3662,3824]，SC 數量改變不影響普通符號排列）；修正 tools/rtp-verify-dragon-wolf.js 的 `map(buildReel)` index 污染 bug。RTP 驗證：95.67%（Base 60.32% + Free 35.35%）
 
 ## 已修復 Bug 完整記錄
 1. **targetY 計算錯誤**：prepend current symbols 後 totalHeight 僅用 reelStrip.length → 轉軸提前 3 格停止
