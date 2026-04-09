@@ -219,7 +219,7 @@ function applyRandomWilds(grid) {
     const available = [];
     for (let col = 1; col < 5; col++)
         for (let row = 0; row < 4; row++)
-            if (grid[col][row] !== 'WD' && grid[col][row] !== 'M1')
+            if (grid[col][row] !== 'WD' && grid[col][row] !== 'M1' && grid[col][row] !== 'SC')
                 available.push([col, row]);
 
     const placed = Math.min(count, available.length);
