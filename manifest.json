@@ -1,0 +1,24 @@
+{
+    "name": "Fortune Slots",
+    "short_name": "Fortune Slots",
+    "description": "Fortune Slots 遊戲平台",
+    "start_url": "/slot-game/",
+    "display": "standalone",
+    "background_color": "#E8F4FF",
+    "theme_color": "#0099FF",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
