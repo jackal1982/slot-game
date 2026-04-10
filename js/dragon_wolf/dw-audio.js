@@ -21,6 +21,10 @@ DragonWolf.Audio = {
     // SFX MP3 音檔（laugh 等）
     _sfxBuffers:     {},
 
+    // Scatter MP3 音檔
+    _scatterBuffer:  null,
+    _scatterLoaded:  false,
+
     /** buffer 載入完成後，若 bgmStart 已被呼叫但當時 buffer 不存在，補播 BGM */
     _onBgmLoaded: function() {
         if (this._bgmRunning && !this._bgmSource) {
@@ -59,6 +63,9 @@ DragonWolf.Audio = {
 
         // 預載 SFX MP3 音檔
         this._loadSfxFiles();
+
+        // 預載 Scatter MP3 音檔
+        this._loadScatter();
 
         // 切換 App 回來時恢復 BGM
         var self = this;
@@ -219,6 +226,31 @@ DragonWolf.Audio = {
         gain.connect(this.soundGain);
         src.start(0);
         return true;
+    },
+
+    /** 預載 dw-scatter.mp3 */
+    _loadScatter: function() {
+        if (!this.ctx) return;
+        var self = this;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'audio/dragon_wolf/dw-scatter.mp3', true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                self.ctx.decodeAudioData(xhr.response, function(buf) {
+                    self._scatterBuffer = buf;
+                    self._scatterLoaded = true;
+                }, function(e) {
+                    console.warn('[DWAudio] dw-scatter.mp3 decode error', e);
+                });
+            } else {
+                console.warn('[DWAudio] dw-scatter.mp3 load failed, status=' + xhr.status);
+            }
+        };
+        xhr.onerror = function() {
+            console.warn('[DWAudio] dw-scatter.mp3 XHR error');
+        };
+        xhr.send();
     },
 
     /** 預載 Base / Free 兩個 BGM MP3 檔 */
@@ -494,9 +526,18 @@ DragonWolf.Audio = {
         }
     },
 
-    /** 散彩（Scatter 觸發）— 機械鬧鐘鈴聲，3 秒 */
+    /** 散彩（Scatter 觸發）— 優先用 MP3，fallback 機械鬧鐘合成音（3 秒） */
     _sfxScatter: function() {
         if (!this.ctx) return;
+        // 優先使用 MP3
+        if (this._scatterLoaded && this._scatterBuffer) {
+            var src = this.ctx.createBufferSource();
+            src.buffer = this._scatterBuffer;
+            src.connect(this.soundGain);
+            src.start(this.ctx.currentTime);
+            return;
+        }
+        // fallback：合成音（機械鬧鐘鈴聲）
         var ctx = this.ctx;
         var t   = ctx.currentTime;
 
