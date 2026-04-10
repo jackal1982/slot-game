@@ -107,9 +107,6 @@ DragonWolf.Animations = {
         // 停止 Base Game BGM（轉場動畫期間靜音，結束後才播 Free BGM）
         try { DragonWolf.Audio.bgmStop(); } catch(e) {}
 
-        // 入場音效
-        try { DragonWolf.Audio.play('scatter'); } catch(e) {}
-
         // 先移除 hidden 讓元素進入 layout，再加 playing 觸發動畫
         dbg('remove hidden');
         el.classList.remove('hidden');
