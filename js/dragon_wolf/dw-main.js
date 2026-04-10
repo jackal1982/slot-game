@@ -215,10 +215,20 @@ DragonWolf.Main = {
             var addSpins = DragonWolf.Config.SCATTER_RETRIGGER;
             DragonWolf.Features.freeSpins.addSpins(addSpins);
             DragonWolf.UI.updateFreeSpinsHud();
-            DragonWolf.Animations.playRetrigger(addSpins);
+            DragonWolf.Animations.playRetrigger(addSpins, function() {
+                DragonWolf.Main._showWinsOrIdle(result, isFree);
+            });
+            return;
         }
 
         // 顯示勝利
+        this._showWinsOrIdle(result, isFree);
+    },
+
+    // ── 顯示勝利或回到 IDLE（Retrigger callback 與正常流程共用） ──
+
+    _showWinsOrIdle: function(result, isFree) {
+        var state = DragonWolf.State;
         if (result.wins.length > 0) {
             state.phase = 'SHOWING_WINS';
             DragonWolf.UI.updateSpinButton();
@@ -231,9 +241,9 @@ DragonWolf.Main = {
             });
         } else {
             if (isFree && !DragonWolf.Features.freeSpins.isActive()) {
-                this._endFreeSpins();
+                DragonWolf.Main._endFreeSpins();
             } else {
-                this._toIdle(isFree);
+                DragonWolf.Main._toIdle(isFree);
             }
         }
     },

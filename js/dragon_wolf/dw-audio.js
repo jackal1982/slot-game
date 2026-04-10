@@ -228,6 +228,15 @@ DragonWolf.Audio = {
         return true;
     },
 
+    /** 回傳 scatter 音效時長（秒）。MP3 已載入時用真實 duration，否則用 fallback 常數 */
+    getScatterDuration: function() {
+        if (this._scatterLoaded && this._scatterBuffer) {
+            return this._scatterBuffer.duration;
+        }
+        // fallback 合成音：6 段 × 0.5s = 3s（numSegs=6, segLen=0.5）
+        return 3.0;
+    },
+
     /** 預載 dw-scatter.mp3 */
     _loadScatter: function() {
         if (!this.ctx) return;
