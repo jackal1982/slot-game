@@ -157,7 +157,7 @@ tools/
 ## PR 歷史
 > 完整 PR 歷史與 Bug 修復記錄見 [CHANGELOG.md](CHANGELOG.md)
 >
-> 最新：PR #103（黑白龍狼傳 RTP 結構重組：Base 50% / Free 46%、M2=M3、Retrigger ~0.83%）
+> 最新：PR #107（黑白龍狼傳 Scatter 高亮音效改為機械鬧鐘 3 秒 + 高亮等待時間 2s→3s）
 
 ## 配色系統（PR #9 定版）
 | 用途 | CSS 變數 | 色碼 |
