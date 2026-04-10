@@ -364,18 +364,22 @@ DragonWolf.Animations = {
 
     // ── Retrigger 動畫 ────────────────────────────────────
 
-    playRetrigger: function(addedSpins) {
+    playRetrigger: function(addedSpins, onComplete) {
         var el = document.getElementById('dw-retrigger-overlay');
-        if (!el) return;
+        if (!el) { if (onComplete) onComplete(); return; }
         var countEl = el.querySelector('.dw-retrigger-count');
         if (countEl) countEl.textContent = '+' + addedSpins;
         el.classList.remove('hidden');
         el.classList.add('dw-retrigger-active');
         try { DragonWolf.Audio.play('scatter'); } catch(e) {}
+        var duration = (typeof DragonWolf !== 'undefined' && DragonWolf.Audio && DragonWolf.Audio.getScatterDuration)
+            ? Math.round(DragonWolf.Audio.getScatterDuration() * 1000)
+            : 3000;
         setTimeout(function() {
             el.classList.remove('dw-retrigger-active');
             el.classList.add('hidden');
-        }, 1500);
+            if (onComplete) onComplete();
+        }, duration);
     },
 
     // ── FS 總結動畫 ───────────────────────────────────────
