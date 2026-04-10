@@ -494,23 +494,50 @@ DragonWolf.Audio = {
         }
     },
 
-    /** 散彩（Scatter 觸發） */
+    /** 散彩（Scatter 觸發）— 機械鬧鐘鈴聲，3 秒 */
     _sfxScatter: function() {
         if (!this.ctx) return;
-        var t = this.ctx.currentTime;
-        // 神秘的三音和弦
-        var freqs = [293.66, 440, 659.26];
-        for (var i = 0; i < freqs.length; i++) {
-            var osc  = this.ctx.createOscillator();
-            var gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = freqs[i];
-            gain.gain.setValueAtTime(0, t);
-            gain.gain.linearRampToValueAtTime(0.15, t + 0.08);
-            gain.gain.setValueAtTime(0.15, t + 0.4);
-            gain.gain.linearRampToValueAtTime(0, t + 0.8);
-            osc.connect(gain); gain.connect(this.soundGain);
-            osc.start(t); osc.stop(t + 0.85);
+        var ctx = this.ctx;
+        var t   = ctx.currentTime;
+
+        // 機械鬧鐘：每 0.5s 一段 ring(0.42s) + pause(0.08s)，共 6 段 ≈ 3s
+        // 每段內鐘槌以 17Hz 快速交替打兩個鈴（980Hz / 1080Hz）
+        var ringTime  = 0.42;   // 每段鈴聲持續時間
+        var segLen    = 0.50;   // 段長（ring + pause）
+        var strikeHz  = 17;     // 鐘槌打擊速率（Hz）
+        var numSegs   = 6;      // 6 段 × 0.5s = 3s
+        var hitsPerSeg = Math.round(ringTime * strikeHz); // ≈7 次打擊
+
+        for (var seg = 0; seg < numSegs; seg++) {
+            var segStart = t + seg * segLen;
+
+            for (var h = 0; h < hitsPerSeg; h++) {
+                var hitTime = segStart + h / strikeHz;
+                var hitDur  = 1 / strikeHz;            // 每次打擊時槽
+                var freq    = (h % 2 === 0) ? 980 : 1080; // 雙鐘交替
+
+                // 主鈴音（極快 attack + 快速指數 decay = 機械金屬打擊感）
+                var osc  = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, hitTime);
+                gain.gain.linearRampToValueAtTime(0.60, hitTime + 0.003);
+                gain.gain.exponentialRampToValueAtTime(0.001, hitTime + hitDur * 0.85);
+                osc.connect(gain); gain.connect(this.soundGain);
+                osc.start(hitTime); osc.stop(hitTime + hitDur);
+
+                // 泛音（非整數倍 → 金屬 clang 質感）
+                var osc2  = ctx.createOscillator();
+                var gain2 = ctx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.value = freq * 2.76;
+                gain2.gain.setValueAtTime(0, hitTime);
+                gain2.gain.linearRampToValueAtTime(0.25, hitTime + 0.002);
+                gain2.gain.exponentialRampToValueAtTime(0.001, hitTime + 0.025);
+                osc2.connect(gain2); gain2.connect(this.soundGain);
+                osc2.start(hitTime); osc2.stop(hitTime + 0.03);
+            }
         }
     },
 

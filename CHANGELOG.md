@@ -71,8 +71,16 @@
 - PR #95: DW 聚氣音效 Tier 制 — 新增 qigong-1/2/3.mp3，依百搭數量（tier）播放對應音效（2s/4s/7s），fallback 至笑聲合成
 - PR #96: 手機橫向改為直式 UI 自然裁切 — 移除 PR #94 的 body-rotation 旋轉方案，改由 overflow:hidden 自然裁切；保留 orientationchange reflow handler
 - PR #97: CLAUDE.md 更新 — PR #90~#96 修改記錄、iOS 雙擊 zoom / 橫向處理防踩坑、DW FS 轉場時序、聚氣音效 Tier 制、audio/dragon_wolf 目錄說明
-- PR #102: 黑白龍狼傳 Free Game Retrigger 機率調高至 ~0.2%
-- PR #103: 黑白龍狼傳 RTP 結構重組 — Base 60%→50%、Free 36%→46%（Total 96%）；M2=M3 黑龍白狼賠率統一（雙主角等強）；Free Reel SC:5/6/6（Retrigger ~0.83%）、M1 軸2:9→10/軸3:9→11（M1 trigger 12.5%）；FREE_PAY 全面重算；fixedSeed v2=[3321,3418,3518,3662,3824]。RTP 驗證：95.89%（Base 49.91% + Free 45.99%） — Free Reel SC 數量：軸1/2 從 2→4、軸3 從 2→3；FREE_PAY 全面 ×1.066 補償 SC 視窗佔用；dw-rng.js `_buildReel` 加入 fixedSeed 機制（Free Reel 固定 seed=[3362,3421,3552,3662,3824]，SC 數量改變不影響普通符號排列）；修正 tools/rtp-verify-dragon-wolf.js 的 `map(buildReel)` index 污染 bug。RTP 驗證：95.67%（Base 60.32% + Free 35.35%）
+- PR #98: 補充 CHANGELOG.md — PR #91~#97 歷史記錄（7 條新增）
+- PR #99: 更新 GAME_SPEC_dragon_wolf.md 至 v2.0（RTP 分配、賠率表、Reel Strip 數量對齊 PR #42 定版），刪除過時 REEL_STRIPS_dragon_wolf.md
+- PR #100: 更新 README.md / README.zh-TW.md（標題改為「老虎機遊戲平台」、新增黑白龍狼傳介紹、Hash Routing 補 #game/dragon_wolf）+ GAME_SPEC_TEMPLATE / SLOT_GAME_REFERENCE 更新
+- PR #101: 重構 GAME_SPEC_TEMPLATE.md v2.0 → v3.0（補 Fortune Slots vs 黑白龍狼傳比較欄、1024-Ways 賠率說明、Scatter 機制空白參數表）
+- PR #102: 黑白龍狼傳 Free Game Retrigger 機率調高至 ~0.2%（Free Reel SC 數量 軸1/2 從 2→4、軸3 從 2→3；FREE_PAY 全面 ×1.066 補償；fixedSeed 機制確保普通符號排列不變）
+- PR #103: 黑白龍狼傳 RTP 結構重組 — Base 60%→50%、Free 36%→46%（Total 96%）；M2=M3 黑龍白狼賠率統一（雙主角等強）；Free Reel SC:5/6/6（Retrigger ~0.83%）、M1 軸2:9→10/軸3:9→11（M1 trigger 12.5%）；FREE_PAY 全面重算；fixedSeed v2=[3321,3418,3518,3662,3824]。RTP 驗證：95.89%（Base 49.91% + Free 45.99%）
+- PR #104: 更新黑白龍狼傳聚氣音效 qigong-1/2/3.mp3 至新版本（Tier1~3 對應 2s/4s/7s）
+- PR #105: 加入 PWA 桌面圖示（images/icon-180/192/512.png + manifest.json + index.html apple-touch-icon / theme-color meta 標籤）
+- PR #106: 修復 randomWilds 覆蓋 SC 導致 Free Game Retrigger 未觸發的 bug（dw-features.js applyRandomWilds available 排除條件加入 SC；同步修正 rtp-verify-dragon-wolf.js）RTP 驗證：95.70%（Base 49.91% + Free 45.79%）
+- PR #107: 黑白龍狼傳 Scatter 高亮音效升級 — _sfxScatter 改為機械鬧鐘鈴聲（6 段 × 17Hz 雙頻交替，共 3 秒，音量 ×4）；高亮等待時間 2000ms → 3000ms（確保音效播畢再進入轉場）
 
 ## 已修復 Bug 完整記錄
 1. **targetY 計算錯誤**：prepend current symbols 後 totalHeight 僅用 reelStrip.length → 轉軸提前 3 格停止

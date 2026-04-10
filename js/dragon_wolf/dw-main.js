@@ -195,7 +195,7 @@ DragonWolf.Main = {
                     DragonWolf.Main._startFreeSpins(
                         DragonWolf.Config.SCATTER_FREE_SPINS
                     );
-                }, 2000);
+                }, 3000);
             };
 
             if (result.wins.length > 0) {
